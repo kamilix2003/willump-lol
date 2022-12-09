@@ -1,18 +1,32 @@
 const API_KEY = "RGAPI-3a6a1ad6-94a9-4449-a4d0-ebc43b71df85";
-const region = "EUN1"
-RIOT_REQUEST = "https://" + region + ".api.riotgames.com"
-const SUMMONER_INFO_REQUEST = "/lol/summoner/v4/summoners/by-name/"
+const EUNE = "EUN1"; 
+const SUMMONER_INFO_REQUEST = "/lol/summoner/v4/summoners/by-name/";
 PlayerUserName = "";
 
 function SubmitUserName(){
     PlayerUserName = document.getElementById("usernameinput").value;
-    console.log("hello world");
-    console.log(PlayerUserName);
-    LogPlayerData();
+    getHTTPrequest(MakeRequestLink(SUMMONER_INFO_REQUEST, EUNE, PlayerUserName));
+   // document.getElementById("summonericon").src = "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/profileicon/"+ data.profileIconId +".png";
 }
 
-function LogPlayerData(){
-    let request = RIOT_REQUEST + SUMMONER_INFO_REQUEST +PlayerUserName+ "?api_key=" + API_KEY;
-    console.log(request);
-    httpGet(request);
+function MakeRequestLink(request_link, region, PlayerUserName){
+    return "https://" + region + ".api.riotgames.com" + request_link + PlayerUserName+ "?api_key=" + API_KEY;
+    //console.log(request);
 }
+
+function getHTTPrequest(request){
+    const req = new XMLHttpRequest();
+    req.open("GET",request);
+    req.send();
+    req.responseType = "json";
+    req.onload = () => {
+        if (req.readyState == 4 && req.status == 200) {
+          const data = req.response;
+          console.log(data.profileIconId);
+        } else {
+          console.log(`Error: ${req.status}`);
+        }
+    }
+}
+
+
