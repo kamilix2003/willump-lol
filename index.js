@@ -1,17 +1,31 @@
 const API_KEY = "RGAPI-bde7d8c2-c271-439d-ac88-88c95b171267";
-const EUNE = "EUN1"; 
 const SUMMONER_INFO_REQUEST = "/lol/summoner/v4/summoners/by-name/";
-PlayerUserName = "";
 
 function SubmitUserName(){
-    PlayerUserName = document.getElementById("usernameinput").value;
-    let url = MakeRequestLink(SUMMONER_INFO_REQUEST,EUNE,PlayerUserName);
-    let data = HTTPrequest("GET", url).then(data => {
-        let iconURL = SummonerIconURL(data.profileIconId);
-        document.getElementById("summonericon").src = iconURL;
-        document.getElementById("summonerlevel").innerHTML = data.summonerLevel;
-        document.getElementById("summonername").innerHTML = data.name;
-    })
+    let PlayerUserName = document.getElementById("usernameinput").value;
+    let region =  GetRegion();
+    console.log(region);
+    if(region != "" && PlayerUserName != ""){
+        let url = MakeRequestLink(SUMMONER_INFO_REQUEST,region,PlayerUserName);
+        let data = HTTPrequest("GET", url).then(data => {
+            let iconURL = SummonerIconURL(data.profileIconId);
+            document.getElementById("summonericon").src = iconURL;
+            document.getElementById("summonerlevel").innerHTML = data.summonerLevel;
+            document.getElementById("summonername").innerHTML = data.name;
+        })
+    }else{
+        if(region == "")
+            document.getElementById("summonername").innerHTML = "Select region!";
+        else 
+            document.getElementById("summonername").innerHTML = "Type in summoner name";
+    }
+
+}
+
+function GetRegion(){
+    const form = document.getElementById("selectregion");
+    const radios = form.elements["region"];
+    return radios.value;    
 }
 
 function SummonerIconURL(summonericonnumber){
@@ -33,7 +47,7 @@ function HTTPrequest(method, url){
               const data = req.response;
               resolve(data);
             } else {
-              console.log(`Error: ${req.status}`);
+              reject(req.status);
             }
         }
     });

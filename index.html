@@ -1,22 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<link rel="stylesheet" href="index.css">
-<script src="index.js"></script>
-<body>
+  </head>
+  <link rel="stylesheet" href="index.css" />
+  <script src="index.js"></script>
+  <body>
     <h1>Summoner data</h1>
 
-    <input id="usernameinput" type="text" value="kamilix2003">
+    <form id="selectregion">
+      <input type="radio" id="regionEUNE" name="region" value="EUN1" />
+      <label for="regionEUNE">EUNE</label><br />
+      <input type="radio" id="regionEUW" name="region" value="EUW1" />
+      <label for="regionEUW">EUW</label><br />
+      <input type="radio" id="regionNA" name="region" value="NA1" />
+      <label for="regionNA">NA</label><br />
+    </form>
+    <input id="usernameinput" type="text" value="kamilix2003" />
     <button onclick="SubmitUserName()">submit</button>
 
     <h2 id="summonername"></h2>
     <h3 id="summonerlevel"></h3>
-    <img id="summonericon" src="" alt="">
-
-</body>
+    <img id="summonericon" src="" alt="" />
+  </body>
 </html>
