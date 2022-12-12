@@ -11,6 +11,7 @@ function SubmitUserName(){
             document.getElementById("summonericon").src = iconURL;
             document.getElementById("summonerlevel").innerHTML = data.summonerLevel;
             document.getElementById("summonername").innerHTML = data.name;
+            GetMatchHistory(data.puuid,"europe")
         })
     }else{
         if(region == "")
@@ -19,6 +20,22 @@ function SubmitUserName(){
             document.getElementById("summonername").innerHTML = "Type in summoner name";
     }
 
+}
+
+function GetMatchHistory(puuid, regionContinent, ids = [startTime, endTime, queue, type, start, count]){
+    let ids_link = "";
+    let idsTags = ["startTime", "endTime", "queue", "type", "start", "count"];
+    for(let i = 0; i < 6; i++){
+        if(ids[i] != ""){
+            ids_link += idsTags[i] +"="+ ids[i] + "&";
+        }
+        //"startTime="+startTime+"&endTime="+endTime+"&queue="+queue+"&type="+type+"&start="+start+"&count="+count;
+    }
+    console.log(ids_link);
+    let url = "https://"+regionContinent+".api.riotgames.com/lol/match/v5/matches/by-puuid/"+puuid+"/ids?"+ids_link+"api_key="+API_KEY;
+    HTTPrequest("GET",url).then(data => {
+        console.log(data);
+    })
 }
 
 function GetRegion(){
