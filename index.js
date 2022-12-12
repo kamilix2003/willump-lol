@@ -1,4 +1,4 @@
-const API_KEY = "RGAPI-ced84f47-dc25-467f-96a4-f78ffe01cfea";
+const API_KEY = "RGAPI-59535019-dfca-47c7-8ffd-e0d93ce1139a";
 const SUMMONER_INFO_REQUEST = "/lol/summoner/v4/summoners/by-name/";
 
 function SubmitUserName(){
