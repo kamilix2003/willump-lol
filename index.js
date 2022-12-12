@@ -1,4 +1,4 @@
-const API_KEY = "RGAPI-59535019-dfca-47c7-8ffd-e0d93ce1139a";
+const API_KEY = "RGAPI-ced84f47-dc25-467f-96a4-f78ffe01cfea";
 const SUMMONER_INFO_REQUEST = "/lol/summoner/v4/summoners/by-name/";
 
 function SubmitUserName(){
@@ -11,7 +11,7 @@ function SubmitUserName(){
             document.getElementById("summonericon").src = iconURL;
             document.getElementById("summonerlevel").innerHTML = data.summonerLevel;
             document.getElementById("summonername").innerHTML = data.name;
-            GetMatchHistory(data.puuid,"europe")
+            GetMatchHistory(data.puuid,"europe", [ , , , , , 5])
         })
     }else{
         if(region == "")
@@ -21,21 +21,26 @@ function SubmitUserName(){
     }
 
 }
-
 function GetMatchHistory(puuid, regionContinent, ids = [startTime, endTime, queue, type, start, count]){
     let ids_link = "";
     let idsTags = ["startTime", "endTime", "queue", "type", "start", "count"];
-    for(let i = 0; i < 6; i++){
-        if(ids[i] != ""){
+    for(let i = 0; i < idsTags.length; i++){
+        if(ids[i] != undefined){
             ids_link += idsTags[i] +"="+ ids[i] + "&";
         }
-        //"startTime="+startTime+"&endTime="+endTime+"&queue="+queue+"&type="+type+"&start="+start+"&count="+count;
     }
-    console.log(ids_link);
     let url = "https://"+regionContinent+".api.riotgames.com/lol/match/v5/matches/by-puuid/"+puuid+"/ids?"+ids_link+"api_key="+API_KEY;
     HTTPrequest("GET",url).then(data => {
         console.log(data);
+        DisplayMatchHistory(data, "match history");
     })
+}
+
+function DisplayMatchHistory(data, id){
+    for(let i = 0; i < data.length; i++)
+    {
+        document.getElementById(id).innerHTML += data[i] + "<br>";
+    }
 }
 
 function GetRegion(){
