@@ -1,9 +1,10 @@
-const API_KEY = "RGAPI-ced84f47-dc25-467f-96a4-f78ffe01cfea";
+const API_KEY = "RGAPI-ddebdc96-a7d9-461d-a15b-bfc523f409f4";
 const SUMMONER_INFO_REQUEST = "/lol/summoner/v4/summoners/by-name/";
 
 function SubmitUserName(){
-    let PlayerUserName = document.getElementById("usernameinput").value;
-    let region =  GetRegion();
+    let UrlData = parseURLParams(window.location.href);
+    let PlayerUserName = UrlData.summonername;
+    let region =  UrlData.region;
     if(region != "" && PlayerUserName != ""){
         let url = MakeRequestLink(SUMMONER_INFO_REQUEST,region,PlayerUserName);
         let data = HTTPrequest("GET", url).then(data => {
@@ -13,13 +14,7 @@ function SubmitUserName(){
             document.getElementById("summonername").innerHTML = data.name;
             GetMatchHistory(data.puuid,"europe", [ , , , , , 5])
         })
-    }else{
-        if(region == "")
-            document.getElementById("summonername").innerHTML = "Select region!";
-        else 
-            document.getElementById("summonername").innerHTML = "Type in summoner name";
     }
-
 }
 function GetMatchHistory(puuid, regionContinent, ids = [startTime, endTime, queue, type, start, count]){
     let ids_link = "";
@@ -32,7 +27,6 @@ function GetMatchHistory(puuid, regionContinent, ids = [startTime, endTime, queu
     let url = "https://"+regionContinent+".api.riotgames.com/lol/match/v5/matches/by-puuid/"+puuid+"/ids?"+ids_link+"api_key="+API_KEY;
     HTTPrequest("GET",url).then(data => {
         console.log(data);
-        DisplayMatchHistory(data, "match history");
     })
 }
 
@@ -55,6 +49,26 @@ function SummonerIconURL(summonericonnumber){
 
 function MakeRequestLink(request_link, region, PlayerUserName){
     return "https://" + region + ".api.riotgames.com" + request_link + PlayerUserName+ "?api_key=" + API_KEY;
+}
+
+function parseURLParams(url) {
+    var queryStart = url.indexOf("?") + 1,
+        queryEnd   = url.indexOf("#") + 1 || url.length + 1,
+        query = url.slice(queryStart, queryEnd - 1),
+        pairs = query.replace(/\+/g, " ").split("&"),
+        parms = {}, i, n, v, nv;
+
+    if (query === url || query === "") return;
+
+    for (i = 0; i < pairs.length; i++) {
+        nv = pairs[i].split("=", 2);
+        n = decodeURIComponent(nv[0]);
+        v = decodeURIComponent(nv[1]);
+
+        if (!parms.hasOwnProperty(n)) parms[n] = [];
+        parms[n].push(nv.length === 2 ? v : null);
+    }
+    return parms;
 }
 
 function HTTPrequest(method, url){

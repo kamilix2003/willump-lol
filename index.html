@@ -11,16 +11,15 @@
   <body>
     <h1>Summoner data</h1>
 
-    <form id="selectregion">
-      <input type="radio" id="regionEUNE" name="region" value="EUN1" />
-      <label for="regionEUNE">EUNE</label><br />
-      <input type="radio" id="regionEUW" name="region" value="EUW1" />
-      <label for="regionEUW">EUW</label><br />
-      <input type="radio" id="regionNA" name="region" value="NA1" />
-      <label for="regionNA">NA</label><br />
-    </form>
-    <input id="usernameinput" type="text" value="kamilix2003" />
-    <button onclick="SubmitUserName()">submit</button>
+    <form id="selectregion" action="results.html">
+      <select name="region" id="region">
+        <option value="EUN1">EUNE</option>
+        <option value="EUW1">EUW</option>
+        <option value="NA1">NA</option>
+      </select>
+      <input id="usernameinput" type="text" name="summonername" value="kamilix2003" />
+      <button>submit</button>
+  </form>
 
     <h2 id="summonername"></h2>
     <h3 id="summonerlevel"></h3>
