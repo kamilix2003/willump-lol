@@ -1,6 +1,9 @@
 const API_KEY = "RGAPI-ddebdc96-a7d9-461d-a15b-bfc523f409f4";
 const SUMMONER_INFO_REQUEST = "/lol/summoner/v4/summoners/by-name/";
 
+const body = document.getElementById("mainbody");
+body.addEventListener('load', SubmitUserName);
+
 function SubmitUserName(){
     let UrlData = parseURLParams(window.location.href);
     let PlayerUserName = UrlData.summonername;
