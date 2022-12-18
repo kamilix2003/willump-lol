@@ -1,4 +1,4 @@
-import json from "./API_KEY.json" assert {type: 'json'};
+import json from "../API_KEY.json" assert {type: 'json'};
 
 const API_KEY = json.API_KEY;
 const SUMMONER_INFO_REQUEST = "/lol/summoner/v4/summoners/by-name/";
