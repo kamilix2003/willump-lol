@@ -1,4 +1,4 @@
-import { parseURLParams, MakeRequestLink, HTTPrequest, SummonerIconURL, API_KEY } from "./func.js";
+import { parseURLParams, MakeRequestLink, HTTPrequest, SummonerIconURL, API_KEY} from "./func.js";
 
 const SUMMONER_INFO_REQUEST = "/lol/summoner/v4/summoners/by-name/";
 const LEAGUE_INFO_REQUEST = "/lol/league/v4/entries/by-summoner/";
@@ -12,6 +12,7 @@ function DisplayResults(){
         let data = HTTPrequest("GET", SummonerInfourl).then(data => {
             let iconURL = SummonerIconURL(data.profileIconId);
             document.querySelector(".summonericon").src = iconURL;
+            document.querySelector(".match-champ-img").src = iconURL;
             document.querySelector(".summonerlevel").innerHTML = data.summonerLevel;
             document.querySelector(".summonername").innerHTML = data.name;
             let MatchHistory = GetMatchHistory(data.puuid,"europe", [ , , , , , 5]);
@@ -44,9 +45,27 @@ function GetMatchHistory(puuid, regionContinent, ids = [startTime, endTime, queu
     let url = "https://"+regionContinent+".api.riotgames.com/lol/match/v5/matches/by-puuid/"+puuid+"/ids?"+ids_link+"api_key="+API_KEY;
     HTTPrequest("GET",url).then(data => {
         console.log(data);
+        const matches = document.querySelector(".grid-matchhistory");
+        for(let i = 0; i < data.length; i++){
+            let NewMatch = NewElement(`
+            <div class="match">
+                <img class="match-champ-img" src="" alt="">
+                <h3 class="match-champ">champ</h3>
+                <p class="match-date">date</p>
+                <p class="match-id"> ${data[i]} </p>
+            </div>
+            `)
+            matches.appendChild(NewMatch);
+        }
         return data;
     })
 }
 
 const greeting = document.querySelector("#greeting");
 greeting.onload = DisplayResults();
+
+function NewElement(html){
+    const template = document.createElement("template");
+    template.innerHTML = html.trim();
+    return template.content.firstElementChild;
+}
