@@ -2,7 +2,11 @@ import json from "../API_KEY.json" assert {type: 'json'};
 
 export const API_KEY = json.API_KEY;
 
-
+export function unixToDate(unixTime) {
+    let date = new Date(unixTime);
+    let formattedTime = date.toLocaleDateString("en-GB");
+    return formattedTime;
+  }
 
 function DisplayMatchHistory(data, id){
     for(let i = 0; i < data.length; i++)
@@ -45,7 +49,7 @@ export function parseURLParams(url) {
     return parms;
 }
 
-export function HTTPrequest(method, url){
+export async function HTTPrequest(method, url){
     const promise = new Promise((resolve, reject) => {
         const req = new XMLHttpRequest();
         req.open(method, url);
@@ -62,4 +66,11 @@ export function HTTPrequest(method, url){
     });
     return promise;
 }
+
+export function NewElement(html){
+    const template = document.createElement("template");
+    template.innerHTML = html.trim();
+    return template.content.firstElementChild;
+}
+
 
