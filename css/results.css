@@ -7,8 +7,10 @@ body{
 }
 
 .match{
-    display: flex;
+    display: grid;
+    grid-template-columns: 5em 3fr 1fr 1fr 1fr 1fr;
     gap: 10px;
+    margin-bottom: 10px;
 }
 
 .match-champ-img{

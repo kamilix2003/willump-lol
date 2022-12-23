@@ -15,7 +15,7 @@ function DisplayResults(){
             document.querySelector(".summonericon").src = iconURL;
             document.querySelector(".summonerlevel").innerHTML = summonerdata.summonerLevel;
             document.querySelector(".summonername").innerHTML = summonerdata.name;
-            let matchhistoryurl = GetMatchHistory(summonerdata.puuid,"europe", [ , , , , , 3]);
+            let matchhistoryurl = GetMatchHistory(summonerdata.puuid,"europe", [ , , , , , 5]);
 
             HTTPrequest("GET",matchhistoryurl).then(matchhistory => {
                 console.log(matchhistory);
@@ -31,13 +31,15 @@ function DisplayResults(){
                                 summoner = i;
                             }
                         }
+                        let kda = [matchdata.info.participants[summoner].kills, matchdata.info.participants[summoner].assists, matchdata.info.participants[summoner].deaths];
                         let NewMatch = NewElement(`
-                        <div class="match">
+                        <div class="match" onclick="${""}">
                             <img class="match-champ-img" src=https://ddragon.leagueoflegends.com/cdn/img/champion/tiles/${matchdata.info.participants[summoner].championName}_0.jpg alt="">
                             <h3 class="match-champ">${matchdata.info.participants[summoner].championName}</h3>
+                            <p class="match-kda">KDA: ${((kda[0]+kda[1])/kda[2]).toFixed(2)}</p>
                             <p class="game-mode">${matchdata.info.gameMode}</p>
                             <p class="match-date">${unixToDate(matchdata.info.gameCreation)}</p>
-                            <p class="match-id"> ${matchhistory[i]} </p>
+                            <p class="match-id" hidden> ${matchhistory[i]} </p>
                         </div>
                         `)
                         matches.appendChild(NewMatch);
@@ -60,6 +62,10 @@ function DisplayResults(){
             });
         })
     }
+}
+
+function goToMatch(matchid){
+    window.location.href = `match.html?matchid=${matchid}`;
 }
 
 function GetMatchHistory(puuid, regionContinent, ids = [startTime, endTime, queue, type, start, count]){
