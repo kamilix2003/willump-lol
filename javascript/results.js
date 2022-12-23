@@ -52,9 +52,9 @@ function DisplayResults(){
                // console.log(response);
                 for(let i = 0; i < response.length; i++){
                     if(response[i].queueType == "RANKED_SOLO_5x5"){
-                        document.querySelector(".solo").innerHTML = response[i].tier + response[i].rank;
+                        document.querySelector(".solo").innerHTML = `Solo/Duo: ${response[i].rank} ${response[i].tier} ${response[i].leaguePoints}LP` ;
                     }else if(response[i].queueType == "RANKED_FLEX_SR"){
-                        document.querySelector(".flex").innerHTML = response[i].tier + response[i].rank;
+                        document.querySelector(".flex").innerHTML = `Flex: ${response[i].rank} ${response[i].tier} ${response[i].leaguePoints}LP`;
                     }
                 }
             }).catch(response => {
