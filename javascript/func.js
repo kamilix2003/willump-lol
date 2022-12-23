@@ -1,36 +1,12 @@
 import json from "../API_KEY.json" assert {type: 'json'};
 
-const API_KEY = json.API_KEY;
-const SUMMONER_INFO_REQUEST = "/lol/summoner/v4/summoners/by-name/";
+export const API_KEY = json.API_KEY;
 
-export function SubmitUserName(){
-    let UrlData = parseURLParams(window.location.href);
-    let PlayerUserName = UrlData.summonername;
-    let region =  UrlData.region;
-    if(region != "" && PlayerUserName != ""){
-        let url = MakeRequestLink(SUMMONER_INFO_REQUEST,region,PlayerUserName);
-        let data = HTTPrequest("GET", url).then(data => {
-            let iconURL = SummonerIconURL(data.profileIconId);
-            document.getElementById("summonericon").src = iconURL;
-            document.getElementById("summonerlevel").innerHTML = data.summonerLevel;
-            document.getElementById("summonername").innerHTML = data.name;
-            GetMatchHistory(data.puuid,"europe", [ , , , , , 5])
-        })
-    }
-}
- function GetMatchHistory(puuid, regionContinent, ids = [startTime, endTime, queue, type, start, count]){
-    let ids_link = "";
-    let idsTags = ["startTime", "endTime", "queue", "type", "start", "count"];
-    for(let i = 0; i < idsTags.length; i++){
-        if(ids[i] != undefined){
-            ids_link += idsTags[i] +"="+ ids[i] + "&";
-        }
-    }
-    let url = "https://"+regionContinent+".api.riotgames.com/lol/match/v5/matches/by-puuid/"+puuid+"/ids?"+ids_link+"api_key="+API_KEY;
-    HTTPrequest("GET",url).then(data => {
-        console.log(data);
-    })
-}
+export function unixToDate(unixTime) {
+    let date = new Date(unixTime);
+    let formattedTime = date.toLocaleDateString("en-GB");
+    return formattedTime;
+  }
 
 function DisplayMatchHistory(data, id){
     for(let i = 0; i < data.length; i++)
@@ -45,15 +21,15 @@ function GetRegion(){
     return radios.value;    
 }
 
- function SummonerIconURL(summonericonnumber){
+export function SummonerIconURL(summonericonnumber){
     return "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/profileicon/"+ summonericonnumber +".png"
 }
 
- function MakeRequestLink(request_link, region, PlayerUserName){
+export function MakeRequestLink(request_link, region, PlayerUserName){
     return "https://" + region + ".api.riotgames.com" + request_link + PlayerUserName+ "?api_key=" + API_KEY;
 }
 
- function parseURLParams(url) {
+export function parseURLParams(url) {
     var queryStart = url.indexOf("?") + 1,
         queryEnd   = url.indexOf("#") + 1 || url.length + 1,
         query = url.slice(queryStart, queryEnd - 1),
@@ -73,7 +49,7 @@ function GetRegion(){
     return parms;
 }
 
- function HTTPrequest(method, url){
+export async function HTTPrequest(method, url){
     const promise = new Promise((resolve, reject) => {
         const req = new XMLHttpRequest();
         req.open(method, url);
@@ -90,4 +66,11 @@ function GetRegion(){
     });
     return promise;
 }
+
+export function NewElement(html){
+    const template = document.createElement("template");
+    template.innerHTML = html.trim();
+    return template.content.firstElementChild;
+}
+
 

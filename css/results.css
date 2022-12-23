@@ -1,0 +1,57 @@
+#greeting{
+    text-align: center;
+}
+
+body{
+    background-color: lightgray;
+}
+
+.match{
+    display: grid;
+    grid-template-columns: 5em 3fr 1fr 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.match-champ-img{
+    max-width: 5em;
+    max-height: 5em;
+}
+
+.grid-container{
+    display: grid;
+    grid-template-columns: [col1] 25% [col2] auto [col3] 5%;
+    grid-template-rows: [row1] 1fr [row2] auto [row3] 5%;
+    gap: 10px;
+    margin-left: 15%;
+    margin-right: 15%;
+}
+
+.grid-summonericon{
+    grid-column-start: col1;
+    grid-column-end: col2;
+    grid-row-start: row1;
+    grid-row-end: row2;
+    margin-top: auto;
+    margin-left: auto;
+}
+
+.grid-summonericon .summonericon{
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.grid-summonerinfo{
+    grid-column-start: col2;
+    grid-column-end: col3;
+    grid-row-start: row1;
+    grid-row-end: row2;
+    padding: 10px;
+}
+
+.grid-matchhistory{
+    grid-column-start: col1;
+    grid-column-end: col3;
+    grid-row-start: row2;
+    grid-row-end: row3;
+}
