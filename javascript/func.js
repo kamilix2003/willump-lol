@@ -57,10 +57,9 @@ export async function HTTPrequest(method, url){
         req.send();
         req.onload = () => {
             if (req.readyState == 4 && req.status == 200) {
-              const data = req.response;
-              resolve(data);
+              resolve(req.response);
             } else {
-              reject(req.status);
+              reject(req.response);
             }
         }
     });
