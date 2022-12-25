@@ -6,6 +6,11 @@ body{
     background-color: lightgray;
 }
 
+a{
+    color: black;
+    text-decoration: none;
+}
+
 .match{
     display: grid;
     grid-template-columns: 5em 3fr 1fr 1fr 1fr 1fr;

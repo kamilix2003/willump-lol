@@ -34,7 +34,7 @@ function DisplayResults(){
                         }
                         let kda = [matchdata.info.participants[summoner].kills, matchdata.info.participants[summoner].assists, matchdata.info.participants[summoner].deaths];
                         let NewMatch = NewElement(`
-                        <a href="match.html?matchid=${matchhistory[i]}">
+                        <a href="game.html?matchid=${matchhistory[i]}">
                         <div class="match match-${i}">
                             <img class="match-champ-img" src=https://ddragon.leagueoflegends.com/cdn/img/champion/tiles/${matchdata.info.participants[summoner].championName}_0.jpg alt="">
                             <h3 class="match-champ">${matchdata.info.participants[summoner].championName}</h3>
