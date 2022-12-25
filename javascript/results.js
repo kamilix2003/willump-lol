@@ -20,9 +20,10 @@ function DisplayResults(){
             HTTPrequest("GET",matchhistoryurl).then(matchhistory => {
                 console.log(matchhistory);
                 const matches = document.querySelector(".grid-matchhistory");
+                let matcharray = [];
                 for(let i = 0; i < matchhistory.length; i++){
                     let url2 = MakeRequestLink(MATCH_INFO_REQUEST,"europe",matchhistory[i])
-                    let test = HTTPrequest("GET", url2).then(matchdata => {
+                    HTTPrequest("GET", url2).then(matchdata => {
                         console.log(matchdata);
                         let participants = matchdata.metadata.participants;
                         let summoner;
@@ -33,6 +34,7 @@ function DisplayResults(){
                         }
                         let kda = [matchdata.info.participants[summoner].kills, matchdata.info.participants[summoner].assists, matchdata.info.participants[summoner].deaths];
                         let NewMatch = NewElement(`
+                        <a href="match.html?matchid=${matchhistory[i]}">
                         <div class="match match-${i}">
                             <img class="match-champ-img" src=https://ddragon.leagueoflegends.com/cdn/img/champion/tiles/${matchdata.info.participants[summoner].championName}_0.jpg alt="">
                             <h3 class="match-champ">${matchdata.info.participants[summoner].championName}</h3>
@@ -41,9 +43,16 @@ function DisplayResults(){
                             <p class="match-date">${unixToDate(matchdata.info.gameCreation)}</p>
                             <p class="match-id" hidden> ${matchhistory[i]} </p>
                         </div>
+                        </a>
                         `)
-                        matches.appendChild(NewMatch);
-                        console.log(i);
+                        // matches.appendChild(NewMatch);
+                        matcharray[i] = NewMatch;
+                        if(matcharray.length == matchhistory.length){
+                            for(let i = 0; i < matcharray.length;i++){
+                                matches.appendChild(matcharray[i]);
+                            }
+                        }
+                        console.log(matcharray);
                     });
                 }
             })
