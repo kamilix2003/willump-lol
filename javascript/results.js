@@ -4,6 +4,8 @@ const SUMMONER_INFO_REQUEST = "/lol/summoner/v4/summoners/by-name/";
 const LEAGUE_INFO_REQUEST = "/lol/league/v4/entries/by-summoner/";
 const MATCH_INFO_REQUEST = "/lol/match/v5/matches/";
 
+DisplayResults();
+
 function DisplayResults(){
     let UrlData = parseURLParams(window.location.href);
     let PlayerUserName = UrlData.summonername;
@@ -89,7 +91,4 @@ function GetMatchHistory(puuid, regionContinent, ids = [startTime, endTime, queu
     let url = "https://"+regionContinent+".api.riotgames.com/lol/match/v5/matches/by-puuid/"+puuid+"/ids?"+ids_link+"api_key="+API_KEY;
     return url;
 }
-
-const greeting = document.querySelector("#greeting");
-greeting.onload = DisplayResults();
 
