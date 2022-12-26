@@ -20,13 +20,13 @@ function DisplayResults(){
             let matchhistoryurl = GetMatchHistory(summonerdata.puuid,"europe", [ , , , , , 5]);
 
             HTTPrequest("GET",matchhistoryurl).then(matchhistory => {
-                console.log(matchhistory);
+                // console.log(matchhistory);
                 const matches = document.querySelector(".grid-matchhistory");
                 let matcharray = [];
                 for(let i = 0; i < matchhistory.length; i++){
                     let url2 = MakeRequestLink(MATCH_INFO_REQUEST,"europe",matchhistory[i])
                     HTTPrequest("GET", url2).then(matchdata => {
-                        console.log(matchdata);
+                        // console.log(matchdata);
                         let participants = matchdata.metadata.participants;
                         let summoner;
                         for(let i = 0; i < participants.length; i++){
@@ -54,7 +54,6 @@ function DisplayResults(){
                                 matches.appendChild(matcharray[i]);
                             }
                         }
-                        console.log(matcharray);
                     });
                 }
             })
@@ -70,7 +69,7 @@ function DisplayResults(){
                     }
                 }
             }).catch(response => {
-                console.log(response);
+                // console.log(response);
             });
         })
     }
