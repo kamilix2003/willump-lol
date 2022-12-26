@@ -1,25 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Match</title>
     <link rel="stylesheet" href="../css/game.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.1.1/dist/chart.umd.min.js"></script>
-</head>
-<body>
+  </head>
+  <body>
     <div class="grid-container">
-        <div class="match-info-container">
-            <h1>Match</h1>
+      <div class="match-info-container">
+        <h1 id="matchid">Match</h1>
+      </div>
+      <div class="match-summoners-container">
+    </div>
+    <div class="summoner-stats-container">
+        <p id="test2">test2</p>
+        <p>kda</p>
+        <p>dmg dealt</p>
+        <p>dmg taken</p>
+        <p>wards</p>
+        <p>cs</p>
+        <div class="items">
+            <p>item1</p>
+            <p>item2</p>
+            <p>item3</p>
+            <p>item4</p>
+            <p>item5</p>
+            <p>item6</p>
         </div>
-        <div class="chart-container">
-        </div>        
+        <div class="runes">
+
+        </div>
+      </div>
+      <div class="chart-container"></div>
     </div>
 
-
-
-
-    <script type="module" src="../javascript/game.js" ></script>
-</body>
+    <script type="module" src="../javascript/game.js"></script>
+    
+    </body>
 </html>
