@@ -76,10 +76,6 @@ function DisplayResults(){
     }
 }
 
-function goToMatch(matchid){
-    window.location.href = `match.html?matchid=${matchid}`;
-}
-
 function GetMatchHistory(puuid, regionContinent, ids = [startTime, endTime, queue, type, start, count]){
     let ids_link = "";
     let idsTags = ["startTime", "endTime", "queue", "type", "start", "count"];
