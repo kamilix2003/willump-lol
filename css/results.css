@@ -3,11 +3,19 @@
 }
 
 body{
-    background-color: lightgray;
+    font-family: 'Roboto Mono', monospace;
+    background-color: rgb(18, 21, 32);
+    color: whitesmoke;
+}
+
+.footer{
+    display: grid;
+    place-items: center;
+    height: 5vh;
 }
 
 a{
-    color: black;
+    color: whitesmoke;
     text-decoration: none;
 }
 

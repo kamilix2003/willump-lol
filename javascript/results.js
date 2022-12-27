@@ -17,7 +17,7 @@ function DisplayResults(){
             document.querySelector(".summonericon").src = iconURL;
             document.querySelector(".summonerlevel").innerHTML = summonerdata.summonerLevel;
             document.querySelector(".summonername").innerHTML = summonerdata.name;
-            let matchhistoryurl = GetMatchHistory(summonerdata.puuid,"europe", [ , , , , , 5]);
+            let matchhistoryurl = GetMatchHistory(summonerdata.puuid,"europe", [ , , , , , 10]);
 
             HTTPrequest("GET",matchhistoryurl).then(matchhistory => {
                 // console.log(matchhistory);
