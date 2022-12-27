@@ -1,4 +1,5 @@
-import { parseURLParams, MakeRequestLink, HTTPrequest, SummonerIconURL, API_KEY, NewElement, unixToDate} from "./func.js";
+import { API_KEY } from "../API_KEY.js";
+import { parseURLParams, MakeRequestLink, HTTPrequest, SummonerIconURL, NewElement, unixToDate} from "./func.js";
 
 const SUMMONER_INFO_REQUEST = "/lol/summoner/v4/summoners/by-name/";
 const LEAGUE_INFO_REQUEST = "/lol/league/v4/entries/by-summoner/";

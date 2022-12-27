@@ -1,4 +1,5 @@
-import { HTTPrequest, MakeRequestLink, parseURLParams, API_KEY, NewElement } from "./func.js";
+import { API_KEY } from "../API_KEY.js";
+import { HTTPrequest, MakeRequestLink, parseURLParams, NewElement } from "./func.js";
 
 const MATCH_REQUEST_LINK = "/lol/match/v5/matches/"
 

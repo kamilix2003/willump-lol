@@ -1,6 +1,5 @@
-import json from "../API_KEY.json" assert {type: 'json'};
+import { API_KEY } from "../API_KEY.js";
 
-export const API_KEY = json.API_KEY;
 
 export function unixToDate(unixTime) {
     let date = new Date(unixTime);
