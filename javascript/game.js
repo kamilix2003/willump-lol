@@ -23,12 +23,13 @@ HTTPrequest("GET", matchurl).then(matchdata => {
   console.log(summoners);
   
   for(let i = 0; i < summoners.length; i++){
+    let matchresult = matchdata.info.participants[i].win;
     let summoner = NewElement(`
-    <div class="summoner" id="summoner-${i}">
+    <div class="summoner win-${matchresult}" id="summoner-${i}">
       <a class="summoner-link" id="summoner-link-${i}" href="results.html?region=EUN1&summonername=${summoners[i].summonerName}">
-        <img class="champion-img" id="champion-img-${i}" src="https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${summoners[i].championName}.png " alt="">
-        <p id="champion-name-${i}">${summoners[i].championName}</p>
-        <p id="summoner-name-${i}">${summoners[i].summonerName}</p>
+        <img class="champion-img" id="champion-img-${i}" src="https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${summoners[i].championName}.png" alt="">
+        <p class="champion-name" id="champion-name-${i}">${summoners[i].championName}</p>
+        <p class="summoner-name" id="summoner-name-${i}">${summoners[i].summonerName}</p>
       </a>
         <button class="stats-btn" id="summoner-stats-btn-${i}">&#10140</button>
     </div>  
@@ -73,7 +74,7 @@ HTTPrequest("GET", matchurl).then(matchdata => {
         },
       }
       let statsDiv = NewElement(`
-      <div class="summoner-stats-container">
+      <div class="summoner-stats-container-child">
       <p>kda: ${stats.kills}/${stats.deaths}/${stats.assists}</p>
       <p>dmg dealt: ${stats.damageDealt}</p>
       <p>dmg taken: ${stats.damageTaken}</p>
@@ -103,27 +104,25 @@ HTTPrequest("GET", matchurl).then(matchdata => {
       document.querySelector(".summoner-stats-container").innerHTML = "";
       document.querySelector(".summoner-stats-container").appendChild(statsDiv);
 
-    })
-  }
-
-
-    HTTPrequest("GET", timelineurl).then(timeline =>{
-        console.log("match data:", matchdata);
+      HTTPrequest("GET", timelineurl).then(timeline =>{
+        // console.log("match data:", matchdata);
         // console.log("match timeline:",timeline);
+
+        document.querySelector(".chart-container").innerHTML = "";
 
         let currentGold = getTimelineDataPlayers(timeline, "currentGold");
         let totalGold = getTimelineDataPlayers(timeline, "totalGold");
-        let kills = getTimelineDataPlayers(timeline, "xp")
-
-        let dataSet2 = makeChartDataSet(totalGold[1], "totalGold")
-        let dataSet = makeChartDataSet(currentGold[1], "currentGold");
-        let dataSet3 = makeChartDataSet(kills[1], "xp")
+        let dataSet2 = makeChartDataSet(totalGold[i+1], "totalGold")
+        let dataSet = makeChartDataSet(currentGold[i+1], "currentGold");
         let labels = makeChartLabels(dataSet.data.length, 1, 1);
         let chartData = makeChartData([dataSet, dataSet2], labels, "line", {});
-        let chartData2 = makeChartData([dataSet2, dataSet3], labels, "line", {});
         
         makeNewChartElement(".chart-container", "test1", chartData);
     })
+
+    })
+  }
+
   })
 
 
