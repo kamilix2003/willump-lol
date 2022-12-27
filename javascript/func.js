@@ -1,6 +1,5 @@
-import json from "../API_KEY.json" assert {type: 'json'};
+import { API_KEY } from "../API_KEY.js";
 
-export const API_KEY = json.API_KEY;
 
 export function unixToDate(unixTime) {
     let date = new Date(unixTime);
@@ -57,10 +56,9 @@ export async function HTTPrequest(method, url){
         req.send();
         req.onload = () => {
             if (req.readyState == 4 && req.status == 200) {
-              const data = req.response;
-              resolve(data);
+              resolve(req.response);
             } else {
-              reject(req.status);
+              reject(req.response);
             }
         }
     });
