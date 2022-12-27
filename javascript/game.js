@@ -12,46 +12,92 @@ let timelineurl = `https://${continent}.api.riotgames.com/lol/match/v5/matches/$
 
 document.getElementById("matchid").innerHTML += ` ${urlData.matchid}`;
 
+let runesData = await fetch("https://ddragon.leagueoflegends.com/cdn/10.16.1/data/en_US/runesReforged.json").then(res => {
+  return res.json();
+});
+
+
 HTTPrequest("GET", matchurl).then(matchdata => {
   let summoners = matchdata.info.participants;
   console.log(summoners);
+  
   for(let i = 0; i < summoners.length; i++){
     let summoner = NewElement(`
     <div class="summoner" id="summoner-${i}">
       <a class="summoner-link" id="summoner-link-${i}" href="results.html?region=EUN1&summonername=${summoners[i].summonerName}">
-        <img class="champion-img" id="champion-img-${i}" src="https://ddragon.leagueoflegends.com/cdn/img/champion/tiles/${summoners[i].championName}_0.jpg" alt="">
+        <img class="champion-img" id="champion-img-${i}" src="https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${summoners[i].championName}.png " alt="">
         <p id="champion-name-${i}">${summoners[i].championName}</p>
         <p id="summoner-name-${i}">${summoners[i].summonerName}</p>
       </a>
-        <button id="summoner-stats-btn-${i}">🔥=></button>
+        <button class="stats-btn" id="summoner-stats-btn-${i}">&#10140</button>
     </div>  
     `);
+
     let summonerContainer = document.querySelector(".match-summoners-container");
     summonerContainer.appendChild(summoner);
+    
     document.querySelector(`#summoner-stats-btn-${i}`).addEventListener("click",(event) => {
+      let items = [
+        summoners[i].item0,
+        summoners[i].item1,
+        summoners[i].item2,
+        summoners[i].item3,
+        summoners[i].item4,
+        summoners[i].item5
+      ]
+      let runes = {
+        main:{
+          row1: findRune(summoners[i].perks.styles[0].selections[0].perk, runesData),
+          row2: findRune(summoners[i].perks.styles[0].selections[1].perk, runesData),
+          row3: findRune(summoners[i].perks.styles[0].selections[2].perk, runesData),
+          row4: findRune(summoners[i].perks.styles[0].selections[3].perk, runesData),
+        },
+        secondary:{
+          row1: findRune(summoners[i].perks.styles[1].selections[0].perk, runesData),
+          row2: findRune(summoners[i].perks.styles[1].selections[1].perk, runesData),
+        },
+      }
+
+      let stats = {
+        kills: summoners[i].kills,
+        deaths: summoners[i].deaths,
+        assists: summoners[i].assists,
+        damageDealt: summoners[i].totalDamageDealtToChampions,
+        damageTaken: summoners[i].totalDamageTaken,
+        visionScore: summoners[i].visionScore,
+        totalMinionsKilled: summoners[i].totalMinionsKilled,
+        neutralMinionsKilled: summoners[i].neutralMinionsKilled,
+        farm: function(){
+          return this.totalMinionsKilled + this.neutralMinionsKilled
+        },
+      }
       let statsDiv = NewElement(`
       <div class="summoner-stats-container">
-      <p id="test2">test2</p>
-      <p>kda: ${summoners[i].kills}/${summoners[i].deaths}/${summoners[i].assists}</p>
-      <p>dmg dealt: ${summoners[i].totalDamageDealtToChampions}</p>
-      <p>dmg taken: ${summoners[i].totalDamageTaken}</p>
-      <p>vision score: ${summoners[i].visionScore}</p>
-      <p>farm: ${summoners[i].totalMinionsKilled + summoners[i].neutralMinionsKilled}</p>
+      <p>kda: ${stats.kills}/${stats.deaths}/${stats.assists}</p>
+      <p>dmg dealt: ${stats.damageDealt}</p>
+      <p>dmg taken: ${stats.damageTaken}</p>
+      <p>vision score: ${stats.visionScore}</p>
+      <p>farm: ${stats.farm()}</p>
       <div class="items">
-          <p>${summoners[i].item0}</p>
-          <p>${summoners[i].item1}</p>
-          <p>${summoners[i].item2}</p>
-          <p>${summoners[i].item3}</p>
-          <p>${summoners[i].item4}</p>
-          <p>${summoners[i].item5}</p>
+          <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/12.23.1/img/item/${items[0]}.png" alt="">
+          <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/12.23.1/img/item/${items[1]}.png" alt="">
+          <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/12.23.1/img/item/${items[2]}.png" alt="">
+          <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/12.23.1/img/item/${items[3]}.png" alt="">
+          <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/12.23.1/img/item/${items[4]}.png" alt="">
+          <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/12.23.1/img/item/${items[5]}.png" alt="">
       </div>
       <div class="runes">
-
+          <img class="rune-icon" src="http://ddragon.leagueoflegends.com/cdn/img/${runes.main.row1.icon}" alt="">
+          <img class="rune-icon" src="http://ddragon.leagueoflegends.com/cdn/img/${runes.main.row2.icon}" alt="">
+          <img class="rune-icon" src="http://ddragon.leagueoflegends.com/cdn/img/${runes.main.row3.icon}" alt="">
+          <img class="rune-icon" src="http://ddragon.leagueoflegends.com/cdn/img/${runes.main.row4.icon}" alt="">
+          <img class="rune-icon" src="http://ddragon.leagueoflegends.com/cdn/img/${runes.secondary.row1.icon}" alt="">
+          <img class="rune-icon" src="http://ddragon.leagueoflegends.com/cdn/img/${runes.secondary.row2.icon}" alt="">
+        </div>
       </div>
-    </div>
       `)
-      
-      
+      //http://ddragon.leagueoflegends.com/cdn/12.23.1/img/perk-images/Styles      
+      //[1].perks.styles[0].selections[0]
       
       document.querySelector(".summoner-stats-container").innerHTML = "";
       document.querySelector(".summoner-stats-container").appendChild(statsDiv);
@@ -79,9 +125,25 @@ HTTPrequest("GET", matchurl).then(matchdata => {
     })
   })
 
-function displaySummonerStats(summoners) {
-  document.getElementById("test2").innerHTML =
-    summoners[summonerNumber].championName;
+
+function runeInfo(runeId, runesJson){
+  return runesJson.find(element => {
+    return element.id == runeId;
+  })
+}
+
+function findRune(runeId, runesJson){
+  let output;
+  for(let i = 0; i < runesJson.length; i++){
+    for(let ii = 0; ii < runesJson[i].slots.length; ii++){
+      runesJson[i].slots[ii].runes.find(childElement => {
+        if(childElement.id == runeId){
+          output = childElement;
+        };
+      })
+    }
+  }
+  return output;
 }
 
 function makeChartLabels(length, start, step){

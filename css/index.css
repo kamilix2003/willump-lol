@@ -1,18 +1,24 @@
+:root{
+    --main-color: rgb(18, 21, 32);
+    --secondary-color: rgb(245, 245, 245);
+}
+
 body{
     font-family: 'Roboto Mono', monospace;
-    background-color: rgb(18, 21, 32);
-    
+    background-color: var(--main-color);
 }
+
 
 .footer{
     display: grid;
     place-items: center;
     height: 5vh;
+    opacity: 25%;
 }
 
 a{
     text-decoration: none;
-    color: whitesmoke;
+    color: var(--secondary-color);
 }
 
 .parent{
@@ -32,45 +38,44 @@ a{
     font-family: 'Roboto Mono', monospace;
     margin: 10px;
     text-align: center;
-    border: 1px whitesmoke solid;
+    border: 1px var(--secondary-color) solid;
     border-radius: 5px;
-    background-color: rgb(18, 21, 32);
-    color: whitesmoke;
+    background-color: var(--main-color);
+    color: var(--secondary-color);
     transition: ease-in-out 150ms;
 }
 
 #usernameinput:focus{
-    background-color: whitesmoke;
-    color: rgb(18, 21, 32);
+    background-color: var(--secondary-color);
+    color: var(--main-color);
 }
 
 #submitbtn{
     font-family: 'Roboto Mono', monospace;
     margin: 10px;
-    border: 1px whitesmoke solid;
+    border: 1px var(--secondary-color) solid;
     border-radius: 5px;
-    background-color: rgb(18, 21, 32);
-    color: whitesmoke;
+    background-color: var(--main-color);
+    color: var(--secondary-color);
     transition: ease-in-out 150ms;
 }
 #submitbtn:hover{
-    background-color: whitesmoke;
-    color: rgb(18, 21, 32);
+    background-color: var(--secondary-color);
+    color: var(--main-color);
 }
 
 #region{
     font-family: 'Roboto Mono', monospace;
     margin: 10px;
     text-align: center;
-    border: 1px whitesmoke solid;
+    border: 1px var(--secondary-color) solid;
     border-radius: 5px;
-    background-color: rgb(18, 21, 32);
-    color: whitesmoke;
+    background-color: var(--main-color);
+    color: var(--secondary-color);
     transition: ease-in-out 150ms;
-
 }
 
 #region:hover{
-    background-color: whitesmoke;
-    color: rgb(18, 21, 32);
+    background-color: var(--secondary-color);
+    color: var(--main-color);
 }

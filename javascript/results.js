@@ -34,13 +34,13 @@ function DisplayResults(){
                                 summoner = i;
                             }
                         }
-                        let kda = [matchdata.info.participants[summoner].kills, matchdata.info.participants[summoner].assists, matchdata.info.participants[summoner].deaths];
+                        let kda = [matchdata.info.participants[summoner].kills, matchdata.info.participants[summoner].deaths, matchdata.info.participants[summoner].assists];
                         let NewMatch = NewElement(`
                         <a href="game.html?matchid=${matchhistory[i]}">
                         <div class="match match-${i}">
                             <img class="match-champ-img" src=https://ddragon.leagueoflegends.com/cdn/img/champion/tiles/${matchdata.info.participants[summoner].championName}_0.jpg alt="">
                             <h3 class="match-champ">${matchdata.info.participants[summoner].championName}</h3>
-                            <p class="match-kda">KDA: ${((kda[0]+kda[1])/kda[2]).toFixed(2)}</p>
+                            <p class="match-kda">${kda[0]}/${kda[1]}/${kda[2]}</p>
                             <p class="game-mode">${matchdata.info.gameMode}</p>
                             <p class="match-date">${unixToDate(matchdata.info.gameCreation)}</p>
                             <p class="match-id" hidden> ${matchhistory[i]} </p>
