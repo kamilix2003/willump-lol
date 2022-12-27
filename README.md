@@ -1,5 +1,7 @@
 # IT project
 
+[website](https://kachi_hi.gitlab.io/it-project/html)
+
 ## TODO
 - [ ] fetch player data
 - [ ] fetch match history of the player
