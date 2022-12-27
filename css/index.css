@@ -1,0 +1,81 @@
+:root{
+    --main-color: rgb(18, 21, 32);
+    --secondary-color: rgb(245, 245, 245);
+}
+
+body{
+    font-family: 'Roboto Mono', monospace;
+    background-color: var(--main-color);
+}
+
+
+.footer{
+    display: grid;
+    place-items: center;
+    height: 5vh;
+    opacity: 25%;
+}
+
+a{
+    text-decoration: none;
+    color: var(--secondary-color);
+}
+
+.parent{
+    display: grid;
+    place-items: center;
+    max-width: 100%;
+    height: 93vh;
+}
+
+#input-summoner-info{
+    display: grid;
+    grid-template-columns: 20em;
+    grid-template-rows: 5em 5em 5em;
+}
+
+#usernameinput{
+    font-family: 'Roboto Mono', monospace;
+    margin: 10px;
+    text-align: center;
+    border: 1px var(--secondary-color) solid;
+    border-radius: 5px;
+    background-color: var(--main-color);
+    color: var(--secondary-color);
+    transition: ease-in-out 150ms;
+}
+
+#usernameinput:focus{
+    background-color: var(--secondary-color);
+    color: var(--main-color);
+}
+
+#submitbtn{
+    font-family: 'Roboto Mono', monospace;
+    margin: 10px;
+    border: 1px var(--secondary-color) solid;
+    border-radius: 5px;
+    background-color: var(--main-color);
+    color: var(--secondary-color);
+    transition: ease-in-out 150ms;
+}
+#submitbtn:hover{
+    background-color: var(--secondary-color);
+    color: var(--main-color);
+}
+
+#region{
+    font-family: 'Roboto Mono', monospace;
+    margin: 10px;
+    text-align: center;
+    border: 1px var(--secondary-color) solid;
+    border-radius: 5px;
+    background-color: var(--main-color);
+    color: var(--secondary-color);
+    transition: ease-in-out 150ms;
+}
+
+#region:hover{
+    background-color: var(--secondary-color);
+    color: var(--main-color);
+}

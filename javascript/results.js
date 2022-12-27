@@ -1,8 +1,11 @@
-import { parseURLParams, MakeRequestLink, HTTPrequest, SummonerIconURL, API_KEY, NewElement, unixToDate} from "./func.js";
+import { API_KEY } from "../API_KEY.js";
+import { parseURLParams, MakeRequestLink, HTTPrequest, SummonerIconURL, NewElement, unixToDate} from "./func.js";
 
 const SUMMONER_INFO_REQUEST = "/lol/summoner/v4/summoners/by-name/";
 const LEAGUE_INFO_REQUEST = "/lol/league/v4/entries/by-summoner/";
 const MATCH_INFO_REQUEST = "/lol/match/v5/matches/";
+
+DisplayResults();
 
 function DisplayResults(){
     let UrlData = parseURLParams(window.location.href);
@@ -15,15 +18,16 @@ function DisplayResults(){
             document.querySelector(".summonericon").src = iconURL;
             document.querySelector(".summonerlevel").innerHTML = summonerdata.summonerLevel;
             document.querySelector(".summonername").innerHTML = summonerdata.name;
-            let matchhistoryurl = GetMatchHistory(summonerdata.puuid,"europe", [ , , , , , 5]);
+            let matchhistoryurl = GetMatchHistory(summonerdata.puuid,"europe", [ , , , , , 10]);
 
             HTTPrequest("GET",matchhistoryurl).then(matchhistory => {
-                console.log(matchhistory);
+                // console.log(matchhistory);
                 const matches = document.querySelector(".grid-matchhistory");
+                let matcharray = [];
                 for(let i = 0; i < matchhistory.length; i++){
                     let url2 = MakeRequestLink(MATCH_INFO_REQUEST,"europe",matchhistory[i])
-                    let test = HTTPrequest("GET", url2).then(matchdata => {
-                        console.log(matchdata);
+                    HTTPrequest("GET", url2).then(matchdata => {
+                        // console.log(matchdata);
                         let participants = matchdata.metadata.participants;
                         let summoner;
                         for(let i = 0; i < participants.length; i++){
@@ -31,18 +35,27 @@ function DisplayResults(){
                                 summoner = i;
                             }
                         }
-                        let kda = [matchdata.info.participants[summoner].kills, matchdata.info.participants[summoner].assists, matchdata.info.participants[summoner].deaths];
+                        let kda = [matchdata.info.participants[summoner].kills, matchdata.info.participants[summoner].deaths, matchdata.info.participants[summoner].assists];
+                        let matchresult = matchdata.info.participants[summoner].win;
                         let NewMatch = NewElement(`
-                        <div class="match" onclick="${""}">
-                            <img class="match-champ-img" src=https://ddragon.leagueoflegends.com/cdn/img/champion/tiles/${matchdata.info.participants[summoner].championName}_0.jpg alt="">
+                        <a href="game.html?matchid=${matchhistory[i]}">
+                        <div class="match match-${i} win-${matchresult}">
+                            <img class="match-champ-img" src="https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${matchdata.info.participants[summoner].championName}.png" alt="">
                             <h3 class="match-champ">${matchdata.info.participants[summoner].championName}</h3>
-                            <p class="match-kda">KDA: ${((kda[0]+kda[1])/kda[2]).toFixed(2)}</p>
+                            <p class="match-kda">${kda[0]}/${kda[1]}/${kda[2]}</p>
                             <p class="game-mode">${matchdata.info.gameMode}</p>
                             <p class="match-date">${unixToDate(matchdata.info.gameCreation)}</p>
                             <p class="match-id" hidden> ${matchhistory[i]} </p>
                         </div>
+                        </a>
                         `)
-                        matches.appendChild(NewMatch);
+                        // matches.appendChild(NewMatch);
+                        matcharray[i] = NewMatch;
+                        if(matcharray.length == matchhistory.length){
+                            for(let i = 0; i < matcharray.length;i++){
+                                matches.appendChild(matcharray[i]);
+                            }
+                        }
                     });
                 }
             })
@@ -58,14 +71,10 @@ function DisplayResults(){
                     }
                 }
             }).catch(response => {
-                console.log(response);
+                // console.log(response);
             });
         })
     }
-}
-
-function goToMatch(matchid){
-    window.location.href = `match.html?matchid=${matchid}`;
 }
 
 function GetMatchHistory(puuid, regionContinent, ids = [startTime, endTime, queue, type, start, count]){
@@ -79,7 +88,4 @@ function GetMatchHistory(puuid, regionContinent, ids = [startTime, endTime, queu
     let url = "https://"+regionContinent+".api.riotgames.com/lol/match/v5/matches/by-puuid/"+puuid+"/ids?"+ids_link+"api_key="+API_KEY;
     return url;
 }
-
-const greeting = document.querySelector("#greeting");
-greeting.onload = DisplayResults();
 

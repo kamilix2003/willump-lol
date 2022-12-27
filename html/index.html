@@ -4,27 +4,36 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Search</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,200;0,400;0,700;1,200;1,400&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <link rel="stylesheet" href="../css/index.css" />
   <body>
-    <h1>Summoner data</h1>
-
-    <form id="selectregion" action="./results.html">
-      <select name="region" id="region">
-        <option value="EUN1">EUNE</option>
-        <option value="EUW1">EUW</option>
-        <option value="NA1">NA</option>
-      </select>
-      <input id="usernameinput" type="text" name="summonername" value="kamilix2003" />
-      <button>submit</button>
+<div class="parent">
+  <form id="input-summoner-info" action="./results.html">
+    <select name="region" id="region">
+      <option value="EUN1">EUNE</option>
+      <option value="EUW1">EUW</option>
+      <option value="NA1">NA</option>
+    </select>
+    <input
+      autocomplete="off"
+      id="usernameinput"
+      type="text"
+      name="summonername"
+      placeholder="Summoner name"
+    />
+    <button id="submitbtn">submit</button>
   </form>
-
-    <h2 id="summonername"></h2>
-    <h3 id="summonerlevel"></h3>
-    <img id="summonericon" src="" alt="" />
-
-    <p id = "match history"></p>
+</div>
+<div class="footer">
+  <a href="https://gitlab.com/kachi_hi/it-project">GITLAB</a>
+</div>
     <script src="../javascript/index.js" type="module"></script>
   </body>
 </html>
