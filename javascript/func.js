@@ -1,5 +1,19 @@
 import { API_KEY } from "../API_KEY.js";
 
+export const regions = {
+    EUNE: {
+        region: "EUN1",
+        continent: "europe",
+    },
+    EUW: {
+        region: "EUW1",
+        continent: "europe",
+    },
+    NA: {
+        region: "NA1",
+        continent: "america",
+    }
+}
 
 export function unixToDate(unixTime) {
     let date = new Date(unixTime);
@@ -58,7 +72,7 @@ export async function HTTPrequest(method, url){
             if (req.readyState == 4 && req.status == 200) {
               resolve(req.response);
             } else {
-              reject(req.response);
+              reject(req, "1");
             }
         }
     });
