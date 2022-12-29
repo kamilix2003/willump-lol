@@ -6,6 +6,7 @@
 body{
     font-family: 'Roboto Mono', monospace;
     background-color: var(--main-color);
+    margin: 0;
 }
 
 
@@ -14,6 +15,18 @@ body{
     place-items: center;
     height: 5vh;
     opacity: 25%;
+    background-color: black;
+    margin-top: 2em;
+}
+
+.header{
+    margin: 0;
+    display: grid;
+    place-items: center;
+    height: 5vh;
+    opacity: 25%;
+    background-color: black;
+    margin-bottom: 2em;
 }
 
 a{
@@ -25,7 +38,7 @@ a{
     display: grid;
     place-items: center;
     max-width: 100%;
-    height: 93vh;
+    height: calc(90vh - 2*2em);
 }
 
 #input-summoner-info{
