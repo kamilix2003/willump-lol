@@ -20,7 +20,6 @@ let runesData = await fetch("https://ddragon.leagueoflegends.com/cdn/10.16.1/dat
 
 HTTPrequest("GET", matchurl).then(matchdata => {
   let summoners = matchdata.info.participants;
-  console.log(summoners);
   
   for(let i = 0; i < summoners.length; i++){
     let matchresult = matchdata.info.participants[i].win;
@@ -105,19 +104,18 @@ HTTPrequest("GET", matchurl).then(matchdata => {
       document.querySelector(".summoner-stats-container").appendChild(statsDiv);
 
       HTTPrequest("GET", timelineurl).then(timeline =>{
-        // console.log("match data:", matchdata);
-        // console.log("match timeline:",timeline);
-
         document.querySelector(".chart-container").innerHTML = "";
+        // console.log("match data:", matchdata);
+        console.log("match timeline:",timeline);
+        console.log(timeline.info.frames);
 
-        let currentGold = getTimelineDataPlayers(timeline, "currentGold");
-        let totalGold = getTimelineDataPlayers(timeline, "totalGold");
-        let dataSet2 = makeChartDataSet(totalGold[i+1], "totalGold")
-        let dataSet = makeChartDataSet(currentGold[i+1], "currentGold");
-        let labels = makeChartLabels(dataSet.data.length, 1, 1);
-        let chartData = makeChartData([dataSet, dataSet2], labels, "line", {});
-        
-        makeNewChartElement(".chart-container", "test1", chartData);
+        let frames = playerFrames(timeline);
+
+        let x = chartData(frames[i], ["championStats.healthMax", "championStats.health", "totalGold"], ["max hp", "hp", "totalGold"], "line");
+
+        console.log(x);
+
+        makeNewChartElement(".chart-container", "test1", x);
     })
 
     })
@@ -125,12 +123,44 @@ HTTPrequest("GET", matchurl).then(matchdata => {
 
   })
 
-
-function runeInfo(runeId, runesJson){
-  return runesJson.find(element => {
-    return element.id == runeId;
-  })
+function chartData(playerframes, paths, labels, type){
+  let datasets = new Array();
+  for(let path = 0; path < paths.length; path++){
+    datasets.push(makeChartDataSet(getFromObject(playerframes, paths[path]), labels[path]))
+  }
+  let chartData = makeChartData(datasets, makeChartLabels(playerframes.length, 0, 1), type)
+  return chartData
 }
+
+function getFromObject(obj, path){
+  let keys = path.split(".");
+  let output = new Array();
+  let temp;
+  for(let frame = 0; frame < obj.length; frame++){
+    //console.log(obj[frame]);
+    temp = obj[frame];
+    for(let key = 0; key < keys.length; key++){
+      temp = temp[keys[key]];
+    }
+    output.push(temp);
+  }
+  return output;
+}
+
+
+function playerFrames(timeline){
+  let frames = timeline.info.frames;
+  let playerCount = 10;
+  let output = new Array();
+  for(let player = 1; player <= playerCount; player++){
+    output[player-1] = new Array();
+    for(let frame = 0; frame < frames.length; frame++){
+      output[player-1].push(frames[frame].participantFrames[player]);
+    }
+  }
+  return output;
+}
+
 
 function findRune(runeId, runesJson){
   let output;
@@ -186,18 +216,6 @@ function makeNewChartElement(containerClass ,chartId, data){
   new Chart(chartId, data);
 }
 
-function getTimelineDataPlayers(timeline, data){
-    let frameCount = timeline.info.frames.length;
-    let playerCount = 10;
-    let outputData = new Array();
-    for(let player = 1; player <= playerCount; player++){
-      outputData[player] = new Array();
-      for(let frame = 0; frame < frameCount; frame++){
-        outputData[player].push(timeline.info.frames[frame].participantFrames[player][data])
-      }
-    }
-    return outputData;
-}
 
 function getTimelineDataevents(timeline, data){
     let frameCount = timeline.info.frames.length;
