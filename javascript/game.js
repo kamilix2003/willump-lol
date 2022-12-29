@@ -74,6 +74,12 @@ HTTPrequest("GET", matchurl).then(matchdata => {
       }
       let statsDiv = NewElement(`
       <div class="summoner-stats-container-child">
+      <button id="button-${i}">test</button>
+      <select name="select" id="select">
+        <option value="currentGold">cg</option>
+        <option value="totalGold">tg</option>
+        <option value="championStats.healthMax">max hp</option>
+      </select>
       <p>kda: ${stats.kills}/${stats.deaths}/${stats.assists}</p>
       <p>dmg dealt: ${stats.damageDealt}</p>
       <p>dmg taken: ${stats.damageTaken}</p>
@@ -102,21 +108,29 @@ HTTPrequest("GET", matchurl).then(matchdata => {
       
       document.querySelector(".summoner-stats-container").innerHTML = "";
       document.querySelector(".summoner-stats-container").appendChild(statsDiv);
+      document.querySelector(".chart-container").innerHTML = "";
+      document.querySelector(`#button-${i}`).addEventListener("click",(test) => {
+        let selected = document.querySelector("#select").value;
+        HTTPrequest("GET", timelineurl).then(timeline =>{
+          // console.log("match data:", matchdata);
+          console.log("match timeline:",timeline);
+          console.log(timeline.info.frames);
 
-      HTTPrequest("GET", timelineurl).then(timeline =>{
-        document.querySelector(".chart-container").innerHTML = "";
-        // console.log("match data:", matchdata);
-        console.log("match timeline:",timeline);
-        console.log(timeline.info.frames);
+          if(document.querySelector(`#${selected}`) != null){
+            document.querySelector(`#${selected}`).remove();
+            console.log("dsaf")
+          }
+  
+          let frames = playerFrames(timeline);
+  
+          let x = chartData(frames[i], [selected], [selected], "line");
+  
+          console.log(x);
+  
+          makeNewChartElement(".chart-container", selected, x);
+      })
+      })
 
-        let frames = playerFrames(timeline);
-
-        let x = chartData(frames[i], ["championStats.healthMax", "championStats.health", "totalGold"], ["max hp", "hp", "totalGold"], "line");
-
-        console.log(x);
-
-        makeNewChartElement(".chart-container", "test1", x);
-    })
 
     })
   }
