@@ -1,1 +1,1 @@
-export let API_KEY = "RGAPI-79d6a236-37f5-4902-8011-5fbdd5e591ec";
+export let API_KEY = "RGAPI-a1bd5302-c5e4-4014-a841-27c0e97a1401";
