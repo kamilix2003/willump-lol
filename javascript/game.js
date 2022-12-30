@@ -37,24 +37,25 @@ HTTPrequest("GET", matchurl).then(matchdata => {
   // team2Kills.innerHTML = matchdata.info.teams[1].objectives.champion.kills;
 
   let bans;
-  if(matchdata.info.teams[0].bans != 0){
-  bans = [
-    [
-      `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[0].bans[0].championId, championData)}.png`,
-      `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[0].bans[1].championId, championData)}.png`,
-      `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[0].bans[2].championId, championData)}.png`,
-      `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[0].bans[3].championId, championData)}.png`,
-      `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[0].bans[4].championId, championData)}.png`,
-    ],
-    [
-      `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[1].bans[0].championId, championData)}.png`,
-      `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[1].bans[1].championId, championData)}.png`,
-      `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[1].bans[2].championId, championData)}.png`,
-      `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[1].bans[3].championId, championData)}.png`,  
-      `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[1].bans[4].championId, championData)}.png`,
+  if (matchdata.info.teams[0].bans != 0) {
+    bans = [
+      [
+        `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[0].bans[0].championId, championData)}.png`,
+        `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[0].bans[1].championId, championData)}.png`,
+        `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[0].bans[2].championId, championData)}.png`,
+        `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[0].bans[3].championId, championData)}.png`,
+        `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[0].bans[4].championId, championData)}.png`,
+      ],
+      [
+        `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[1].bans[0].championId, championData)}.png`,
+        `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[1].bans[1].championId, championData)}.png`,
+        `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[1].bans[2].championId, championData)}.png`,
+        `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[1].bans[3].championId, championData)}.png`,
+        `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[1].bans[4].championId, championData)}.png`,
+      ]
     ]
-  ]}else{
-  bans = [
+  } else {
+    bans = [
       [
         "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/profileicon/29.png",
         "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/profileicon/29.png",
@@ -145,17 +146,79 @@ HTTPrequest("GET", matchurl).then(matchdata => {
 
 
   HTTPrequest("GET", timelineurl).then(timeline => {
+    let playerframes = playerFrames(timeline);
+    let frames = timeline.info.frames;
+    console.log({ playerframes, frames });
+
+    let redSideTotalGold = teamSum(playerFrames(timeline), "totalGold", 0, 5);
+    let blueSideTotalGold = teamSum(playerFrames(timeline), "totalGold", 5, 10);
+    let test = blueSideTotalGold.map(x => -x);
+    let totalGoldDiffrence = teamDiff(playerFrames(timeline), "totalGold");
+    let labels = range(redSideTotalGold.length, 0, 1);
+    console.log({ redSideTotalGold, blueSideTotalGold, totalGoldDiffrence, labels });
+
+    let data = {
+      type: "line",
+      data: {
+        datasets: [
+          {
+            label: "red side gold",
+            data: redSideTotalGold,
+            borderWidth: 3,
+            borderColor: "hsl(358, 94%, 62%)",
+            pointStyle: false,
+          },
+          {
+            label: "blue side gold",
+            data: test,
+            borderWidth: 3,
+            borderColor: "hsl(196, 93%, 60%)",
+            pointStyle: false,
+          },
+          {
+            label: "gold diffrence",
+            data: totalGoldDiffrence,
+            borderWidth: 3,
+            borderColor: "hsl(150, 49%, 59%)",
+            pointStyle: false,
+          }
+        ],
+        labels: range(redSideTotalGold.length, 0, 1)
+      },
+      options: {
+        scales: {
+          y: {
+            type: 'linear',
+            grid:{
+              color: "hsl(0, 0%, 96%, 0.25)",
+            }
+          },
+          x: {
+            type: 'linear',
+            grid:{
+              color: "hsl(0, 0%, 96%, 0.25)",
+            }
+          },
+        }
+      }
+    }
+
+    makeNewChartElement(".match-info-container", "test", data);
+
+
+
+
 
     for (let i = 0; i < summoners.length; i++) {
       let matchresult = matchdata.info.participants[i].win;
       let summoner = NewElement(`
-    <div class="summoner ${i<5?redSide:blueSide}" id="summoner-${i}">
+    <div class="summoner ${i < 5 ? redSide : blueSide}" id="summoner-${i}">
     <div class="summoner-link">
     <img class="champion-img" id="champion-img-${i}" src="https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${summoners[i].championName}.png" alt="">
         <p class="champion-name" id="champion-name-${i}">${summoners[i].championName}</p>
-        <a id="summoner-link-${i}" href="results.html?region=EUN1&summonername=${summoners[i].summonerName}">
-        <p class="summoner-name" id="summoner-name-${i}">${summoners[i].summonerName}</p>
-        </a>
+        <p class="summoner-name" id="summoner-name-${i}">
+        <a id="summoner-link-${i}" href="results.html?region=EUN1&summonername=${summoners[i].summonerName}">${summoners[i].summonerName}</a>
+        </p>
       </div>
       <button class="stats-btn" id="summoner-stats-btn-${i}">&#10140</button>
       </div>  
@@ -241,10 +304,24 @@ function champIdToName(champId, champData) {
   }
 }
 
-function teamDiff(frames, path) {
+function teamSum(frames, path, firstPlayer, lastPlayer) {
+  let output;
   let team1 = new Array(frames[0].length);
   team1.fill(0)
+  for (let player = firstPlayer; player < lastPlayer; player++) {
+    let temp = getFromObject(frames[player], path)
+    for (let frame = 0; frame < temp.length; frame++) {
+      team1[frame] += temp[frame]
+    }
+  }
+  output = team1;
+  return output;
+}
+
+function teamDiff(frames, path) {
+  let team1 = new Array(frames[0].length);
   let team2 = new Array(frames[0].length);
+  team1.fill(0)
   team2.fill(0)
   for (let player = 0; player < 5; player++) {
     let temp = getFromObject(frames[player], path)
