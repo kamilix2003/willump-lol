@@ -1,9 +1,10 @@
-import { parseURLParams, MakeRequestLink, HTTPrequest, SummonerIconURL, NewElement, unixToDate, askForApiKey} from "./func.js";
+import { parseURLParams, MakeRequestLink, HTTPrequest, SummonerIconURL, NewElement, unixToDate, askForApiKey, regions, getCurrentVersion} from "./func.js";
 
 askForApiKey();
 
 const API_KEY = sessionStorage.getItem("API_KEY")
 
+const currentVersion = await getCurrentVersion();
 
 const SUMMONER_INFO_REQUEST = "/lol/summoner/v4/summoners/by-name/";
 const LEAGUE_INFO_REQUEST = "/lol/league/v4/entries/by-summoner/";
@@ -22,16 +23,17 @@ function DisplayResults(){
             document.querySelector(".summonericon").src = iconURL;
             document.querySelector(".summonerlevel").innerHTML = summonerdata.summonerLevel;
             document.querySelector(".summonername").innerHTML = summonerdata.name;
-            let matchhistoryurl = GetMatchHistory(summonerdata.puuid,"europe", [ , , , , , 10]);
+            let matchhistoryurl = GetMatchHistory(summonerdata.puuid, regions[region].continent , [ , , , , , 10]);
 
             HTTPrequest("GET",matchhistoryurl).then(matchhistory => {
                 // console.log(matchhistory);
                 const matches = document.querySelector(".grid-matchhistory");
                 let matcharray = [];
                 for(let i = 0; i < matchhistory.length; i++){
-                    let url2 = MakeRequestLink(MATCH_INFO_REQUEST,"europe",matchhistory[i])
+                    let url2 = MakeRequestLink(MATCH_INFO_REQUEST,regions[region].continent,matchhistory[i])
                     HTTPrequest("GET", url2).then(matchdata => {
-                        // console.log(matchdata);
+                        // console.log({matchdata});
+                        // let gameVersion = `${matchdata.info.gameVersion.split(".")[0]}.${matchdata.info.gameVersion.split(".")[1]}`;
                         let participants = matchdata.metadata.participants;
                         let summoner;
                         for(let i = 0; i < participants.length; i++){
@@ -44,7 +46,7 @@ function DisplayResults(){
                         let NewMatch = NewElement(`
                         <a href="game.html?matchid=${matchhistory[i]}">
                         <div class="match match-${i} win-${matchresult}">
-                            <img class="match-champ-img" src="https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${matchdata.info.participants[summoner].championName}.png" alt="">
+                            <img class="match-champ-img" src="https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${matchdata.info.participants[summoner].championName}.png" alt="">
                             <h3 class="match-champ">${matchdata.info.participants[summoner].championName}</h3>
                             <p class="match-kda">${kda[0]}/${kda[1]}/${kda[2]}</p>
                             <p class="game-mode">${matchdata.info.gameMode}</p>

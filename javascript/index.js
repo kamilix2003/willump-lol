@@ -1,9 +1,8 @@
-import { askForApiKey, HTTPrequest, MakeRequestLink, regions } from "./func.js";
+import { askForApiKey, getCurrentVersion} from "./func.js";
 
 let input = document.querySelector("#usernameinput");
 let submitbtn = document.querySelector("#submitbtn");
 let regionselection = document.querySelector("#region");
-
 
 askForApiKey();
 const API_KEY = sessionStorage.getItem("API_KEY")

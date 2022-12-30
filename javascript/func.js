@@ -1,25 +1,41 @@
 const API_KEY = sessionStorage.getItem("API_KEY")
 
+export async function getCurrentVersion(){
+    let output = await fetch(`https://ddragon.leagueoflegends.com/api/versions.json`).then(res => {
+        return res.json();
+    })
+    return output[0];
+}
+
 export function askForApiKey(){
     if (sessionStorage.getItem("API_KEY") == "" || sessionStorage.getItem("API_KEY") == "null" || sessionStorage.getItem("API_KEY") == null) {
+        alert(`you can get your api key on https://developer.riotgames.com/`);
         let promptInput = prompt(`api key:`);
         sessionStorage.setItem("API_KEY", promptInput);
         window.location.reload();
     }
 }
 
+export function clearApiKey(){
+    sessionStorage.removeItem("API_KEY");
+}
+
 export const regions = {
-    EUNE: {
-        region: "EUN1",
+    EUN1: {
+        region: "EUNE",
         continent: "europe",
     },
-    EUW: {
-        region: "EUW1",
+    EUW1: {
+        region: "EUW",
         continent: "europe",
     },
-    NA: {
-        region: "NA1",
-        continent: "america",
+    NA1: {
+        region: "NA",
+        continent: "americas",
+    },
+    KR:{
+        region: "KR",
+        continent: "asia"
     }
 }
 
