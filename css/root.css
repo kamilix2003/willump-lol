@@ -1,0 +1,27 @@
+:root{
+    --main-color: hsl(227, 28%, 10%);
+    --main-color-low-lum: hsl(228, 29%, 8%);
+    --main-color-high-lum: hsl(228, 29%, 13%);
+    --secondary-color: hsl(0, 0%, 96%);
+    --lose: hsl(358, 94%, 62%);
+    --win: hsl(150, 49%, 59%);
+    --red-side: hsl(358, 94%, 62%);
+    --blue-side: hsl(196, 93%, 60%);
+    --ban-img-width: 2em
+}
+
+.footer{
+    display: grid;
+    place-items: center;
+    height: 5vh;
+    background-color: var(--main-color-low-lum);
+    margin-top: 2em;
+}
+
+.header{
+    display: grid;
+    place-items: center;
+    height: 5vh;
+    background-color: var(--main-color-low-lum);
+    margin-bottom: 2em;
+}

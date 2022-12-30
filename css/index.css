@@ -1,33 +1,9 @@
-:root{
-    --main-color: rgb(18, 21, 32);
-    --secondary-color: rgb(245, 245, 245);
-}
-
 body{
     font-family: 'Roboto Mono', monospace;
     background-color: var(--main-color);
     margin: 0;
 }
 
-
-.footer{
-    display: grid;
-    place-items: center;
-    height: 5vh;
-    opacity: 25%;
-    background-color: black;
-    margin-top: 2em;
-}
-
-.header{
-    margin: 0;
-    display: grid;
-    place-items: center;
-    height: 5vh;
-    opacity: 25%;
-    background-color: black;
-    margin-bottom: 2em;
-}
 
 a{
     text-decoration: none;
