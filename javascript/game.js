@@ -1,4 +1,4 @@
-import { HTTPrequest, MakeRequestLink, parseURLParams, NewElement, askForApiKey } from "./func.js";
+import { HTTPrequest, parseURLParams, NewElement, askForApiKey, regions, getCurrentVersion } from "./func.js";
 
 askForApiKey();
 const API_KEY = sessionStorage.getItem("API_KEY")
@@ -6,22 +6,22 @@ const API_KEY = sessionStorage.getItem("API_KEY")
 const redSide = "red-side";
 const blueSide = "blue-side";
 
-const MATCH_REQUEST_LINK = "/lol/match/v5/matches/"
-
-let continent = "europe";
-
-const ctx = document.getElementById('myChart');
+const currentVersion = await getCurrentVersion();
 
 let urlData = parseURLParams(window.location.href);
+
+let regionId = urlData.matchid[0].split("_")[0];
+let continent = regions[regionId].continent;
+
 let matchurl = `https://${continent}.api.riotgames.com/lol/match/v5/matches/${urlData.matchid}?api_key=${API_KEY}`;
 let timelineurl = `https://${continent}.api.riotgames.com/lol/match/v5/matches/${urlData.matchid}/timeline?api_key=${API_KEY}`;
 
 
-let runesData = await fetch("https://ddragon.leagueoflegends.com/cdn/10.16.1/data/en_US/runesReforged.json").then(res => {
+let runesData = await fetch(`https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/runesReforged.json`).then(res => {
   return res.json();
 });
 
-let championData = await fetch("https://ddragon.leagueoflegends.com/cdn/12.23.1/data/en_US/champion.json").then(res => {
+let championData = await fetch(`https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/champion.json`).then(res => {
   return res.json();
 })
 
@@ -42,35 +42,35 @@ HTTPrequest("GET", matchurl).then(matchdata => {
   if (matchdata.info.teams[0].bans != 0) {
     bans = [
       [
-        `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[0].bans[0].championId, championData)}.png`,
-        `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[0].bans[1].championId, championData)}.png`,
-        `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[0].bans[2].championId, championData)}.png`,
-        `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[0].bans[3].championId, championData)}.png`,
-        `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[0].bans[4].championId, championData)}.png`,
+        `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${champIdToName(matchdata.info.teams[0].bans[0].championId, championData)}.png`,
+        `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${champIdToName(matchdata.info.teams[0].bans[1].championId, championData)}.png`,
+        `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${champIdToName(matchdata.info.teams[0].bans[2].championId, championData)}.png`,
+        `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${champIdToName(matchdata.info.teams[0].bans[3].championId, championData)}.png`,
+        `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${champIdToName(matchdata.info.teams[0].bans[4].championId, championData)}.png`,
       ],
       [
-        `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[1].bans[0].championId, championData)}.png`,
-        `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[1].bans[1].championId, championData)}.png`,
-        `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[1].bans[2].championId, championData)}.png`,
-        `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[1].bans[3].championId, championData)}.png`,
-        `https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${champIdToName(matchdata.info.teams[1].bans[4].championId, championData)}.png`,
+        `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${champIdToName(matchdata.info.teams[1].bans[0].championId, championData)}.png`,
+        `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${champIdToName(matchdata.info.teams[1].bans[1].championId, championData)}.png`,
+        `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${champIdToName(matchdata.info.teams[1].bans[2].championId, championData)}.png`,
+        `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${champIdToName(matchdata.info.teams[1].bans[3].championId, championData)}.png`,
+        `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${champIdToName(matchdata.info.teams[1].bans[4].championId, championData)}.png`,
       ]
     ]
   } else {
     bans = [
       [
-        "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/profileicon/29.png",
-        "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/profileicon/29.png",
-        "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/profileicon/29.png",
-        "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/profileicon/29.png",
-        "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/profileicon/29.png",
+        `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`,
+        `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`,
+        `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`,
+        `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`,
+        `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`,
       ],
       [
-        "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/profileicon/29.png",
-        "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/profileicon/29.png",
-        "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/profileicon/29.png",
-        "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/profileicon/29.png",
-        "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/profileicon/29.png",
+        `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`,
+        `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`,
+        `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`,
+        `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`,
+        `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`,
       ]
     ]
   }
@@ -106,11 +106,11 @@ HTTPrequest("GET", matchurl).then(matchdata => {
     <p class="win win-${team1Stats.win}">${team1Stats.win ? "Victory!" : ""}</p>
     <p class="bans-info1">bans:</p>
     <div class="bans bans-team1">
-    <img src="${bans[0][0] != "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/undefined.png" ? bans[0][0] : "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/profileicon/29.png"}" alt="">
-    <img src="${bans[0][1] != "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/undefined.png" ? bans[0][1] : "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/profileicon/29.png"}" alt="">
-    <img src="${bans[0][2] != "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/undefined.png" ? bans[0][2] : "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/profileicon/29.png"}" alt="">
-    <img src="${bans[0][3] != "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/undefined.png" ? bans[0][3] : "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/profileicon/29.png"}" alt="">
-    <img src="${bans[0][4] != "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/undefined.png" ? bans[0][4] : "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/profileicon/29.png"}" alt="">
+    <img src="${bans[0][0] != `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/undefined.png` ? bans[0][0] : `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`}" alt="">
+    <img src="${bans[0][1] != `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/undefined.png` ? bans[0][1] : `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`}" alt="">
+    <img src="${bans[0][2] != `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/undefined.png` ? bans[0][2] : `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`}" alt="">
+    <img src="${bans[0][3] != `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/undefined.png` ? bans[0][3] : `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`}" alt="">
+    <img src="${bans[0][4] != `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/undefined.png` ? bans[0][4] : `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`}" alt="">
     </div>
     <div class="teamstats">
     <p>Kills: ${team1Stats.kills} <span class="first">${team1Stats.firstBlood ? "First Blood!" : ""}</span></p>
@@ -127,11 +127,11 @@ HTTPrequest("GET", matchurl).then(matchdata => {
   <p class="win win-${team2Stats.win}">${team2Stats.win ? "Victory!" : ""}</p>
   <p class="bans-info2">bans:</p>
   <div class="bans bans-team2">
-  <img src="${bans[1][0] != "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/undefined.png" ? bans[1][0] : "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/profileicon/29.png"}" alt="">
-  <img src="${bans[1][1] != "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/undefined.png" ? bans[1][1] : "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/profileicon/29.png"}" alt="">
-  <img src="${bans[1][2] != "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/undefined.png" ? bans[1][2] : "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/profileicon/29.png"}" alt="">
-  <img src="${bans[1][3] != "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/undefined.png" ? bans[1][3] : "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/profileicon/29.png"}" alt="">
-  <img src="${bans[1][4] != "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/undefined.png" ? bans[1][4] : "https://ddragon.leagueoflegends.com/cdn/12.23.1/img/profileicon/29.png"}" alt="">
+  <img src="${bans[1][0] != `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/undefined.png` ? bans[1][0] : `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`}" alt="">
+  <img src="${bans[1][1] != `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/undefined.png` ? bans[1][1] : `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`}" alt="">
+  <img src="${bans[1][2] != `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/undefined.png` ? bans[1][2] : `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`}" alt="">
+  <img src="${bans[1][3] != `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/undefined.png` ? bans[1][3] : `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`}" alt="">
+  <img src="${bans[1][4] != `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/undefined.png` ? bans[1][4] : `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`}" alt="">
   </div>
   <div class="teamstats">
   <p>Kills: ${team2Stats.kills} <span class="first">${team2Stats.firstBlood ? "First Blood!" : ""}</span></p>
@@ -216,7 +216,7 @@ HTTPrequest("GET", matchurl).then(matchdata => {
       let summoner = NewElement(`
     <div class="summoner ${i < 5 ? redSide : blueSide}" id="summoner-${i}">
     <div class="summoner-link">
-    <img class="champion-img" id="champion-img-${i}" src="https://ddragon.leagueoflegends.com/cdn/12.23.1/img/champion/${summoners[i].championName}.png" alt="">
+    <img class="champion-img" id="champion-img-${i}" src="https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${summoners[i].championName}.png" alt="">
         <p class="champion-name" id="champion-name-${i}">${summoners[i].championName}</p>
         <p class="summoner-name" id="summoner-name-${i}">
         <a id="summoner-link-${i}" href="results.html?region=EUN1&summonername=${summoners[i].summonerName}">${summoners[i].summonerName}</a>
@@ -272,12 +272,12 @@ HTTPrequest("GET", matchurl).then(matchdata => {
       <p>vision score: ${stats.visionScore}</p>
       <p>farm: ${stats.farm()}</p>
       <div class="items">
-          <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/12.23.1/img/item/${items[0]}.png" alt="">
-          <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/12.23.1/img/item/${items[1]}.png" alt="">
-          <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/12.23.1/img/item/${items[2]}.png" alt="">
-          <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/12.23.1/img/item/${items[3]}.png" alt="">
-          <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/12.23.1/img/item/${items[4]}.png" alt="">
-          <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/12.23.1/img/item/${items[5]}.png" alt="">
+          <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[0]}.png" alt="">
+          <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[1]}.png" alt="">
+          <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[2]}.png" alt="">
+          <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[3]}.png" alt="">
+          <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[4]}.png" alt="">
+          <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[5]}.png" alt="">
       </div>
       <div class="runes">
           <img class="rune-icon" src="http://ddragon.leagueoflegends.com/cdn/img/${runes.main.row1.icon}" alt="">
