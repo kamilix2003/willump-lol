@@ -1,5 +1,9 @@
-import { API_KEY } from "../API_KEY.js";
-import { parseURLParams, MakeRequestLink, HTTPrequest, SummonerIconURL, NewElement, unixToDate} from "./func.js";
+import { parseURLParams, MakeRequestLink, HTTPrequest, SummonerIconURL, NewElement, unixToDate, askForApiKey} from "./func.js";
+
+askForApiKey();
+
+const API_KEY = sessionStorage.getItem("API_KEY")
+
 
 const SUMMONER_INFO_REQUEST = "/lol/summoner/v4/summoners/by-name/";
 const LEAGUE_INFO_REQUEST = "/lol/league/v4/entries/by-summoner/";
