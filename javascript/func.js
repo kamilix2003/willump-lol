@@ -1,4 +1,12 @@
-import { API_KEY } from "../API_KEY.js";
+const API_KEY = sessionStorage.getItem("API_KEY")
+
+export function askForApiKey(){
+    if (sessionStorage.getItem("API_KEY") == "" || sessionStorage.getItem("API_KEY") == "null" || sessionStorage.getItem("API_KEY") == null) {
+        let promptInput = prompt(`api key:`);
+        sessionStorage.setItem("API_KEY", promptInput);
+        window.location.reload();
+    }
+}
 
 export const regions = {
     EUNE: {

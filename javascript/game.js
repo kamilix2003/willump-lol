@@ -1,5 +1,7 @@
-import { API_KEY } from "../API_KEY.js";
-import { HTTPrequest, MakeRequestLink, parseURLParams, NewElement } from "./func.js";
+import { HTTPrequest, MakeRequestLink, parseURLParams, NewElement, askForApiKey } from "./func.js";
+
+askForApiKey();
+const API_KEY = sessionStorage.getItem("API_KEY")
 
 const redSide = "red-side";
 const blueSide = "blue-side";
