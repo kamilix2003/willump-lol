@@ -205,7 +205,7 @@ HTTPrequest("GET", matchurl).then(matchdata => {
       }
     }
 
-    makeNewChartElement(".match-info-container", "gold", data);
+    makeNewChartElement(".match-info-container", "gold", data, "50vw", "15em");
 
 
 
@@ -544,11 +544,11 @@ function range(length, start, step) {
 }
 
 
-function makeNewChartElement(containerClass, chartId, data) {
+function makeNewChartElement(containerClass, chartId, data, width = "25em", height = "15em") {
   let container = document.querySelector(containerClass);
   let chartElement = NewElement(`
     <div class="chart-container-child">
-      <canvas class="chart" id="${chartId}"></canvas>
+      <canvas style="width: ${width}; height: ${height}" class="chart" id="${chartId}"></canvas>
     </div> 
   `);
   container.appendChild(chartElement);
