@@ -30,7 +30,7 @@ HTTPrequest("GET", matchurl).then(matchdata => {
   let summoners = matchdata.info.participants;
   const matchtime = new Date(matchdata.info.gameCreation);
   document.querySelector("#date").innerHTML = `${matchtime}`;
-  console.log({ matchdata });
+  // console.log({ matchdata });
   // let team1Kills = document.querySelector("#team1-kills");
   // let team2Kills = document.querySelector("#team2-kills");
   // team1Kills.classList.add(`win-${teamWin1}`);
@@ -191,13 +191,13 @@ HTTPrequest("GET", matchurl).then(matchdata => {
         scales: {
           y: {
             type: 'linear',
-            grid:{
+            grid: {
               color: "hsl(0, 0%, 96%, 0.25)",
             }
           },
           x: {
             type: 'linear',
-            grid:{
+            grid: {
               color: "hsl(0, 0%, 96%, 0.25)",
             }
           },
@@ -272,12 +272,12 @@ HTTPrequest("GET", matchurl).then(matchdata => {
       <p>vision score: ${stats.visionScore}</p>
       <p>farm: ${stats.farm()}</p>
       <div class="items">
-          <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[0]}.png" alt="">
-          <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[1]}.png" alt="">
-          <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[2]}.png" alt="">
-          <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[3]}.png" alt="">
-          <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[4]}.png" alt="">
-          <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[5]}.png" alt="">
+          <img class="item-icon" src="${items[0] != "0" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[0]}.png` : ""}" alt="">
+          <img class="item-icon" src="${items[1] != "0" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[1]}.png` : ""}" alt="">
+          <img class="item-icon" src="${items[2] != "0" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[2]}.png` : ""}" alt="">
+          <img class="item-icon" src="${items[3] != "0" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[3]}.png` : ""}" alt="">
+          <img class="item-icon" src="${items[4] != "0" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[4]}.png` : ""}" alt="">
+          <img class="item-icon" src="${items[5] != "0" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[5]}.png` : ""}" alt="">
       </div>
       <div class="runes">
           <img class="rune-icon" src="http://ddragon.leagueoflegends.com/cdn/img/${runes.main.row1.icon}" alt="">
@@ -293,6 +293,170 @@ HTTPrequest("GET", matchurl).then(matchdata => {
         document.querySelector(".summoner-stats-container").appendChild(statsDiv);
         document.querySelector(".chart-container").innerHTML = "";
 
+        let selectorOptions = `
+            <option value="damageStats.totalDamageDone"> total DMG </option>
+            <option value="totalGold"> total gold </option>
+            <option value="championStats.healthMax"> max HP </option>
+        `;
+
+        // make playerChart universare (input index etc.)
+
+        let playerChart1 = NewElement(`
+          <div class="blank-player-chart player-chart-1">
+            <select name="chartData" class="chart-data-selector chart-data-selector-1">
+              ${selectorOptions}
+            </select>
+            <button class="player-chart-button player-chart-button-1"> chart 1 </button>
+          </div>
+        `)
+        let playerchart2 = NewElement(`
+          <div class="blank-player-chart player-chart-2">
+            <select name="chartData" class="chart-data-selector chart-data-selector-2">
+              ${selectorOptions}
+            </select>
+            <button class="player-chart-button player-chart-button-2"> chart 2 </button>
+          </div>
+        `)
+        let playerchart3 = NewElement(`
+          <div class="blank-player-chart player-chart-3">
+            <select name="chartData" class="chart-data-selector chart-data-selector-3">
+              ${selectorOptions}
+            </select>
+            <button class="player-chart-button  player-chart-button-3"> chart 3 </button>
+          </div>
+        `)
+        document.querySelector(".chart-container").append(playerChart1, playerchart2, playerchart3);
+
+        let chartButtons = [
+          document.querySelector(".player-chart-button-1"),
+          document.querySelector(".player-chart-button-2"),
+          document.querySelector(".player-chart-button-3")
+        ];
+
+        let selectors = [
+          document.querySelector(".chart-data-selector-1"),
+          document.querySelector(".chart-data-selector-2"),
+          document.querySelector(".chart-data-selector-3")
+        ]
+
+    
+        chartButtons[0].addEventListener("click", () => {
+          let chartIndex = 0
+          let removeChartBtn = NewElement(`
+          <button class="remove-chart-btn remove-chart-btn-${chartIndex+1}">🗑</button>
+          `);
+          document.querySelector(`.player-chart-${chartIndex+1}`).innerHTML = "";
+          let chartData1 = {
+            type: "line",
+            data: {
+              datasets: [
+                {
+                  label: selectors[chartIndex].options[selectors[chartIndex].selectedIndex].label,
+                  data: getFromObject(playerframes[i], selectors[chartIndex].value),
+                  borderWidth: 3,
+                  borderColor: "hsl(358, 94%, 62%)",
+                  pointStyle: false,
+                },
+              ],
+              labels: range(redSideTotalGold.length, 0, 1)
+            },
+            options: {
+              scales: {
+                y: {
+                  type: 'linear',
+                  grid: {
+                    color: "hsl(0, 0%, 96%, 0.25)",
+                  }
+                },
+                x: {
+                  type: 'linear',
+                  grid: {
+                    color: "hsl(0, 0%, 96%, 0.25)",
+                  }
+                },
+              }
+            }
+          }
+          makeNewChartElement(`.player-chart-${chartIndex+1}`, `chart-${chartIndex+1}`, chartData1);
+        });
+
+
+        chartButtons[1].addEventListener("click", () => {
+          let chartIndex = 1
+          document.querySelector(`.player-chart-${chartIndex+1}`).innerHTML = "";
+          let chartData2 = {
+            type: "line",
+            data: {
+              datasets: [
+                {
+                  label: selectors[chartIndex].options[selectors[chartIndex].selectedIndex].label,
+                  data: getFromObject(playerframes[i], selectors[chartIndex].value),
+                  borderWidth: 3,
+                  borderColor: "hsl(358, 94%, 62%)",
+                  pointStyle: false,
+                },
+              ],
+              labels: range(redSideTotalGold.length, 0, 1)
+            },
+            options: {
+              scales: {
+                y: {
+                  type: 'linear',
+                  grid: {
+                    color: "hsl(0, 0%, 96%, 0.25)",
+                  }
+                },
+                x: {
+                  type: 'linear',
+                  grid: {
+                    color: "hsl(0, 0%, 96%, 0.25)",
+                  }
+                },
+              }
+            }
+          }
+
+          makeNewChartElement(`.player-chart-${chartIndex+1}`, `chart-${chartIndex+1}`, chartData2);
+        });
+
+
+        chartButtons[2].addEventListener("click", () => {
+          let chartIndex = 2
+          document.querySelector(`.player-chart-${chartIndex+1}`).innerHTML = "";
+          let chartData3 = {
+            type: "line",
+            data: {
+              datasets: [
+                {
+                  label: selectors[chartIndex].options[selectors[chartIndex].selectedIndex].label,
+                  data: getFromObject(playerframes[i], selectors[chartIndex].value),
+                  borderWidth: 3,
+                  borderColor: "hsl(358, 94%, 62%)",
+                  pointStyle: false,
+                },
+              ],
+              labels: range(redSideTotalGold.length, 0, 1)
+            },
+            options: {
+              scales: {
+                y: {
+                  type: 'linear',
+                  grid: {
+                    color: "hsl(0, 0%, 96%, 0.25)",
+                  }
+                },
+                x: {
+                  type: 'linear',
+                  grid: {
+                    color: "hsl(0, 0%, 96%, 0.25)",
+                  }
+                },
+              }
+            }
+          }
+
+          makeNewChartElement(`.player-chart-${chartIndex+1}`, `chart-${chartIndex+1}`, chartData3);
+        })
       })
     }
   })
@@ -400,7 +564,7 @@ function makeNewChartElement(containerClass, chartId, data) {
   let container = document.querySelector(containerClass);
   let chartElement = NewElement(`
     <div class="chart-container-child">
-      <canvas id="${chartId}"></canvas>
+      <canvas class="chart" id="${chartId}"></canvas>
     </div> 
   `);
   container.appendChild(chartElement);
