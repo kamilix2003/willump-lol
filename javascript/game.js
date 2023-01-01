@@ -205,7 +205,7 @@ HTTPrequest("GET", matchurl).then(matchdata => {
       }
     }
 
-    makeNewChartElement(".match-info-container", "test", data);
+    makeNewChartElement(".match-info-container", "gold", data);
 
 
 
@@ -297,35 +297,14 @@ HTTPrequest("GET", matchurl).then(matchdata => {
             <option value="damageStats.totalDamageDone"> total DMG </option>
             <option value="totalGold"> total gold </option>
             <option value="championStats.healthMax"> max HP </option>
+            <option value="championStats.health"> HP </option>
         `;
-
-        // make playerChart universare (input index etc.)
-
-        let playerChart1 = NewElement(`
-          <div class="blank-player-chart player-chart-1">
-            <select name="chartData" class="chart-data-selector chart-data-selector-1">
-              ${selectorOptions}
-            </select>
-            <button class="player-chart-button player-chart-button-1"> chart 1 </button>
-          </div>
-        `)
-        let playerchart2 = NewElement(`
-          <div class="blank-player-chart player-chart-2">
-            <select name="chartData" class="chart-data-selector chart-data-selector-2">
-              ${selectorOptions}
-            </select>
-            <button class="player-chart-button player-chart-button-2"> chart 2 </button>
-          </div>
-        `)
-        let playerchart3 = NewElement(`
-          <div class="blank-player-chart player-chart-3">
-            <select name="chartData" class="chart-data-selector chart-data-selector-3">
-              ${selectorOptions}
-            </select>
-            <button class="player-chart-button  player-chart-button-3"> chart 3 </button>
-          </div>
-        `)
-        document.querySelector(".chart-container").append(playerChart1, playerchart2, playerchart3);
+        let playerCharts = [
+          NewElement(playerChart(1,selectorOptions)),
+          NewElement(playerChart(2,selectorOptions)),
+          NewElement(playerChart(3,selectorOptions)),
+        ]
+        document.querySelector(".chart-container").append(playerCharts[0], playerCharts[1], playerCharts[2]);
 
         let chartButtons = [
           document.querySelector(".player-chart-button-1"),
@@ -342,11 +321,8 @@ HTTPrequest("GET", matchurl).then(matchdata => {
     
         chartButtons[0].addEventListener("click", () => {
           let chartIndex = 0
-          let removeChartBtn = NewElement(`
-          <button class="remove-chart-btn remove-chart-btn-${chartIndex+1}">🗑</button>
-          `);
           document.querySelector(`.player-chart-${chartIndex+1}`).innerHTML = "";
-          let chartData1 = {
+          let chartData = {
             type: "line",
             data: {
               datasets: [
@@ -377,14 +353,12 @@ HTTPrequest("GET", matchurl).then(matchdata => {
               }
             }
           }
-          makeNewChartElement(`.player-chart-${chartIndex+1}`, `chart-${chartIndex+1}`, chartData1);
+          makeNewChartElement(`.player-chart-${chartIndex+1}`, `chart-${chartIndex+1}`, chartData);
         });
-
-
         chartButtons[1].addEventListener("click", () => {
           let chartIndex = 1
           document.querySelector(`.player-chart-${chartIndex+1}`).innerHTML = "";
-          let chartData2 = {
+          let chartData = {
             type: "line",
             data: {
               datasets: [
@@ -415,15 +389,12 @@ HTTPrequest("GET", matchurl).then(matchdata => {
               }
             }
           }
-
-          makeNewChartElement(`.player-chart-${chartIndex+1}`, `chart-${chartIndex+1}`, chartData2);
+          makeNewChartElement(`.player-chart-${chartIndex+1}`, `chart-${chartIndex+1}`, chartData);
         });
-
-
         chartButtons[2].addEventListener("click", () => {
           let chartIndex = 2
           document.querySelector(`.player-chart-${chartIndex+1}`).innerHTML = "";
-          let chartData3 = {
+          let chartData = {
             type: "line",
             data: {
               datasets: [
@@ -454,13 +425,26 @@ HTTPrequest("GET", matchurl).then(matchdata => {
               }
             }
           }
+          makeNewChartElement(`.player-chart-${chartIndex+1}`, `chart-${chartIndex+1}`, chartData);
+        });
+        
 
-          makeNewChartElement(`.player-chart-${chartIndex+1}`, `chart-${chartIndex+1}`, chartData3);
-        })
       })
     }
   })
 })
+
+function playerChart(chartIndex, selectorOptions){
+  return `
+  <div class="blank-player-chart player-chart-${chartIndex}">
+      <select name="chartData" class="chart-data-selector chart-data-selector-${chartIndex}">
+        ${selectorOptions}
+      </select>
+      <button class="player-chart-button  player-chart-button-${chartIndex}"> chart ${chartIndex} </button>
+    </div>        
+  `
+}
+
 
 function champIdToName(champId, champData) {
   let keys = Object.keys(champData.data);
