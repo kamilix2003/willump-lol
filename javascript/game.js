@@ -33,6 +33,8 @@ let itemsData = await fetch(itemsurl).then(res => {
 
 console.log({matchurl, timelineurl, runesurl, championurl, itemsurl});
 
+let counter = 0;
+
 HTTPrequest("GET", matchurl).then(matchdata => {
   let summoners = matchdata.info.participants;
   const matchtime = new Date(matchdata.info.gameCreation);
@@ -213,7 +215,7 @@ HTTPrequest("GET", matchurl).then(matchdata => {
       }
     }
 
-    makeNewChartElement(".match-info-container", "gold", data, "50vw", "15em");
+    makeNewChartElement(".match-info-container", "gold", data, "70em", "15em");
 
 
 
@@ -238,6 +240,7 @@ HTTPrequest("GET", matchurl).then(matchdata => {
       summonerContainer.appendChild(summoner);
 
       document.querySelector(`#summoner-stats-btn-${i}`).addEventListener("click", (event) => {
+
         let items = [
           itemsData.data[summoners[i].item0] != null ? itemsData.data[summoners[i].item0] : "",
           itemsData.data[summoners[i].item1] != null ? itemsData.data[summoners[i].item1] : "",
@@ -306,13 +309,24 @@ HTTPrequest("GET", matchurl).then(matchdata => {
       `)
         document.querySelector(".summoner-stats-container").innerHTML = "";
         document.querySelector(".summoner-stats-container").appendChild(statsDiv);
-        document.querySelector(".chart-container").innerHTML = "";
-        document.querySelector(".chart-container").appendChild(NewElement(`
-        <div>
-        <button id="add-chart">add chart</button>
-        <select name="chart-data" id="chart-data"></select>
-        </div>
-        `))
+        if(document.querySelector(".add-chart") == undefined){
+          document.querySelector(".grid-container").append(NewElement(`
+          <div class="add-chart">
+            <button class="add-chart-btn">add chart</button>
+            <select name="chart-data" class="chart-data"></select>
+            <button class="remove-all-charts-btn">&#128465</button>
+          </div>
+          `));
+          }else{
+            document.querySelector(".add-chart").remove();
+            document.querySelector(".grid-container").appendChild(NewElement(`
+            <div class="add-chart">
+              <button class="add-chart-btn">add chart</button>
+              <select name="chart-data" class="chart-data"></select>
+              <button class="remove-all-charts-btn">&#128465</button>
+            </div>
+            `));
+          }
 
         let selectorOptions = `
           <option value="championStats.abilityPower"> ability power </option>
@@ -344,11 +358,13 @@ HTTPrequest("GET", matchurl).then(matchdata => {
           <option value="timeEnemySpentControlled"> inflicted CC time </option>
             
         `;
-        document.querySelector("#chart-data").innerHTML = selectorOptions;
-        let counter = 0;
-        document.querySelector("#add-chart").addEventListener("click", () => {
+        document.querySelector(".chart-data").innerHTML = selectorOptions;
+        document.querySelector(".remove-all-charts-btn").addEventListener("click", () => {
+          document.querySelector(".chart-container").innerHTML = "";
+        })
+        document.querySelector(".add-chart-btn").addEventListener("click", () => {
           counter++;
-          let selector = document.querySelector("#chart-data")
+          let selector = document.querySelector(".chart-data")
           let blankchart = NewElement(playerChart(counter, selectorOptions));
           document.querySelector(".chart-container").append(blankchart);
           document.querySelector(`.player-chart-${counter}`).innerHTML = "";
@@ -383,12 +399,16 @@ HTTPrequest("GET", matchurl).then(matchdata => {
               }
             }
           }
-          makeNewChartElement(`.player-chart-${counter}`, `chart-${counter}`, chartData);
+          makeNewChartElement(`.player-chart-${counter}`, `chart-${counter}`, chartData, "35em");
         })
       })
     }
   })
 })
+
+function test(){
+  console.log("hello");
+}
 
 function playerChart(chartIndex, selectorOptions){
   return `
