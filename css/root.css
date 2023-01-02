@@ -15,7 +15,6 @@
     place-items: center;
     height: 5vh;
     background-color: var(--main-color-low-lum);
-    margin-top: 2em;
 }
 
 .footer *{
@@ -31,5 +30,4 @@
     place-items: center;
     height: 5vh;
     background-color: var(--main-color-low-lum);
-    margin-bottom: 2em;
 }

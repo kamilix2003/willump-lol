@@ -15,16 +15,23 @@ let continent = regions[regionId].continent;
 
 let matchurl = `https://${continent}.api.riotgames.com/lol/match/v5/matches/${urlData.matchid}?api_key=${API_KEY}`;
 let timelineurl = `https://${continent}.api.riotgames.com/lol/match/v5/matches/${urlData.matchid}/timeline?api_key=${API_KEY}`;
+let runesurl = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/runesReforged.json`;
+let championurl = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/champion.json`;
+let itemsurl = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/item.json`
 
-
-let runesData = await fetch(`https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/runesReforged.json`).then(res => {
+let runesData = await fetch(runesurl).then(res => {
   return res.json();
 });
 
-let championData = await fetch(`https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/champion.json`).then(res => {
+let championData = await fetch(championurl).then(res => {
   return res.json();
 })
 
+let itemsData = await fetch(itemsurl).then(res => {
+  return res.json();
+})
+
+console.log({matchurl, timelineurl, runesurl, championurl, itemsurl});
 
 HTTPrequest("GET", matchurl).then(matchdata => {
   let summoners = matchdata.info.participants;
@@ -103,7 +110,7 @@ HTTPrequest("GET", matchurl).then(matchdata => {
   }
 
   let Team1 = NewElement(`
-    <div>
+    <div class="match-details">
     <p class="win win-${team1Stats.win}">${team1Stats.win ? "Victory!" : ""}</p>
     <p class="bans-info1">bans:</p>
     <div class="bans bans-team1">
@@ -124,7 +131,7 @@ HTTPrequest("GET", matchurl).then(matchdata => {
     </div>
   `)
   let Team2 = NewElement(`
-  <div>
+  <div class="match-details">
   <p class="win win-${team2Stats.win}">${team2Stats.win ? "Victory!" : ""}</p>
   <p class="bans-info2">bans:</p>
   <div class="bans bans-team2">
@@ -144,8 +151,8 @@ HTTPrequest("GET", matchurl).then(matchdata => {
   </div>
   </div>
   `)
-  document.querySelector(".match-details").appendChild(Team1);
-  document.querySelector(".match-details").appendChild(Team2);
+  document.querySelector(".match-info-container").appendChild(Team1);
+  document.querySelector(".match-info-container").appendChild(Team2);
 
 
   HTTPrequest("GET", timelineurl).then(timeline => {
@@ -232,12 +239,12 @@ HTTPrequest("GET", matchurl).then(matchdata => {
 
       document.querySelector(`#summoner-stats-btn-${i}`).addEventListener("click", (event) => {
         let items = [
-          summoners[i].item0,
-          summoners[i].item1,
-          summoners[i].item2,
-          summoners[i].item3,
-          summoners[i].item4,
-          summoners[i].item5
+          itemsData.data[summoners[i].item0] != null ? itemsData.data[summoners[i].item0] : "",
+          itemsData.data[summoners[i].item1] != null ? itemsData.data[summoners[i].item1] : "",
+          itemsData.data[summoners[i].item2] != null ? itemsData.data[summoners[i].item2] : "",
+          itemsData.data[summoners[i].item3] != null ? itemsData.data[summoners[i].item3] : "",
+          itemsData.data[summoners[i].item4] != null ? itemsData.data[summoners[i].item4] : "",
+          itemsData.data[summoners[i].item5] != null ? itemsData.data[summoners[i].item5] : ""
         ]
         let runes = {
           main: {
@@ -265,6 +272,7 @@ HTTPrequest("GET", matchurl).then(matchdata => {
             return this.totalMinionsKilled + this.neutralMinionsKilled
           },
         }
+        console.log({runes, items});
         let statsDiv = NewElement(`
       <div class="summoner-stats-container-child">
       <p>kda: ${stats.kills}/${stats.deaths}/${stats.assists}</p>
@@ -273,29 +281,40 @@ HTTPrequest("GET", matchurl).then(matchdata => {
       <p>vision score: ${stats.visionScore}</p>
       <p>farm: ${stats.farm()}</p>
       <div class="items">
-          <img class="item-icon" src="${items[0] != "0" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[0]}.png` : ""}" alt="">
-          <img class="item-icon" src="${items[1] != "0" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[1]}.png` : ""}" alt="">
-          <img class="item-icon" src="${items[2] != "0" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[2]}.png` : ""}" alt="">
-          <img class="item-icon" src="${items[3] != "0" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[3]}.png` : ""}" alt="">
-          <img class="item-icon" src="${items[4] != "0" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[4]}.png` : ""}" alt="">
-          <img class="item-icon" src="${items[5] != "0" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[5]}.png` : ""}" alt="">
+          <a href="https://leagueoflegends.fandom.com/wiki/${items[0] != "" ? items[0].name.replaceAll(" ", "_") : "" }"><img class="item-icon" src="${items[0] != "" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[0].image.full}` : ""}" alt=""></a>
+          <a href="https://leagueoflegends.fandom.com/wiki/${items[1] != "" ? items[1].name.replaceAll(" ", "_") : "" }"><img class="item-icon" src="${items[1] != "" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[1].image.full}` : ""}" alt=""></a>
+          <a href="https://leagueoflegends.fandom.com/wiki/${items[2] != "" ? items[2].name.replaceAll(" ", "_") : "" }"><img class="item-icon" src="${items[2] != "" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[2].image.full}` : ""}" alt=""></a>
+          <a href="https://leagueoflegends.fandom.com/wiki/${items[3] != "" ? items[3].name.replaceAll(" ", "_") : "" }"><img class="item-icon" src="${items[3] != "" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[3].image.full}` : ""}" alt=""></a>
+          <a href="https://leagueoflegends.fandom.com/wiki/${items[4] != "" ? items[4].name.replaceAll(" ", "_") : "" }"><img class="item-icon" src="${items[4] != "" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[4].image.full}` : ""}" alt=""></a>
+          <a href="https://leagueoflegends.fandom.com/wiki/${items[5] != "" ? items[5].name.replaceAll(" ", "_") : "" }"><img class="item-icon" src="${items[5] != "" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[5].image.full}` : ""}" alt=""></a>
       </div>
       <div class="runes">
-          <img class="rune-icon" src="http://ddragon.leagueoflegends.com/cdn/img/${runes.main.row1.icon}" alt="">
+          <img class="rune-icon rune-icon-main" src="http://ddragon.leagueoflegends.com/cdn/img/${runes.main.row1.icon}" alt="">
+          <p class="rune-name"> <a href="${`https://leagueoflegends.fandom.com/wiki/${runes.main.row1.name.replaceAll(" ","_")}`}"> ${runes.main.row1.name} </a> </p>
           <img class="rune-icon" src="http://ddragon.leagueoflegends.com/cdn/img/${runes.main.row2.icon}" alt="">
+          <p class="rune-name"> <a href="${`https://leagueoflegends.fandom.com/wiki/${runes.main.row2.name.replaceAll(" ","_")}`}"> ${runes.main.row2.name} </a> </p>
           <img class="rune-icon" src="http://ddragon.leagueoflegends.com/cdn/img/${runes.main.row3.icon}" alt="">
+          <p class="rune-name"> <a href="${`https://leagueoflegends.fandom.com/wiki/${runes.main.row3.name.replaceAll(" ","_")}`}"> ${runes.main.row3.name} </a> </p>
           <img class="rune-icon" src="http://ddragon.leagueoflegends.com/cdn/img/${runes.main.row4.icon}" alt="">
+          <p class="rune-name"> <a href="${`https://leagueoflegends.fandom.com/wiki/${runes.main.row4.name.replaceAll(" ","_")}`}"> ${runes.main.row4.name} </a> </p>
           <img class="rune-icon" src="http://ddragon.leagueoflegends.com/cdn/img/${runes.secondary.row1.icon}" alt="">
+          <p class="rune-name"> <a href="${`https://leagueoflegends.fandom.com/wiki/${runes.secondary.row1.name.replaceAll(" ","_")}`}"> ${runes.secondary.row1.name} </a> </p>
           <img class="rune-icon" src="http://ddragon.leagueoflegends.com/cdn/img/${runes.secondary.row2.icon}" alt="">
+          <p class="rune-name"> <a href="${`https://leagueoflegends.fandom.com/wiki/${runes.secondary.row2.name.replaceAll(" ","_")}`}"> ${runes.secondary.row2.name} </a> </p>
         </div>
       </div>
       `)
         document.querySelector(".summoner-stats-container").innerHTML = "";
         document.querySelector(".summoner-stats-container").appendChild(statsDiv);
         document.querySelector(".chart-container").innerHTML = "";
+        document.querySelector(".chart-container").appendChild(NewElement(`
+        <div>
+        <button id="add-chart">add chart</button>
+        <select name="chart-data" id="chart-data"></select>
+        </div>
+        `))
 
         let selectorOptions = `
-          <option value="championStats.abilityHaste"> ability haste </option>
           <option value="championStats.abilityPower"> ability power </option>
           <option value="championStats.armor"> armor </option>
           <option value="championStats.attackDamage"> atack damage </option>
@@ -321,40 +340,25 @@ HTTPrequest("GET", matchurl).then(matchdata => {
           <option value="minionsKilled"> minions killed </option>
           <option value="level"> level </option>
           <option value="xp"> experience </option>
-          <option value="totalGold"> gold </option>
+          <option selected="selected" value="totalGold"> gold </option>
           <option value="timeEnemySpentControlled"> inflicted CC time </option>
             
         `;
-        let playerCharts = [
-          NewElement(playerChart(1,selectorOptions)),
-          NewElement(playerChart(2,selectorOptions)),
-          NewElement(playerChart(3,selectorOptions)),
-        ]
-        document.querySelector(".chart-container").append(playerCharts[0], playerCharts[1], playerCharts[2]);
-
-        let chartButtons = [
-          document.querySelector(".player-chart-button-1"),
-          document.querySelector(".player-chart-button-2"),
-          document.querySelector(".player-chart-button-3")
-        ];
-
-        let selectors = [
-          document.querySelector(".chart-data-selector-1"),
-          document.querySelector(".chart-data-selector-2"),
-          document.querySelector(".chart-data-selector-3")
-        ]
-
-    
-        chartButtons[0].addEventListener("click", () => {
-          let chartIndex = 0
-          document.querySelector(`.player-chart-${chartIndex+1}`).innerHTML = "";
+        document.querySelector("#chart-data").innerHTML = selectorOptions;
+        let counter = 0;
+        document.querySelector("#add-chart").addEventListener("click", () => {
+          counter++;
+          let selector = document.querySelector("#chart-data")
+          let blankchart = NewElement(playerChart(counter, selectorOptions));
+          document.querySelector(".chart-container").append(blankchart);
+          document.querySelector(`.player-chart-${counter}`).innerHTML = "";
           let chartData = {
             type: "line",
             data: {
               datasets: [
                 {
-                  label: selectors[chartIndex].options[selectors[chartIndex].selectedIndex].label,
-                  data: getFromObject(playerframes[i], selectors[chartIndex].value),
+                  label: selector.options[selector.selectedIndex].label,
+                  data: getFromObject(playerframes[i], selector.value),
                   borderWidth: 3,
                   borderColor: "hsl(358, 94%, 62%)",
                   pointStyle: false,
@@ -379,82 +383,8 @@ HTTPrequest("GET", matchurl).then(matchdata => {
               }
             }
           }
-          makeNewChartElement(`.player-chart-${chartIndex+1}`, `chart-${chartIndex+1}`, chartData);
-        });
-        chartButtons[1].addEventListener("click", () => {
-          let chartIndex = 1
-          document.querySelector(`.player-chart-${chartIndex+1}`).innerHTML = "";
-          let chartData = {
-            type: "line",
-            data: {
-              datasets: [
-                {
-                  label: selectors[chartIndex].options[selectors[chartIndex].selectedIndex].label,
-                  data: getFromObject(playerframes[i], selectors[chartIndex].value),
-                  borderWidth: 3,
-                  borderColor: "hsl(358, 94%, 62%)",
-                  pointStyle: false,
-                },
-              ],
-              labels: range(redSideTotalGold.length, 0, 1)
-            },
-            options: {
-              scales: {
-                y: {
-                  type: 'linear',
-                  grid: {
-                    color: "hsl(0, 0%, 96%, 0.25)",
-                  }
-                },
-                x: {
-                  type: 'linear',
-                  grid: {
-                    color: "hsl(0, 0%, 96%, 0.25)",
-                  }
-                },
-              }
-            }
-          }
-          makeNewChartElement(`.player-chart-${chartIndex+1}`, `chart-${chartIndex+1}`, chartData);
-        });
-        chartButtons[2].addEventListener("click", () => {
-          let chartIndex = 2
-          document.querySelector(`.player-chart-${chartIndex+1}`).innerHTML = "";
-          let chartData = {
-            type: "line",
-            data: {
-              datasets: [
-                {
-                  label: selectors[chartIndex].options[selectors[chartIndex].selectedIndex].label,
-                  data: getFromObject(playerframes[i], selectors[chartIndex].value),
-                  borderWidth: 3,
-                  borderColor: "hsl(358, 94%, 62%)",
-                  pointStyle: false,
-                },
-              ],
-              labels: range(redSideTotalGold.length, 0, 1)
-            },
-            options: {
-              scales: {
-                y: {
-                  type: 'linear',
-                  grid: {
-                    color: "hsl(0, 0%, 96%, 0.25)",
-                  }
-                },
-                x: {
-                  type: 'linear',
-                  grid: {
-                    color: "hsl(0, 0%, 96%, 0.25)",
-                  }
-                },
-              }
-            }
-          }
-          makeNewChartElement(`.player-chart-${chartIndex+1}`, `chart-${chartIndex+1}`, chartData);
-        });
-        
-
+          makeNewChartElement(`.player-chart-${counter}`, `chart-${counter}`, chartData);
+        })
       })
     }
   })
@@ -470,7 +400,6 @@ function playerChart(chartIndex, selectorOptions){
     </div>        
   `
 }
-
 
 function champIdToName(champId, champData) {
   let keys = Object.keys(champData.data);
