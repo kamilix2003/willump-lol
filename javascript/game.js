@@ -29,7 +29,8 @@ let championData = await fetch(`https://ddragon.leagueoflegends.com/cdn/${curren
 HTTPrequest("GET", matchurl).then(matchdata => {
   let summoners = matchdata.info.participants;
   const matchtime = new Date(matchdata.info.gameCreation);
-  document.querySelector("#date").innerHTML = `${matchtime}`;
+  let date = `${matchtime.toDateString()} ${matchtime.getHours()}:${matchtime.getMinutes()}`
+  document.querySelector("#date").innerHTML = `${date}`;
   // console.log({ matchdata });
   // let team1Kills = document.querySelector("#team1-kills");
   // let team2Kills = document.querySelector("#team2-kills");
@@ -294,10 +295,35 @@ HTTPrequest("GET", matchurl).then(matchdata => {
         document.querySelector(".chart-container").innerHTML = "";
 
         let selectorOptions = `
-            <option value="damageStats.totalDamageDone"> total DMG </option>
-            <option value="totalGold"> total gold </option>
-            <option value="championStats.healthMax"> max HP </option>
-            <option value="championStats.health"> HP </option>
+          <option value="championStats.abilityHaste"> ability haste </option>
+          <option value="championStats.abilityPower"> ability power </option>
+          <option value="championStats.armor"> armor </option>
+          <option value="championStats.attackDamage"> atack damage </option>
+          <option value="championStats.attackSpeed"> atack speed </option>
+          <option value="championStats.healthMax"> health </option>
+          <option value="championStats.magicResist"> magic resistance </option>
+          <option value="championStats.powerMax"> mana </option>
+
+          <option value="damageStats.magicDamageDone"> total magic damage done </option>
+          <option value="damageStats.magicDamageDoneToChampions"> magic damage done to champions </option>
+          <option value="damageStats.magicDamageTaken"> magic damage taken </option>
+          <option value="damageStats.physicalDamageDone"> total physical damage done </option>
+          <option value="damageStats.physicalDamageDoneToChampions"> physical damage done to champions </option>
+          <option value="damageStats.physicalDamageTaken"> physical damage taken </option>
+          <option value="damageStats.totalDamageDone"> total damage done </option>
+          <option value="damageStats.totalDamageDoneToChampions"> damage done to champions </option>
+          <option value="damageStats.totalDamageTaken"> damage taken </option>
+          <option value="damageStats.trueDamageDone"> total true damage done </option>
+          <option value="damageStats.trueDamageDoneToChampions"> true damage done to champions </option>
+          <option value="damageStats.trueDamageTaken"> true damage taken </option>
+
+          <option value="jungleMinionsKilled"> monsters killed </option>
+          <option value="minionsKilled"> minions killed </option>
+          <option value="level"> level </option>
+          <option value="xp"> experience </option>
+          <option value="totalGold"> gold </option>
+          <option value="timeEnemySpentControlled"> inflicted CC time </option>
+            
         `;
         let playerCharts = [
           NewElement(playerChart(1,selectorOptions)),
