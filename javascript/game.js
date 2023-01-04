@@ -214,8 +214,10 @@ HTTPrequest("GET", matchurl).then(matchdata => {
         }
       }
     }
-
-    makeNewChartElement(".match-info-container", "gold", data, "70em", "15em");
+    document.querySelector(".grid-container").appendChild(NewElement(`
+    <div class="match-chart-container"></div>
+    `))
+    makeNewChartElement(".match-chart-container", "gold", data);
 
 
 
@@ -365,9 +367,9 @@ HTTPrequest("GET", matchurl).then(matchdata => {
         document.querySelector(".add-chart-btn").addEventListener("click", () => {
           counter++;
           let selector = document.querySelector(".chart-data")
-          let blankchart = NewElement(playerChart(counter, selectorOptions));
-          document.querySelector(".chart-container").append(blankchart);
-          document.querySelector(`.player-chart-${counter}`).innerHTML = "";
+          // let blankchart = NewElement(playerChart(counter, selectorOptions));
+          // document.querySelector(".chart-container").append(blankchart);
+          // document.querySelector(`.player-chart-${counter}`).innerHTML = "";
           let chartData = {
             type: "line",
             data: {
@@ -383,6 +385,7 @@ HTTPrequest("GET", matchurl).then(matchdata => {
               labels: range(redSideTotalGold.length, 0, 1)
             },
             options: {
+              responsive: true,
               scales: {
                 y: {
                   type: 'linear',
@@ -399,16 +402,13 @@ HTTPrequest("GET", matchurl).then(matchdata => {
               }
             }
           }
-          makeNewChartElement(`.player-chart-${counter}`, `chart-${counter}`, chartData, "35em");
+          makeNewChartElement(`.chart-container`, `chart-${counter}`, chartData);
         })
       })
     }
   })
 })
 
-function test(){
-  console.log("hello");
-}
 
 function playerChart(chartIndex, selectorOptions){
   return `
