@@ -12,6 +12,23 @@
     --ban-img-width: 2em
 }
 
+.loader-wrapper{
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: var(--main-color-low-lum);
+    display: grid;
+    place-items: center;
+    transition: 1000ms ease-out;
+}
+
+.loaded{
+    opacity: 0;
+    pointer-events: none;
+}
+
 .footer{
     display: grid;
     place-items: center;

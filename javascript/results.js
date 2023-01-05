@@ -122,6 +122,11 @@ function DisplayResults(){
     }
 }
 
+window.addEventListener("load", () => {
+    const loader = document.querySelector(".loader-wrapper");
+    loader.classList.add("loaded");
+})
+
 function GetMatchHistory(puuid, regionContinent, ids = [startTime, endTime, queue, type, start, count]){
     let ids_link = "";
     let idsTags = ["startTime", "endTime", "queue", "type", "start", "count"];

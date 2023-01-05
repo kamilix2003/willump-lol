@@ -1,5 +1,10 @@
 import { askForApiKey, getCurrentVersion} from "./func.js";
 
+window.addEventListener("load", () => {
+    const loader = document.querySelector(".loader-wrapper");
+    loader.classList.add("loaded");
+  })
+
 let input = document.querySelector("#usernameinput");
 let submitbtn = document.querySelector("#submitbtn");
 let regionselection = document.querySelector("#region");
