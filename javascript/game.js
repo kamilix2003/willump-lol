@@ -1,4 +1,4 @@
-import { HTTPrequest, parseURLParams, NewElement, askForApiKey, regions, getCurrentVersion } from "./func.js";
+import { HTTPrequest, parseURLParams, NewElement, askForApiKey, regions, getCurrentVersion, unixToDate } from "./func.js";
 
 askForApiKey();
 const API_KEY = sessionStorage.getItem("API_KEY")
@@ -37,8 +37,7 @@ let counter = 0;
 
 HTTPrequest("GET", matchurl).then(matchdata => {
   let summoners = matchdata.info.participants;
-  const matchtime = new Date(matchdata.info.gameCreation);
-  let date = `${matchtime.toDateString()} ${matchtime.getHours()}:${matchtime.getMinutes()}`
+  let date = unixToDate(matchdata.info.gameCreation)
   document.querySelector("#date").innerHTML = `${date}`;
   // console.log({ matchdata });
   // let team1Kills = document.querySelector("#team1-kills");
