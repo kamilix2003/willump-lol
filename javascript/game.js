@@ -160,8 +160,8 @@ HTTPrequest("GET", matchurl).then(matchdata => {
   </div>
   </div>
   `)
-  document.querySelector(".match-info-container").appendChild(Team1);
-  document.querySelector(".match-info-container").appendChild(Team2);
+  document.querySelector(".grid-container").prepend(Team1);
+  document.querySelector(".grid-container").prepend(Team2);
 
 
   HTTPrequest("GET", timelineurl).then(timeline => {
@@ -171,12 +171,17 @@ HTTPrequest("GET", matchurl).then(matchdata => {
 
     let redSideTotalGold = teamSum(playerFrames(timeline), "totalGold", 0, 5);
     let blueSideTotalGold = teamSum(playerFrames(timeline), "totalGold", 5, 10);
-    let test = blueSideTotalGold.map(x => -x);
     let totalGoldDiffrence = teamDiff(playerFrames(timeline), "totalGold");
+    let pieChartData = pieChart(matchdata, "goldEarned");
+    let dmgChartData = pieChart(matchdata, "totalDamageDealtToChampions");
     let labels = range(redSideTotalGold.length, 0, 1);
-    console.log({ redSideTotalGold, blueSideTotalGold, totalGoldDiffrence, labels });
+    console.log({ redSideTotalGold, blueSideTotalGold, totalGoldDiffrence,pieChartData,dmgChartData, labels });
 
-    let data = {
+    const footer = (tooltipItems) => {
+      return `Gold diffrence: ` + Math.abs(tooltipItems[0].raw - tooltipItems[1].raw);
+    };
+
+    let dataTeamGold = {
       type: "line",
       data: {
         datasets: [
@@ -189,17 +194,56 @@ HTTPrequest("GET", matchurl).then(matchdata => {
           },
           {
             label: "blue side gold",
-            data: test,
+            data: blueSideTotalGold,
             borderWidth: 3,
             borderColor: "hsl(196, 93%, 60%)",
             pointStyle: false,
           },
+        ],
+        labels: range(redSideTotalGold.length, 0, 1)
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            type: 'linear',
+            grid: {
+              color: "hsl(0, 0%, 96%, 0.25)",
+            }
+          },
+          x: {
+            type: 'linear',
+            grid: {
+              color: "hsl(0, 0%, 96%, 0.25)",
+            }
+          },
+        },
+        interaction: {
+          intersect: false,
+          mode: 'index',
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              footer: footer,
+        }
+      }
+    }
+  }
+}
+
+    let dataTeamDiff = {
+      type: "line",
+      data: {
+        datasets: [
           {
             label: "gold diffrence",
             data: totalGoldDiffrence,
-            borderWidth: 3,
+            borderWidth: 2,
             borderColor: "hsl(150, 49%, 59%)",
             pointStyle: false,
+            fill: {above: 'hsl(358, 94%, 62%, 0.5)', below: 'hsl(196, 93%, 60%, 0.5)', target: {value: 350}},
           }
         ],
         labels: range(redSideTotalGold.length, 0, 1)
@@ -220,15 +264,100 @@ HTTPrequest("GET", matchurl).then(matchdata => {
               color: "hsl(0, 0%, 96%, 0.25)",
             }
           },
+        },
+        interaction: {
+          intersect: false,
+          mode: 'index',
+        },
+        plugins: {
         }
       }
     }
+
+    let dataGoldShare = {
+      type: "pie",
+      data: {
+        datasets: [
+          {
+            label: "gold share",
+            data: pieChartData[1],
+            borderWidth: 0,
+            pointStyle: false,
+          }
+        ],
+        labels: pieChartData[0]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+          intersect: false,
+          mode: 'index',
+        },
+        plugins: {
+          legend: {
+            display: false,
+          }
+        }
+      }
+    }
+
+    let dataDamage = {
+      type: "bar",
+      data: {
+        datasets: [
+          {
+            label: "Damage dealt to champions",
+            data: dmgChartData[1],
+            borderWidth: 3,
+            backgroundColor: [
+              "hsl(358, 94%, 62%, 0.5)",
+              "hsl(358, 94%, 62%, 0.5)",
+              "hsl(358, 94%, 62%, 0.5)",
+              "hsl(358, 94%, 62%, 0.5)",
+              "hsl(358, 94%, 62%, 0.5)",
+              "hsl(196, 93%, 60%, 0.5)",
+              "hsl(196, 93%, 60%, 0.5)",
+              "hsl(196, 93%, 60%, 0.5)",
+              "hsl(196, 93%, 60%, 0.5)",
+              "hsl(196, 93%, 60%, 0.5)",
+            ],
+            borderColor: [
+              "hsl(358, 94%, 62%)",
+              "hsl(358, 94%, 62%)",
+              "hsl(358, 94%, 62%)",
+              "hsl(358, 94%, 62%)",
+              "hsl(358, 94%, 62%)",
+              "hsl(196, 93%, 60%)",
+              "hsl(196, 93%, 60%)",
+              "hsl(196, 93%, 60%)",
+              "hsl(196, 93%, 60%)",
+              "hsl(196, 93%, 60%)"
+            ],
+            pointStyle: false,
+          }
+        ],
+        labels: dmgChartData[0]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        
+        interaction: {
+          intersect: false,
+          mode: 'index',
+        },
+        plugins: {
+        }
+      }
+    }
+
     document.querySelector(".grid-container").appendChild(NewElement(`
     <div class="match-chart-container"></div>
     `))
-    makeNewChartElement(".match-chart-container", "gold", data);
-    makeNewChartElement(".match-chart-container", "gasdaold", data);
-    document.querySelector(".chart-container-child").style.width = "100%";
+    makeNewChartElement(".match-chart-container", "gasdaold", dataTeamDiff);
+    makeNewChartElement(".match-chart-container", "gasdaoasdl", dataDamage);
+    makeNewChartElement(".match-chart-container", "gasdaol", dataGoldShare);
 
 
 
@@ -428,6 +557,17 @@ function playerChart(chartIndex, selectorOptions){
       <button class="player-chart-button  player-chart-button-${chartIndex}"> chart ${chartIndex} </button>
     </div>        
   `
+}
+
+function pieChart(matchData, path){
+  let output = [];
+  output[0] = new Array();
+  output[1] = new Array();
+  for(let player = 0; player < 10; player++){
+    output[0][player] = matchData.info.participants[player].championName;
+    output[1][player] = matchData.info.participants[player][path];
+  }
+  return output;
 }
 
 function champIdToName(champId, champData) {
