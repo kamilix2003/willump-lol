@@ -198,6 +198,8 @@ HTTPrequest("GET", matchurl).then(matchdata => {
         labels: range(redSideTotalGold.length, 0, 1)
       },
       options: {
+        responsive: true,
+        maintainAspectRatio: false,
         scales: {
           y: {
             type: 'linear',
@@ -214,9 +216,12 @@ HTTPrequest("GET", matchurl).then(matchdata => {
         }
       }
     }
-
-    makeNewChartElement(".match-info-container", "gold", data, "70em", "15em");
-
+    document.querySelector(".grid-container").appendChild(NewElement(`
+    <div class="match-chart-container"></div>
+    `))
+    makeNewChartElement(".match-chart-container", "gold", data);
+    makeNewChartElement(".match-chart-container", "gasdaold", data);
+    document.querySelector(".chart-container-child").style.width = "100%";
 
 
 
@@ -227,7 +232,9 @@ HTTPrequest("GET", matchurl).then(matchdata => {
     <div class="summoner ${i < 5 ? redSide : blueSide}" id="summoner-${i}">
     <div class="summoner-link">
     <img class="champion-img" id="champion-img-${i}" src="https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${summoners[i].championName}.png" alt="">
-        <p class="champion-name" id="champion-name-${i}">${summoners[i].championName}</p>
+        <p class="champion-name" id="champion-name-${i}">
+        <a href="https://leagueoflegends.fandom.com/wiki/${summoners[i].championName}/LoL"$>${summoners[i].championName}</a>
+        </p>
         <p class="summoner-name" id="summoner-name-${i}">
         <a id="summoner-link-${i}" href="results.html?region=EUN1&summonername=${summoners[i].summonerName}">${summoners[i].summonerName}</a>
         </p>
@@ -365,9 +372,6 @@ HTTPrequest("GET", matchurl).then(matchdata => {
         document.querySelector(".add-chart-btn").addEventListener("click", () => {
           counter++;
           let selector = document.querySelector(".chart-data")
-          let blankchart = NewElement(playerChart(counter, selectorOptions));
-          document.querySelector(".chart-container").append(blankchart);
-          document.querySelector(`.player-chart-${counter}`).innerHTML = "";
           let chartData = {
             type: "line",
             data: {
@@ -383,6 +387,7 @@ HTTPrequest("GET", matchurl).then(matchdata => {
               labels: range(redSideTotalGold.length, 0, 1)
             },
             options: {
+              responsive: true,
               scales: {
                 y: {
                   type: 'linear',
@@ -399,16 +404,13 @@ HTTPrequest("GET", matchurl).then(matchdata => {
               }
             }
           }
-          makeNewChartElement(`.player-chart-${counter}`, `chart-${counter}`, chartData, "35em");
+          makeNewChartElement(`.chart-container`, `chart-${counter}`, chartData);
         })
       })
     }
   })
 })
 
-function test(){
-  console.log("hello");
-}
 
 function playerChart(chartIndex, selectorOptions){
   return `
@@ -523,7 +525,7 @@ function makeNewChartElement(containerClass, chartId, data, width = "25em", heig
   let container = document.querySelector(containerClass);
   let chartElement = NewElement(`
     <div class="chart-container-child">
-      <canvas style="width: ${width}; height: ${height}" class="chart" id="${chartId}"></canvas>
+      <canvas class="chart" id="${chartId}"></canvas>
     </div> 
   `);
   container.appendChild(chartElement);
