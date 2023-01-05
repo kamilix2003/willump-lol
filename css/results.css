@@ -13,7 +13,7 @@ button{
     color: var(--secondary-color);
     background-color: var(--main-color-high-lum);
     border: 0;
-    border-radius: 5px;
+    border-radius: 1em;
     padding: 0.5em;
     transition: 150ms ease-in-out;
 }
@@ -25,7 +25,6 @@ button:hover{
 
 .win-true{
     border: 3px solid var(--win);
-    border-radius: 5px;
     transition: 150ms ease-in-out;
 }
 
@@ -35,7 +34,6 @@ button:hover{
 
 .win-false{
     border: 3px solid var(--lose);
-    border-radius: 5px;
     transition: 150ms ease-in-out;
 }
 
@@ -64,11 +62,14 @@ a{
     grid-template-columns: 5em 8em 1fr 1fr 1fr 1fr;
     gap: 10px;
     margin-bottom: 10px;
+    border-radius: 1em;
 }
 
 .match-champ-img{
     max-width: 5em;
     max-height: 5em;
+    border-radius: 2em;
+    border: 0.3em solid var(--main-color-low-lum);
 }
 
 .grid-container{
@@ -78,13 +79,15 @@ a{
     grid-template-rows: 1fr auto 2em;
     gap: 10px;
     padding: 1.5em;
-    padding-left: 15%;
-    padding-right: 15%;
+    padding-left: 25%;
+    padding-right: 25%;
 }
 
 .summonericon{
     max-width: 15em;
     display: inline;
+    border-radius: 50%;
+    border: 0.4em solid var(--main-color-low-lum);
 }
 
 .grid-summonerinfo{

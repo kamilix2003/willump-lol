@@ -1,7 +1,12 @@
 import { HTTPrequest, parseURLParams, NewElement, askForApiKey, regions, getCurrentVersion, unixToDate } from "./func.js";
 
 askForApiKey();
-const API_KEY = sessionStorage.getItem("API_KEY")
+const API_KEY = sessionStorage.getItem("API_KEY");
+
+window.addEventListener("load", () => {
+  const loader = document.querySelector(".loader-wrapper");
+  loader.classList.add("loaded");
+})
 
 const redSide = "red-side";
 const blueSide = "blue-side";
@@ -17,7 +22,8 @@ let matchurl = `https://${continent}.api.riotgames.com/lol/match/v5/matches/${ur
 let timelineurl = `https://${continent}.api.riotgames.com/lol/match/v5/matches/${urlData.matchid}/timeline?api_key=${API_KEY}`;
 let runesurl = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/runesReforged.json`;
 let championurl = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/champion.json`;
-let itemsurl = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/item.json`
+let itemsurl = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/item.json`;
+
 
 let runesData = await fetch(runesurl).then(res => {
   return res.json();
@@ -34,6 +40,8 @@ let itemsData = await fetch(itemsurl).then(res => {
 console.log({matchurl, timelineurl, runesurl, championurl, itemsurl});
 
 let counter = 0;
+
+
 
 HTTPrequest("GET", matchurl).then(matchdata => {
   let summoners = matchdata.info.participants;
@@ -407,7 +415,7 @@ HTTPrequest("GET", matchurl).then(matchdata => {
         })
       })
     }
-  })
+  }) 
 })
 
 
