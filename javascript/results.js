@@ -16,6 +16,7 @@ function DisplayResults(){
     let UrlData = parseURLParams(window.location.href);
     let PlayerUserName = UrlData.summonername;
     let region =  UrlData.region;
+    let matchCount = 5;
     if(region != "" && PlayerUserName != ""){
         let SummonerInfourl = MakeRequestLink(SUMMONER_INFO_REQUEST,region,PlayerUserName);
         HTTPrequest("GET", SummonerInfourl).then(summonerdata => {
@@ -23,7 +24,7 @@ function DisplayResults(){
             document.querySelector(".summonericon").src = iconURL;
             document.querySelector(".summonerlevel").innerHTML = summonerdata.summonerLevel;
             document.querySelector(".summonername").innerHTML = summonerdata.name;
-            let matchhistoryurl = GetMatchHistory(summonerdata.puuid, regions[region].continent , [ , , , , , 10]);
+            let matchhistoryurl = GetMatchHistory(summonerdata.puuid, regions[region].continent , [ , , , , , matchCount]);
 
             HTTPrequest("GET",matchhistoryurl).then(matchhistory => {
                 // console.log(matchhistory);
@@ -43,6 +44,7 @@ function DisplayResults(){
                         }
                         let kda = [matchdata.info.participants[summoner].kills, matchdata.info.participants[summoner].deaths, matchdata.info.participants[summoner].assists];
                         let matchresult = matchdata.info.participants[summoner].win;
+                        let matchdate = new Date(matchdata.info.gameCreation);
                         let NewMatch = NewElement(`
                         <a href="game.html?matchid=${matchhistory[i]}">
                         <div class="match match-${i} win-${matchresult}">
@@ -50,7 +52,7 @@ function DisplayResults(){
                             <h3 class="match-champ">${matchdata.info.participants[summoner].championName}</h3>
                             <p class="match-kda">${kda[0]}/${kda[1]}/${kda[2]}</p>
                             <p class="game-mode">${matchdata.info.gameMode}</p>
-                            <p class="match-date">${unixToDate(matchdata.info.gameCreation)}</p>
+                            <p class="match-date">${unixToDate(matchdate)}</p>
                             <p class="match-id" hidden> ${matchhistory[i]} </p>
                         </div>
                         </a>
@@ -79,6 +81,43 @@ function DisplayResults(){
             }).catch(response => {
                 // console.log(response);
             });
+
+            document.querySelector(".more-games").addEventListener("click", async () => {
+                let url = GetMatchHistory(summonerdata.puuid, regions[region].continent , [ , , , , matchCount++, 1]);
+                let matchResponse = await fetch(url).then( res => {
+                    return res.json();
+                })
+                console.log(matchResponse)
+                let matchurl = MakeRequestLink(MATCH_INFO_REQUEST,regions[region].continent, matchResponse[0]);
+                let matchdata = await fetch(matchurl).then(res => {
+                    return res.json();
+                })
+                let summoner;
+                for(let i = 0; i < 10; i++){
+                    if(matchdata.info.participants[i].summonerName == PlayerUserName){
+                        summoner = i;
+                    }
+                }
+                let matchresult = matchdata.info.participants[summoner].win;
+                let kda = [
+                    matchdata.info.participants[summoner].kills,
+                    matchdata.info.participants[summoner].deaths,
+                    matchdata.info.participants[summoner].assists
+                ]
+                let NewMatch = NewElement(`
+                    <a href="game.html?matchid=${matchResponse[0]}">
+                    <div class="match match-${matchCount} win-${matchresult}">
+                        <img class="match-champ-img" src="https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${matchdata.info.participants[summoner].championName}.png" alt="">
+                        <h3 class="match-champ">${matchdata.info.participants[summoner].championName}</h3>
+                        <p class="match-kda">${kda[0]}/${kda[1]}/${kda[2]}</p>
+                        <p class="game-mode">${matchdata.info.gameMode}</p>
+                        <p class="match-date">${unixToDate(matchdata.info.gameCreation)}</p>
+                        <p class="match-id" hidden> ${matchResponse[0]} </p>
+                    </div>
+                    </a>
+                    `);
+                document.querySelector(".grid-matchhistory").appendChild(NewMatch);
+            })
         })
     }
 }

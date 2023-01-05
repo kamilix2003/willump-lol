@@ -41,8 +41,7 @@ export const regions = {
 
 export function unixToDate(unixTime) {
     let date = new Date(unixTime);
-    let formattedTime = date.toLocaleDateString("en-GB");
-    return formattedTime;
+    return `${date.toDateString()} ${date.getHours() < 10 ? `0${date.getHours()}`: date.getHours()}:${date.getMinutes() < 10 ? `0${date.getMinutes()}`: date.getMinutes()}`;
   }
 
 function DisplayMatchHistory(data, id){
