@@ -12,6 +12,10 @@
     --ban-img-width: 2em
 }
 
+h1{
+    margin: 0;
+}
+
 .loader-wrapper{
     height: 100%;
     width: 100%;
@@ -47,6 +51,7 @@
 .header{
     display: grid;
     place-items: center;
-    height: 5vh;
+    min-height: 3em;
+    height: fit-content;
     background-color: var(--main-color-low-lum);
 }

@@ -24,21 +24,14 @@ button:hover{
 }
 
 .win-true{
-    border: 3px solid var(--win);
+    color: var(--win);
     transition: 150ms ease-in-out;
 }
 
-.win-true:hover{
-    background-color: var(--win-low-opa);
-}
 
 .win-false{
-    border: 3px solid var(--lose);
+    color: var(--lose);
     transition: 150ms ease-in-out;
-}
-
-.win-false:hover{
-    background-color: var(--lose-low-opa);
 }
 
 .more-games{
@@ -58,17 +51,42 @@ a{
 }
 
 .match{
+    background-color: var(--main-color-high-lum);
     display: grid;
-    grid-template-columns: 5em 8em 1fr 1fr 1fr 1fr;
+    grid-template-columns: 5em 8em auto 5em auto auto;
+    padding: 3px;
     gap: 10px;
     margin-bottom: 10px;
     border-radius: 1em;
+    border: var(--main-color) solid 1px;
+    transition: border 150ms ease-in-out;
+}
+
+.win-false:hover{
+    border: 3px solid var(--lose);
+}
+
+.win-true:hover{
+    border: 3px solid var(--win);
+}
+
+.match div img{
+    height: 2em;
+    width: 2em;
+    border-radius: 0.5em;
+    border: 0.2em solid var(--main-color-low-lum);
+}
+
+.match div{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
 }
 
 .match-champ-img{
     max-width: 5em;
     max-height: 5em;
-    border-radius: 2em;
+    border-radius: 1em;
     border: 0.3em solid var(--main-color-low-lum);
 }
 
@@ -76,7 +94,7 @@ a{
     background-color: var(--main-color);
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: 1fr auto 2em;
+    grid-template-rows: 1fr auto auto;
     gap: 10px;
     padding: 1.5em;
     padding-left: 25%;
@@ -86,16 +104,23 @@ a{
 .summonericon{
     max-width: 15em;
     display: inline;
-    border-radius: 50%;
+    border-radius: 1em;
     border: 0.4em solid var(--main-color-low-lum);
 }
 
 .grid-summonerinfo{
+    background-color: var(--main-color-high-lum);
+    border-radius: 1em;
     display: flex;
     grid-column: 1 / span 1;
     grid-row: 1 / span 1;
     padding: 10px;
     gap: 1em;
+}
+
+.grid-summonerinfo div{
+    text-align: center;
+    flex-grow: 2;
 }
 
 .grid-matchhistory{

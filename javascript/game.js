@@ -1,4 +1,4 @@
-import { HTTPrequest, parseURLParams, NewElement, askForApiKey, regions, getCurrentVersion, unixToDate } from "./func.js";
+import { HTTPrequest, parseURLParams, NewElement, askForApiKey, regions, getCurrentVersion, unixToDate, getSummonerSpell } from "./func.js";
 
 askForApiKey();
 const API_KEY = sessionStorage.getItem("API_KEY");
@@ -23,7 +23,11 @@ let timelineurl = `https://${continent}.api.riotgames.com/lol/match/v5/matches/$
 let runesurl = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/runesReforged.json`;
 let championurl = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/champion.json`;
 let itemsurl = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/item.json`;
+let spellsurl = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/summoner.json`;
 
+let spellsData = await fetch(spellsurl).then(res => {
+    return res.json();
+});
 
 let runesData = await fetch(runesurl).then(res => {
   return res.json();
@@ -176,9 +180,12 @@ HTTPrequest("GET", matchurl).then(matchdata => {
     let dmgChartData = pieChart(matchdata, "totalDamageDealtToChampions");
     let labels = range(redSideTotalGold.length, 0, 1);
     console.log({ redSideTotalGold, blueSideTotalGold, totalGoldDiffrence,pieChartData,dmgChartData, labels });
-
+    let tooltipcounter = 0;
     const footer = (tooltipItems) => {
-      return `Gold diffrence: ` + Math.abs(tooltipItems[0].raw - tooltipItems[1].raw);
+      let output = 
+      `red side total gold: ${redSideTotalGold[tooltipItems[0].dataIndex]}
+blue side total gold: ${blueSideTotalGold[tooltipItems[0].dataIndex]}`
+      return output;
     };
 
     let dataTeamDiff = {
@@ -222,6 +229,11 @@ HTTPrequest("GET", matchurl).then(matchdata => {
           mode: 'index',
         },
         plugins: {
+          tooltip: {
+            callbacks: {
+              footer: footer,
+            }
+          }
         }
       }
     }
@@ -307,7 +319,11 @@ HTTPrequest("GET", matchurl).then(matchdata => {
       summonerContainer.appendChild(summoner);
 
       document.querySelector(`#summoner-stats-btn-${i}`).addEventListener("click", (event) => {
-
+        let summonerSpells = [
+          getSummonerSpell(summoners[i].summoner1Id, spellsData),
+          getSummonerSpell(summoners[i].summoner2Id, spellsData),,
+        ]
+        console.log(summonerSpells)
         let items = [
           itemsData.data[summoners[i].item0] != null ? itemsData.data[summoners[i].item0] : "",
           itemsData.data[summoners[i].item1] != null ? itemsData.data[summoners[i].item1] : "",
@@ -345,11 +361,14 @@ HTTPrequest("GET", matchurl).then(matchdata => {
         console.log({runes, items});
         let statsDiv = NewElement(`
       <div class="summoner-stats-container-child">
+      <div class="stats">
       <p>kda: ${stats.kills}/${stats.deaths}/${stats.assists}</p>
       <p>dmg dealt: ${stats.damageDealt}</p>
       <p>dmg taken: ${stats.damageTaken}</p>
       <p>vision score: ${stats.visionScore}</p>
       <p>farm: ${stats.farm()}</p>
+      </div>
+      <div class="stats-wrapper">
       <div class="items">
           <a href="https://leagueoflegends.fandom.com/wiki/${items[0] != "" ? items[0].name.replaceAll(" ", "_") : "" }"><img class="item-icon" src="${items[0] != "" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[0].image.full}` : ""}" alt=""></a>
           <a href="https://leagueoflegends.fandom.com/wiki/${items[1] != "" ? items[1].name.replaceAll(" ", "_") : "" }"><img class="item-icon" src="${items[1] != "" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[1].image.full}` : ""}" alt=""></a>
@@ -357,6 +376,11 @@ HTTPrequest("GET", matchurl).then(matchdata => {
           <a href="https://leagueoflegends.fandom.com/wiki/${items[3] != "" ? items[3].name.replaceAll(" ", "_") : "" }"><img class="item-icon" src="${items[3] != "" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[3].image.full}` : ""}" alt=""></a>
           <a href="https://leagueoflegends.fandom.com/wiki/${items[4] != "" ? items[4].name.replaceAll(" ", "_") : "" }"><img class="item-icon" src="${items[4] != "" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[4].image.full}` : ""}" alt=""></a>
           <a href="https://leagueoflegends.fandom.com/wiki/${items[5] != "" ? items[5].name.replaceAll(" ", "_") : "" }"><img class="item-icon" src="${items[5] != "" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[5].image.full}` : ""}" alt=""></a>
+      </div>
+      <div class="summoner-spells">
+      <img src="https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/spell/${summonerSpells[0].image.full}" alt="">
+      <img src="https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/spell/${summonerSpells[1].image.full}" alt="">
+      </div>
       </div>
       <div class="runes">
           <img class="rune-icon rune-icon-main" src="http://ddragon.leagueoflegends.com/cdn/img/${runes.main.row1.icon}" alt="">
@@ -396,6 +420,7 @@ HTTPrequest("GET", matchurl).then(matchdata => {
           }
 
         let selectorOptions = `
+        <optgroup label="Champion stats">
           <option value="championStats.abilityPower"> ability power </option>
           <option value="championStats.armor"> armor </option>
           <option value="championStats.attackDamage"> atack damage </option>
@@ -403,7 +428,8 @@ HTTPrequest("GET", matchurl).then(matchdata => {
           <option value="championStats.healthMax"> health </option>
           <option value="championStats.magicResist"> magic resistance </option>
           <option value="championStats.powerMax"> mana </option>
-
+        </optgroup>
+        <optgroup label="Damage stats">
           <option value="damageStats.magicDamageDone"> total magic damage done </option>
           <option value="damageStats.magicDamageDoneToChampions"> magic damage done to champions </option>
           <option value="damageStats.magicDamageTaken"> magic damage taken </option>
@@ -416,14 +442,15 @@ HTTPrequest("GET", matchurl).then(matchdata => {
           <option value="damageStats.trueDamageDone"> total true damage done </option>
           <option value="damageStats.trueDamageDoneToChampions"> true damage done to champions </option>
           <option value="damageStats.trueDamageTaken"> true damage taken </option>
-
+        </optgroup>
+        <optgroup label="General stats">
           <option value="jungleMinionsKilled"> monsters killed </option>
           <option value="minionsKilled"> minions killed </option>
           <option value="level"> level </option>
           <option value="xp"> experience </option>
           <option selected="selected" value="totalGold"> gold </option>
           <option value="timeEnemySpentControlled"> inflicted CC time </option>
-            
+        </optgroup>
         `;
         document.querySelector(".chart-data").innerHTML = selectorOptions;
         document.querySelector(".remove-all-charts-btn").addEventListener("click", () => {

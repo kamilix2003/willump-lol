@@ -108,4 +108,14 @@ export function NewElement(html){
     return template.content.firstElementChild;
 }
 
+export function getSummonerSpell(spellId, spellsData){
+    let keys = Object.keys(spellsData.data);
+    let output;
+    keys.map(key => {
+        spellsData.data[key].key == spellId ? output = spellsData.data[key] : "nope";
+    })
+
+    return output;
+}
+
 
