@@ -51,6 +51,7 @@ h1{
 .header{
     display: grid;
     place-items: center;
+    min-height: 3em;
     height: fit-content;
     background-color: var(--main-color-low-lum);
 }

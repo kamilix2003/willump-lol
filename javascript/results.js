@@ -15,7 +15,7 @@ const SUMMONER_INFO_REQUEST = "/lol/summoner/v4/summoners/by-name/";
 const LEAGUE_INFO_REQUEST = "/lol/league/v4/entries/by-summoner/";
 const MATCH_INFO_REQUEST = "/lol/match/v5/matches/";
 
-let summonerSpells = await fetch(`https://ddragon.leagueoflegends.com/cdn/12.23.1/data/en_US/summoner.json`).then(res => {
+let summonerSpells = await fetch(`https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/summoner.json`).then(res => {
     return res.json();
 });
 
