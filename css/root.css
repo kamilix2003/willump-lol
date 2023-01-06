@@ -28,6 +28,10 @@ h1{
     transition: 1000ms ease-out;
 }
 
+.loader-wrapper h1{
+    color: var(--secondary-color);
+}
+
 .loaded{
     opacity: 0;
     pointer-events: none;
