@@ -1,6 +1,11 @@
-import { parseURLParams, MakeRequestLink, HTTPrequest, SummonerIconURL, NewElement, unixToDate, askForApiKey, regions, getCurrentVersion} from "./func.js";
+import { parseURLParams, MakeRequestLink, HTTPrequest, SummonerIconURL, NewElement, unixToDate, askForApiKey, regions, getCurrentVersion, getSummonerSpell} from "./func.js";
 
 askForApiKey();
+
+window.addEventListener("load", () => {
+    const loader = document.querySelector(".loader-wrapper");
+    loader.classList.add("loaded");
+})
 
 const API_KEY = sessionStorage.getItem("API_KEY")
 
@@ -9,6 +14,12 @@ const currentVersion = await getCurrentVersion();
 const SUMMONER_INFO_REQUEST = "/lol/summoner/v4/summoners/by-name/";
 const LEAGUE_INFO_REQUEST = "/lol/league/v4/entries/by-summoner/";
 const MATCH_INFO_REQUEST = "/lol/match/v5/matches/";
+
+let summonerSpells = await fetch(`https://ddragon.leagueoflegends.com/cdn/12.23.1/data/en_US/summoner.json`).then(res => {
+    return res.json();
+});
+
+console.log(summonerSpells);
 
 DisplayResults();
 
@@ -22,7 +33,7 @@ function DisplayResults(){
         HTTPrequest("GET", SummonerInfourl).then(summonerdata => {
             let iconURL = SummonerIconURL(summonerdata.profileIconId);
             document.querySelector(".summonericon").src = iconURL;
-            document.querySelector(".summonerlevel").innerHTML = summonerdata.summonerLevel;
+            document.querySelector(".summonerlevel").innerHTML = "Level: " + summonerdata.summonerLevel;
             document.querySelector(".summonername").innerHTML = summonerdata.name;
             let matchhistoryurl = GetMatchHistory(summonerdata.puuid, regions[region].continent , [ , , , , , matchCount]);
 
@@ -33,7 +44,6 @@ function DisplayResults(){
                 for(let i = 0; i < matchhistory.length; i++){
                     let url2 = MakeRequestLink(MATCH_INFO_REQUEST,regions[region].continent,matchhistory[i])
                     HTTPrequest("GET", url2).then(matchdata => {
-                        // console.log({matchdata});
                         // let gameVersion = `${matchdata.info.gameVersion.split(".")[0]}.${matchdata.info.gameVersion.split(".")[1]}`;
                         let participants = matchdata.metadata.participants;
                         let summoner;
@@ -42,17 +52,23 @@ function DisplayResults(){
                                 summoner = i;
                             }
                         }
+                        let summonerSpell1 = getSummonerSpell(matchdata.info.participants[summoner].summoner1Id, summonerSpells).image.full;
+                        let summonerSpell2 = getSummonerSpell(matchdata.info.participants[summoner].summoner2Id, summonerSpells).image.full;
                         let kda = [matchdata.info.participants[summoner].kills, matchdata.info.participants[summoner].deaths, matchdata.info.participants[summoner].assists];
                         let matchresult = matchdata.info.participants[summoner].win;
                         let matchdate = new Date(matchdata.info.gameCreation);
                         let NewMatch = NewElement(`
                         <a href="game.html?matchid=${matchhistory[i]}">
-                        <div class="match match-${i} win-${matchresult}">
+                        <div class="match match-${i}  win-${matchresult}">
                             <img class="match-champ-img" src="https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${matchdata.info.participants[summoner].championName}.png" alt="">
                             <h3 class="match-champ">${matchdata.info.participants[summoner].championName}</h3>
                             <p class="match-kda">${kda[0]}/${kda[1]}/${kda[2]}</p>
                             <p class="game-mode">${matchdata.info.gameMode}</p>
                             <p class="match-date">${unixToDate(matchdate)}</p>
+                            <div>
+                            <img src="https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/spell/${summonerSpell1}" alt="">
+                            <img src="https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/spell/${summonerSpell2}" alt="">
+                            </div>
                             <p class="match-id" hidden> ${matchhistory[i]} </p>
                         </div>
                         </a>
@@ -104,14 +120,20 @@ function DisplayResults(){
                     matchdata.info.participants[summoner].deaths,
                     matchdata.info.participants[summoner].assists
                 ]
+                let summonerSpell1 = getSummonerSpell(matchdata.info.participants[summoner].summoner1Id, summonerSpells).image.full;
+                let summonerSpell2 = getSummonerSpell(matchdata.info.participants[summoner].summoner2Id, summonerSpells).image.full;
                 let NewMatch = NewElement(`
                     <a href="game.html?matchid=${matchResponse[0]}">
-                    <div class="match match-${matchCount} win-${matchresult}">
+                    <div class="match match-${matchCount}  win-${matchresult}">
                         <img class="match-champ-img" src="https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${matchdata.info.participants[summoner].championName}.png" alt="">
                         <h3 class="match-champ">${matchdata.info.participants[summoner].championName}</h3>
                         <p class="match-kda">${kda[0]}/${kda[1]}/${kda[2]}</p>
                         <p class="game-mode">${matchdata.info.gameMode}</p>
                         <p class="match-date">${unixToDate(matchdata.info.gameCreation)}</p>
+                        <div>
+                        <img src="https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/spell/${summonerSpell1}" alt="">
+                        <img src="https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/spell/${summonerSpell2}" alt="">
+                        </div>
                         <p class="match-id" hidden> ${matchResponse[0]} </p>
                     </div>
                     </a>
@@ -121,11 +143,6 @@ function DisplayResults(){
         })
     }
 }
-
-window.addEventListener("load", () => {
-    const loader = document.querySelector(".loader-wrapper");
-    loader.classList.add("loaded");
-})
 
 function GetMatchHistory(puuid, regionContinent, ids = [startTime, endTime, queue, type, start, count]){
     let ids_link = "";
