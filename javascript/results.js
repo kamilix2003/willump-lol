@@ -1,4 +1,4 @@
-import { parseURLParams, MakeRequestLink, HTTPrequest, SummonerIconURL, NewElement, unixToDate, askForApiKey, regions, getCurrentVersion, getSummonerSpell } from "./func.js";
+import { parseURLParams, MakeRequestLink, HTTPrequest, SummonerIconURL, NewElement, unixToDate, askForApiKey, regions, getCurrentVersion } from "./func.js";
 
 askForApiKey();
 
@@ -156,3 +156,12 @@ function GetMatchHistory(puuid, regionContinent, ids = [startTime, endTime, queu
     return url;
 }
 
+function getSummonerSpell(spellId, spellsData){
+    let keys = Object.keys(spellsData.data);
+    let output;
+    keys.map(key => {
+        spellsData.data[key].key == spellId ? output = spellsData.data[key] : "nope";
+    })
+
+    return output;
+}

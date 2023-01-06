@@ -1,4 +1,4 @@
-import { HTTPrequest, parseURLParams, NewElement, askForApiKey, regions, getCurrentVersion, unixToDate, getSummonerSpell } from "./func.js";
+import { HTTPrequest, parseURLParams, NewElement, askForApiKey, regions, getCurrentVersion, unixToDate } from "./func.js";
 
 askForApiKey();
 const API_KEY = sessionStorage.getItem("API_KEY");
@@ -633,4 +633,14 @@ function makeNewChartElement(containerClass, chartId, data, width = "25em", heig
   `);
   container.appendChild(chartElement);
   new Chart(chartId, data);
+}
+
+function getSummonerSpell(spellId, spellsData){
+  let keys = Object.keys(spellsData.data);
+  let output;
+  keys.map(key => {
+      spellsData.data[key].key == spellId ? output = spellsData.data[key] : "nope";
+  })
+
+  return output;
 }
