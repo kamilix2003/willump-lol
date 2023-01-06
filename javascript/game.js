@@ -181,58 +181,6 @@ HTTPrequest("GET", matchurl).then(matchdata => {
       return `Gold diffrence: ` + Math.abs(tooltipItems[0].raw - tooltipItems[1].raw);
     };
 
-    let dataTeamGold = {
-      type: "line",
-      data: {
-        datasets: [
-          {
-            label: "red side gold",
-            data: redSideTotalGold,
-            borderWidth: 3,
-            borderColor: "hsl(358, 94%, 62%)",
-            pointStyle: false,
-          },
-          {
-            label: "blue side gold",
-            data: blueSideTotalGold,
-            borderWidth: 3,
-            borderColor: "hsl(196, 93%, 60%)",
-            pointStyle: false,
-          },
-        ],
-        labels: range(redSideTotalGold.length, 0, 1)
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          y: {
-            type: 'linear',
-            grid: {
-              color: "hsl(0, 0%, 96%, 0.25)",
-            }
-          },
-          x: {
-            type: 'linear',
-            grid: {
-              color: "hsl(0, 0%, 96%, 0.25)",
-            }
-          },
-        },
-        interaction: {
-          intersect: false,
-          mode: 'index',
-        },
-        plugins: {
-          tooltip: {
-            callbacks: {
-              footer: footer,
-        }
-      }
-    }
-  }
-}
-
     let dataTeamDiff = {
       type: "line",
       data: {
@@ -243,7 +191,11 @@ HTTPrequest("GET", matchurl).then(matchdata => {
             borderWidth: 2,
             borderColor: "hsl(150, 49%, 59%)",
             pointStyle: false,
-            fill: {above: 'hsl(358, 94%, 62%, 0.5)', below: 'hsl(196, 93%, 60%, 0.5)', target: {value: 350}},
+            fill: {
+              target: {value: 0},
+              above: 'hsl(358, 94%, 62%, 0.5)', 
+              below: 'hsl(196, 93%, 60%, 0.5)', 
+            },
           }
         ],
         labels: range(redSideTotalGold.length, 0, 1)
@@ -270,34 +222,6 @@ HTTPrequest("GET", matchurl).then(matchdata => {
           mode: 'index',
         },
         plugins: {
-        }
-      }
-    }
-
-    let dataGoldShare = {
-      type: "pie",
-      data: {
-        datasets: [
-          {
-            label: "gold share",
-            data: pieChartData[1],
-            borderWidth: 0,
-            pointStyle: false,
-          }
-        ],
-        labels: pieChartData[0]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: {
-          intersect: false,
-          mode: 'index',
-        },
-        plugins: {
-          legend: {
-            display: false,
-          }
         }
       }
     }
@@ -355,9 +279,9 @@ HTTPrequest("GET", matchurl).then(matchdata => {
     document.querySelector(".grid-container").appendChild(NewElement(`
     <div class="match-chart-container"></div>
     `))
-    makeNewChartElement(".match-chart-container", "gasdaold", dataTeamDiff);
-    makeNewChartElement(".match-chart-container", "gasdaoasdl", dataDamage);
-    makeNewChartElement(".match-chart-container", "gasdaol", dataGoldShare);
+    makeNewChartElement(".match-chart-container", "golddiff", dataTeamDiff);
+    makeNewChartElement(".match-chart-container", "dmgdealt", dataDamage);
+    document.querySelector(".match-chart-container .chart-container-child").style.width = "100%";
 
 
 
@@ -518,6 +442,10 @@ HTTPrequest("GET", matchurl).then(matchdata => {
                   borderWidth: 3,
                   borderColor: "hsl(358, 94%, 62%)",
                   pointStyle: false,
+                  fill: {
+                    target: {value: 0},
+                    above: "hsl(358, 94%, 62%, 0.5)",
+                  }
                 },
               ],
               labels: range(redSideTotalGold.length, 0, 1)
@@ -537,6 +465,7 @@ HTTPrequest("GET", matchurl).then(matchdata => {
                     color: "hsl(0, 0%, 96%, 0.25)",
                   }
                 },
+                
               }
             }
           }
