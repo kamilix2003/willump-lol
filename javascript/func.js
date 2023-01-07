@@ -11,7 +11,12 @@ export function askForApiKey(){
     if (sessionStorage.getItem("API_KEY") == "" || sessionStorage.getItem("API_KEY") == "null" || sessionStorage.getItem("API_KEY") == null) {
         alert(`you can get your api key on https://developer.riotgames.com/`);
         let promptInput = prompt(`api key:`);
-        sessionStorage.setItem("API_KEY", promptInput);
+        if(promptInput.length == 42 && promptInput.substring(0, 5) == "RGAPI"){
+            sessionStorage.setItem("API_KEY", promptInput);
+        }
+        else{
+            alert("Invalid key");
+        }
         window.location.reload();
     }
 }
