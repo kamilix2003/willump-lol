@@ -45,13 +45,13 @@ console.log({matchurl, timelineurl, runesurl, championurl, itemsurl});
 
 let counter = 0;
 
-
+let prevSummoner;
 
 HTTPrequest("GET", matchurl).then(matchdata => {
   let summoners = matchdata.info.participants;
   let date = unixToDate(matchdata.info.gameCreation)
   document.querySelector("#date").innerHTML = `${date}`;
-  // console.log({ matchdata });
+  // // console.log({ matchdata });
   // let team1Kills = document.querySelector("#team1-kills");
   // let team2Kills = document.querySelector("#team2-kills");
   // team1Kills.classList.add(`win-${teamWin1}`);
@@ -171,7 +171,7 @@ HTTPrequest("GET", matchurl).then(matchdata => {
   HTTPrequest("GET", timelineurl).then(timeline => {
     let playerframes = playerFrames(timeline);
     let frames = timeline.info.frames;
-    console.log({ playerframes, frames });
+    // console.log({ playerframes, frames });
 
     let redSideTotalGold = teamSum(playerFrames(timeline), "totalGold", 0, 5);
     let blueSideTotalGold = teamSum(playerFrames(timeline), "totalGold", 5, 10);
@@ -179,7 +179,7 @@ HTTPrequest("GET", matchurl).then(matchdata => {
     let pieChartData = pieChart(matchdata, "goldEarned");
     let dmgChartData = pieChart(matchdata, "totalDamageDealtToChampions");
     let labels = range(redSideTotalGold.length, 0, 1);
-    console.log({ redSideTotalGold, blueSideTotalGold, totalGoldDiffrence,pieChartData,dmgChartData, labels });
+    // console.log({ redSideTotalGold, blueSideTotalGold, totalGoldDiffrence,pieChartData,dmgChartData, labels });
     let tooltipcounter = 0;
     const footer = (tooltipItems) => {
       let output = 
@@ -319,11 +319,18 @@ blue side total gold: ${blueSideTotalGold[tooltipItems[0].dataIndex]}`
       summonerContainer.appendChild(summoner);
 
       document.querySelector(`#summoner-stats-btn-${i}`).addEventListener("click", (event) => {
+        if(prevSummoner != undefined){
+          document.querySelector(`#summoner-stats-btn-${prevSummoner}`).style.backgroundColor = "hsl(227, 28%, 10%)";
+          document.querySelector(`#summoner-stats-btn-${prevSummoner}`).style.color = "hsl(0, 0%, 96%)";
+        }
+        document.querySelector(`#summoner-stats-btn-${i}`).style.backgroundColor = "hsl(0, 0%, 96%)";
+        document.querySelector(`#summoner-stats-btn-${i}`).style.color = "hsl(228, 29%, 13%)";
+        prevSummoner = i;
         let summonerSpells = [
           getSummonerSpell(summoners[i].summoner1Id, spellsData),
           getSummonerSpell(summoners[i].summoner2Id, spellsData),,
         ]
-        console.log(summonerSpells)
+        // console.log(summonerSpells)
         let items = [
           itemsData.data[summoners[i].item0] != null ? itemsData.data[summoners[i].item0] : "",
           itemsData.data[summoners[i].item1] != null ? itemsData.data[summoners[i].item1] : "",
@@ -358,7 +365,7 @@ blue side total gold: ${blueSideTotalGold[tooltipItems[0].dataIndex]}`
             return this.totalMinionsKilled + this.neutralMinionsKilled
           },
         }
-        console.log({runes, items});
+        // console.log({runes, items});
         let statsDiv = NewElement(`
       <div class="summoner-stats-container-child">
       <div class="stats">
@@ -370,12 +377,12 @@ blue side total gold: ${blueSideTotalGold[tooltipItems[0].dataIndex]}`
       </div>
       <div class="stats-wrapper">
       <div class="items">
-          <a href="https://leagueoflegends.fandom.com/wiki/${items[0] != "" ? items[0].name.replaceAll(" ", "_") : "" }"><img class="item-icon" src="${items[0] != "" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[0].image.full}` : ""}" alt=""></a>
-          <a href="https://leagueoflegends.fandom.com/wiki/${items[1] != "" ? items[1].name.replaceAll(" ", "_") : "" }"><img class="item-icon" src="${items[1] != "" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[1].image.full}` : ""}" alt=""></a>
-          <a href="https://leagueoflegends.fandom.com/wiki/${items[2] != "" ? items[2].name.replaceAll(" ", "_") : "" }"><img class="item-icon" src="${items[2] != "" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[2].image.full}` : ""}" alt=""></a>
-          <a href="https://leagueoflegends.fandom.com/wiki/${items[3] != "" ? items[3].name.replaceAll(" ", "_") : "" }"><img class="item-icon" src="${items[3] != "" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[3].image.full}` : ""}" alt=""></a>
-          <a href="https://leagueoflegends.fandom.com/wiki/${items[4] != "" ? items[4].name.replaceAll(" ", "_") : "" }"><img class="item-icon" src="${items[4] != "" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[4].image.full}` : ""}" alt=""></a>
-          <a href="https://leagueoflegends.fandom.com/wiki/${items[5] != "" ? items[5].name.replaceAll(" ", "_") : "" }"><img class="item-icon" src="${items[5] != "" ? `http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[5].image.full}` : ""}" alt=""></a>
+          ${items[0] != "" ? `<a href="https://leagueoflegends.fandom.com/wiki/${items[0].name.replaceAll(" ", "_")}"> <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[0].image.full}" alt=""></a>` : ""}
+          ${items[1] != "" ? `<a href="https://leagueoflegends.fandom.com/wiki/${items[1].name.replaceAll(" ", "_")}"> <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[1].image.full}" alt=""></a>` : ""}
+          ${items[2] != "" ? `<a href="https://leagueoflegends.fandom.com/wiki/${items[2].name.replaceAll(" ", "_")}"> <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[2].image.full}" alt=""></a>` : ""}
+          ${items[3] != "" ? `<a href="https://leagueoflegends.fandom.com/wiki/${items[3].name.replaceAll(" ", "_")}"> <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[3].image.full}" alt=""></a>` : ""}
+          ${items[4] != "" ? `<a href="https://leagueoflegends.fandom.com/wiki/${items[4].name.replaceAll(" ", "_")}"> <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[4].image.full}" alt=""></a>` : ""}
+          ${items[5] != "" ? `<a href="https://leagueoflegends.fandom.com/wiki/${items[5].name.replaceAll(" ", "_")}"> <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[5].image.full}" alt=""></a>` : ""}
       </div>
       <div class="summoner-spells">
       <img src="https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/spell/${summonerSpells[0].image.full}" alt="">
@@ -458,6 +465,7 @@ blue side total gold: ${blueSideTotalGold[tooltipItems[0].dataIndex]}`
         })
         document.querySelector(".add-chart-btn").addEventListener("click", () => {
           counter++;
+          let color = i < 5 ? "358, 94%, 62%" : "196, 93%, 60%";
           let selector = document.querySelector(".chart-data")
           let chartData = {
             type: "line",
@@ -467,11 +475,11 @@ blue side total gold: ${blueSideTotalGold[tooltipItems[0].dataIndex]}`
                   label: selector.options[selector.selectedIndex].label,
                   data: getFromObject(playerframes[i], selector.value),
                   borderWidth: 3,
-                  borderColor: "hsl(358, 94%, 62%)",
+                  borderColor: `hsl(${color})`,
                   pointStyle: false,
                   fill: {
                     target: {value: 0},
-                    above: "hsl(358, 94%, 62%, 0.5)",
+                    above: `hsl(${color}, 0.5)`,
                   }
                 },
               ],
@@ -496,7 +504,16 @@ blue side total gold: ${blueSideTotalGold[tooltipItems[0].dataIndex]}`
               }
             }
           }
-          makeNewChartElement(`.chart-container`, `chart-${counter}`, chartData);
+          if(document.querySelector(`#chart-${selector.options[selector.selectedIndex].label.replaceAll(" ", "-")}-${summoners[i].championName}`) == undefined){
+            makeNewChartElement(`.chart-container`, `chart-${selector.options[selector.selectedIndex].label.replaceAll(" ", "-")}-${summoners[i].championName}`, chartData)
+            let championNameForChart = NewElement(`
+              <div class="chart-champion-info">
+                <img src="https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${summoners[i].championName}.png" alt="">
+                <p> ${summoners[i].championName} </p>
+              </div>
+            `)
+            document.querySelector(`#chart-${selector.options[selector.selectedIndex].label.replaceAll(" ", "-")}-${summoners[i].championName}`).parentNode.prepend(championNameForChart)
+        };
         })
       })
     }
