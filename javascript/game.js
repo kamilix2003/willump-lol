@@ -320,11 +320,9 @@ blue side total gold: ${blueSideTotalGold[tooltipItems[0].dataIndex]}`
 
       document.querySelector(`#summoner-stats-btn-${i}`).addEventListener("click", (event) => {
         if(prevSummoner != undefined){
-          document.querySelector(`#summoner-stats-btn-${prevSummoner}`).style.backgroundColor = "hsl(227, 28%, 10%)";
-          document.querySelector(`#summoner-stats-btn-${prevSummoner}`).style.color = "hsl(0, 0%, 96%)";
+          document.querySelector(`#summoner-stats-btn-${prevSummoner}`).classList.remove("selected");
         }
-        document.querySelector(`#summoner-stats-btn-${i}`).style.backgroundColor = "hsl(0, 0%, 96%)";
-        document.querySelector(`#summoner-stats-btn-${i}`).style.color = "hsl(228, 29%, 13%)";
+        document.querySelector(`#summoner-stats-btn-${i}`).classList.add("selected");
         prevSummoner = i;
         let summonerSpells = [
           getSummonerSpell(summoners[i].summoner1Id, spellsData),
