@@ -1,5 +1,9 @@
 import { askForApiKey, getCurrentVersion} from "./func.js";
 
+let test = await fetch(`http://localhost:3000/`).then(res => {
+    return res.json();
+})
+console.log(test);
 window.addEventListener("load", () => {
     const loader = document.querySelector(".loader-wrapper");
     loader.classList.add("loaded");
