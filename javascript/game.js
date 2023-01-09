@@ -51,13 +51,7 @@ HTTPrequest("GET", matchurl).then(matchdata => {
   let summoners = matchdata.info.participants;
   let date = unixToDate(matchdata.info.gameCreation)
   document.querySelector("#date").innerHTML = `${date}`;
-  // // console.log({ matchdata });
-  // let team1Kills = document.querySelector("#team1-kills");
-  // let team2Kills = document.querySelector("#team2-kills");
-  // team1Kills.classList.add(`win-${teamWin1}`);
-  // team2Kills.classList.add(`win-${teamWin2}`);
-  // team1Kills.innerHTML = matchdata.info.teams[0].objectives.champion.kills;
-  // team2Kills.innerHTML = matchdata.info.teams[1].objectives.champion.kills;
+  console.log({ matchdata, summoners });
 
   let bans;
   if (matchdata.info.teams[0].bans != 0) {
@@ -126,7 +120,7 @@ HTTPrequest("GET", matchurl).then(matchdata => {
     <div class="match-details">
     <p class="win win-${team1Stats.win}">${team1Stats.win ? "Victory!" : ""}</p>
     <p class="bans-info1">bans:</p>
-    <div class="bans bans-team1">
+    <div class="bans bans-${summoners[0].teamId == 100 ? "blue" : "red"}">
     <img src="${bans[0][0] != `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/undefined.png` ? bans[0][0] : `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`}" alt="">
     <img src="${bans[0][1] != `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/undefined.png` ? bans[0][1] : `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`}" alt="">
     <img src="${bans[0][2] != `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/undefined.png` ? bans[0][2] : `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`}" alt="">
@@ -147,7 +141,7 @@ HTTPrequest("GET", matchurl).then(matchdata => {
   <div class="match-details">
   <p class="win win-${team2Stats.win}">${team2Stats.win ? "Victory!" : ""}</p>
   <p class="bans-info2">bans:</p>
-  <div class="bans bans-team2">
+  <div class="bans bans-${summoners[9].teamId == 100 ? "blue" : "red"}">
   <img src="${bans[1][0] != `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/undefined.png` ? bans[1][0] : `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`}" alt="">
   <img src="${bans[1][1] != `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/undefined.png` ? bans[1][1] : `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`}" alt="">
   <img src="${bans[1][2] != `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/undefined.png` ? bans[1][2] : `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`}" alt="">
@@ -200,8 +194,8 @@ blue side total gold: ${blueSideTotalGold[tooltipItems[0].dataIndex]}`
             pointStyle: false,
             fill: {
               target: {value: 0},
-              above: 'hsl(358, 94%, 62%, 0.5)', 
-              below: 'hsl(196, 93%, 60%, 0.5)', 
+              above: summoners[0].teamId == 100 ? "hsl(196, 93%, 60%, 0.5)" : "hsl(358, 94%, 62%, 0.5)", 
+              below: summoners[9].teamId == 100 ? "hsl(196, 93%, 60%, 0.5)" : "hsl(358, 94%, 62%, 0.5)",
             },
           }
         ],
@@ -247,28 +241,28 @@ blue side total gold: ${blueSideTotalGold[tooltipItems[0].dataIndex]}`
             data: dmgChartData[1],
             borderWidth: 3,
             backgroundColor: [
-              "hsl(358, 94%, 62%, 0.5)",
-              "hsl(358, 94%, 62%, 0.5)",
-              "hsl(358, 94%, 62%, 0.5)",
-              "hsl(358, 94%, 62%, 0.5)",
-              "hsl(358, 94%, 62%, 0.5)",
-              "hsl(196, 93%, 60%, 0.5)",
-              "hsl(196, 93%, 60%, 0.5)",
-              "hsl(196, 93%, 60%, 0.5)",
-              "hsl(196, 93%, 60%, 0.5)",
-              "hsl(196, 93%, 60%, 0.5)",
+              summoners[0].teamId == 100 ? "hsl(196, 93%, 60%, 0.5)" : "hsl(358, 94%, 62%, 0.5)",
+              summoners[1].teamId == 100 ? "hsl(196, 93%, 60%, 0.5)" : "hsl(358, 94%, 62%, 0.5)",
+              summoners[2].teamId == 100 ? "hsl(196, 93%, 60%, 0.5)" : "hsl(358, 94%, 62%, 0.5)",
+              summoners[3].teamId == 100 ? "hsl(196, 93%, 60%, 0.5)" : "hsl(358, 94%, 62%, 0.5)",
+              summoners[4].teamId == 100 ? "hsl(196, 93%, 60%, 0.5)" : "hsl(358, 94%, 62%, 0.5)",
+              summoners[5].teamId == 100 ? "hsl(196, 93%, 60%, 0.5)" : "hsl(358, 94%, 62%, 0.5)",
+              summoners[6].teamId == 100 ? "hsl(196, 93%, 60%, 0.5)" : "hsl(358, 94%, 62%, 0.5)",
+              summoners[7].teamId == 100 ? "hsl(196, 93%, 60%, 0.5)" : "hsl(358, 94%, 62%, 0.5)",
+              summoners[8].teamId == 100 ? "hsl(196, 93%, 60%, 0.5)" : "hsl(358, 94%, 62%, 0.5)",
+              summoners[9].teamId == 100 ? "hsl(196, 93%, 60%, 0.5)" : "hsl(358, 94%, 62%, 0.5)",
             ],
             borderColor: [
-              "hsl(358, 94%, 62%)",
-              "hsl(358, 94%, 62%)",
-              "hsl(358, 94%, 62%)",
-              "hsl(358, 94%, 62%)",
-              "hsl(358, 94%, 62%)",
-              "hsl(196, 93%, 60%)",
-              "hsl(196, 93%, 60%)",
-              "hsl(196, 93%, 60%)",
-              "hsl(196, 93%, 60%)",
-              "hsl(196, 93%, 60%)"
+              summoners[0].teamId == 100 ? "hsl(196, 93%, 60%)" : "hsl(358, 94%, 62%)",
+              summoners[1].teamId == 100 ? "hsl(196, 93%, 60%)" : "hsl(358, 94%, 62%)",
+              summoners[2].teamId == 100 ? "hsl(196, 93%, 60%)" : "hsl(358, 94%, 62%)",
+              summoners[3].teamId == 100 ? "hsl(196, 93%, 60%)" : "hsl(358, 94%, 62%)",
+              summoners[4].teamId == 100 ? "hsl(196, 93%, 60%)" : "hsl(358, 94%, 62%)",
+              summoners[5].teamId == 100 ? "hsl(196, 93%, 60%)" : "hsl(358, 94%, 62%)",
+              summoners[6].teamId == 100 ? "hsl(196, 93%, 60%)" : "hsl(358, 94%, 62%)",
+              summoners[7].teamId == 100 ? "hsl(196, 93%, 60%)" : "hsl(358, 94%, 62%)",
+              summoners[8].teamId == 100 ? "hsl(196, 93%, 60%)" : "hsl(358, 94%, 62%)",
+              summoners[9].teamId == 100 ? "hsl(196, 93%, 60%)" : "hsl(358, 94%, 62%)",
             ],
             pointStyle: false,
           }
@@ -301,7 +295,7 @@ blue side total gold: ${blueSideTotalGold[tooltipItems[0].dataIndex]}`
     for (let i = 0; i < summoners.length; i++) {
       let matchresult = matchdata.info.participants[i].win;
       let summoner = NewElement(`
-    <div class="summoner ${i < 5 ? redSide : blueSide}" id="summoner-${i}">
+    <div class="summoner ${summoners[i].teamId == 100 ? blueSide : redSide}" id="summoner-${i}">
     <div class="summoner-link">
     <img class="champion-img" id="champion-img-${i}" src="https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${summoners[i].championName}.png" alt="">
         <p class="champion-name" id="champion-name-${i}">
@@ -463,7 +457,7 @@ blue side total gold: ${blueSideTotalGold[tooltipItems[0].dataIndex]}`
         })
         document.querySelector(".add-chart-btn").addEventListener("click", () => {
           counter++;
-          let color = i < 5 ? "358, 94%, 62%" : "196, 93%, 60%";
+          let color = summoners[i].teamId == 100 ? "196, 93%, 60%" : "358, 94%, 62%";
           let selector = document.querySelector(".chart-data")
           let chartData = {
             type: "line",
