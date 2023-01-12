@@ -5,7 +5,7 @@
   "description": "[website](https://kachi_hi.gitlab.io/it-project/html)",
   "main": "index.js",
   "scripts": {
-    "test": "node backend/index.js"
+    "test": "nodemon backend/index.js"
   },
   "repository": {
     "type": "git",
@@ -20,7 +20,9 @@
   "homepage": "https://gitlab.com/kachi_hi/it-project#readme",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "nodemon": "^2.0.20",
     "undici": "^5.14.0"
   }
 }

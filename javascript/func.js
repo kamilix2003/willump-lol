@@ -1,4 +1,4 @@
-const API_KEY = sessionStorage.getItem("API_KEY")
+// const API_KEY = sessionStorage.getItem("API_KEY")
 
 export async function getCurrentVersion(){
     let output = await fetch(`https://ddragon.leagueoflegends.com/api/versions.json`).then(res => {
@@ -67,7 +67,7 @@ export function SummonerIconURL(summonericonnumber){
 }
 
 export function MakeRequestLink(request_link, region, PlayerUserName){
-    return "https://" + region + ".api.riotgames.com" + request_link + PlayerUserName+ "?api_key=" + API_KEY;
+    return "https://" + region + ".api.riotgames.com" + request_link + PlayerUserName+ "?";
 }
 
 export function parseURLParams(url) {
@@ -113,3 +113,6 @@ export function NewElement(html){
     return template.content.firstElementChild;
 }
 
+export function passRequest(url){
+    return `http://localhost:3000/riotapirequest?url=${encodeURIComponent(url)}`
+}

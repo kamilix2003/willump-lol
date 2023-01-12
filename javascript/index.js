@@ -1,9 +1,5 @@
-import { askForApiKey, getCurrentVersion} from "./func.js";
+import { askForApiKey, getCurrentVersion, passRequest} from "./func.js";
 
-let test = await fetch(`http://localhost:3000/`).then(res => {
-    return res.json();
-})
-console.log(test);
 window.addEventListener("load", () => {
     const loader = document.querySelector(".loader-wrapper");
     loader.classList.add("loaded");
@@ -13,14 +9,14 @@ let input = document.querySelector("#usernameinput");
 let submitbtn = document.querySelector("#submitbtn");
 let regionselection = document.querySelector("#region");
 
-askForApiKey();
-const API_KEY = sessionStorage.getItem("API_KEY")
+// askForApiKey();
+// const API_KEY = sessionStorage.getItem("API_KEY")
 
 submitbtn.onclick = () => playerfound();
 
 function playerfound() {
-    let playerUrl = `https://${regionselection.value}.api.riotgames.com/lol/summoner/v4/summoners/by-name/${input.value}?api_key=${API_KEY}`
-    fetch(playerUrl).then(player => {
+    let playerUrl = `https://${regionselection.value}.api.riotgames.com/lol/summoner/v4/summoners/by-name/${input.value}?`
+    fetch(passRequest(playerUrl)).then(player => {
         if (!player.ok) {
             return player.text().then(text => { throw new Error(text) })
         }
