@@ -27,7 +27,7 @@ function DisplayResults(){
     let UrlData = parseURLParams(window.location.href);
     let PlayerUserName = UrlData.summonername;
     let region =  UrlData.region;
-    let matchCount = 5;
+    let matchCount = UrlData.count || 5;
     if(region != "" && PlayerUserName != ""){
         let SummonerInfourl = MakeRequestLink(SUMMONER_INFO_REQUEST,region,PlayerUserName);
         HTTPrequest("GET", passRequest(SummonerInfourl)).then(summonerdata => {
@@ -87,7 +87,7 @@ function DisplayResults(){
             let LeagueInfourl = MakeRequestLink(LEAGUE_INFO_REQUEST,region,summonerdata.id);
             console.log((LeagueInfourl))
             HTTPrequest("GET", passRequest(LeagueInfourl)).then(response => {
-                console.log(response);
+                // console.log(response);
                 for(let i = 0; i < response.length; i++){
                     if(response[i].queueType == "RANKED_SOLO_5x5"){
                         document.querySelector(".solo").innerHTML = `Solo/Duo: ${response[i].rank} ${response[i].tier} ${response[i].leaguePoints}LP` ;

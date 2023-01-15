@@ -20,6 +20,7 @@ app.get('/', (req, res,) => {
 app.get('/riotapirequest', (req, res) => {
     let url = req.query.url + "api_key="+api_key;
     // res.send(url);
+    // console.log(`request ${url}`)
     fetch(url)
         .then(res => res.json())
         .then(data => res.send(data))
