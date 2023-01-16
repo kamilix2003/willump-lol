@@ -58,7 +58,7 @@ a{
     gap: 10px;
     margin-bottom: 10px;
     border-radius: 1em;
-    border: var(--main-color) solid 1px;
+    border: var(--main-color) solid 3px;
     transition: border 150ms ease-in-out;
 }
 

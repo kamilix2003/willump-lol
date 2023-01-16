@@ -1,7 +1,7 @@
-import { HTTPrequest, parseURLParams, NewElement, askForApiKey, regions, getCurrentVersion, unixToDate } from "./func.js";
+import { HTTPrequest, parseURLParams, NewElement, askForApiKey, regions, getCurrentVersion, unixToDate, passRequest } from "./func.js";
 
-askForApiKey();
-const API_KEY = sessionStorage.getItem("API_KEY");
+// askForApiKey();
+// const API_KEY = sessionStorage.getItem("API_KEY");
 
 window.addEventListener("load", () => {
   const loader = document.querySelector(".loader-wrapper");
@@ -18,8 +18,8 @@ let urlData = parseURLParams(window.location.href);
 let regionId = urlData.matchid[0].split("_")[0];
 let continent = regions[regionId].continent;
 
-let matchurl = `https://${continent}.api.riotgames.com/lol/match/v5/matches/${urlData.matchid}?api_key=${API_KEY}`;
-let timelineurl = `https://${continent}.api.riotgames.com/lol/match/v5/matches/${urlData.matchid}/timeline?api_key=${API_KEY}`;
+let matchurl = `https://${continent}.api.riotgames.com/lol/match/v5/matches/${urlData.matchid}?`;
+let timelineurl = `https://${continent}.api.riotgames.com/lol/match/v5/matches/${urlData.matchid}/timeline?`;
 let runesurl = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/runesReforged.json`;
 let championurl = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/champion.json`;
 let itemsurl = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/item.json`;
@@ -47,7 +47,7 @@ let counter = 0;
 
 let prevSummoner;
 
-HTTPrequest("GET", matchurl).then(matchdata => {
+HTTPrequest("GET", passRequest(matchurl)).then(matchdata => {
   let summoners = matchdata.info.participants;
   let date = unixToDate(matchdata.info.gameCreation)
   document.querySelector("#date").innerHTML = `${date}`;
@@ -162,7 +162,7 @@ HTTPrequest("GET", matchurl).then(matchdata => {
   document.querySelector(".grid-container").prepend(Team2);
 
 
-  HTTPrequest("GET", timelineurl).then(timeline => {
+  HTTPrequest("GET", passRequest(timelineurl)).then(timeline => {
     let playerframes = playerFrames(timeline);
     let frames = timeline.info.frames;
     // console.log({ playerframes, frames });

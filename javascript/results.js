@@ -1,13 +1,13 @@
-import { parseURLParams, MakeRequestLink, HTTPrequest, SummonerIconURL, NewElement, unixToDate, askForApiKey, regions, getCurrentVersion } from "./func.js";
+import { parseURLParams, MakeRequestLink, HTTPrequest, SummonerIconURL, NewElement, unixToDate, askForApiKey, regions, getCurrentVersion, passRequest } from "./func.js";
 
-askForApiKey();
+// askForApiKey();
 
 window.addEventListener("load", () => {
     const loader = document.querySelector(".loader-wrapper");
     loader.classList.add("loaded");
 })
 
-const API_KEY = sessionStorage.getItem("API_KEY")
+// const API_KEY = sessionStorage.getItem("API_KEY")
 
 const currentVersion = await getCurrentVersion();
 
@@ -27,23 +27,23 @@ function DisplayResults(){
     let UrlData = parseURLParams(window.location.href);
     let PlayerUserName = UrlData.summonername;
     let region =  UrlData.region;
-    let matchCount = 5;
+    let matchCount = UrlData.count || 5;
     if(region != "" && PlayerUserName != ""){
         let SummonerInfourl = MakeRequestLink(SUMMONER_INFO_REQUEST,region,PlayerUserName);
-        HTTPrequest("GET", SummonerInfourl).then(summonerdata => {
+        HTTPrequest("GET", passRequest(SummonerInfourl)).then(summonerdata => {
             let iconURL = SummonerIconURL(summonerdata.profileIconId);
             document.querySelector(".summonericon").src = iconURL;
             document.querySelector(".summonerlevel").innerHTML = "Level: " + summonerdata.summonerLevel;
             document.querySelector(".summonername").innerHTML = summonerdata.name;
             let matchhistoryurl = GetMatchHistory(summonerdata.puuid, regions[region].continent , [ , , , , , matchCount]);
 
-            HTTPrequest("GET",matchhistoryurl).then(matchhistory => {
+            HTTPrequest("GET",passRequest(matchhistoryurl)).then(matchhistory => {
                 // console.log(matchhistory);
                 const matches = document.querySelector(".grid-matchhistory");
                 let matcharray = [];
                 for(let i = 0; i < matchhistory.length; i++){
                     let url2 = MakeRequestLink(MATCH_INFO_REQUEST,regions[region].continent,matchhistory[i])
-                    HTTPrequest("GET", url2).then(matchdata => {
+                    HTTPrequest("GET", passRequest(url2)).then(matchdata => {
                         // let gameVersion = `${matchdata.info.gameVersion.split(".")[0]}.${matchdata.info.gameVersion.split(".")[1]}`;
                         let participants = matchdata.metadata.participants;
                         let summoner;
@@ -85,8 +85,9 @@ function DisplayResults(){
             })
 
             let LeagueInfourl = MakeRequestLink(LEAGUE_INFO_REQUEST,region,summonerdata.id);
-            HTTPrequest("GET", LeagueInfourl).then(response => {
-               // console.log(response);
+            console.log((LeagueInfourl))
+            HTTPrequest("GET", passRequest(LeagueInfourl)).then(response => {
+                // console.log(response);
                 for(let i = 0; i < response.length; i++){
                     if(response[i].queueType == "RANKED_SOLO_5x5"){
                         document.querySelector(".solo").innerHTML = `Solo/Duo: ${response[i].rank} ${response[i].tier} ${response[i].leaguePoints}LP` ;
@@ -94,18 +95,16 @@ function DisplayResults(){
                         document.querySelector(".flex").innerHTML = `Flex: ${response[i].rank} ${response[i].tier} ${response[i].leaguePoints}LP`;
                     }
                 }
-            }).catch(response => {
-                // console.log(response);
             });
 
             document.querySelector(".more-games").addEventListener("click", async () => {
                 let url = GetMatchHistory(summonerdata.puuid, regions[region].continent , [ , , , , matchCount++, 1]);
-                let matchResponse = await fetch(url).then( res => {
+                let matchResponse = await fetch(passRequest(url)).then( res => {
                     return res.json();
                 })
                 console.log(matchResponse)
                 let matchurl = MakeRequestLink(MATCH_INFO_REQUEST,regions[region].continent, matchResponse[0]);
-                let matchdata = await fetch(matchurl).then(res => {
+                let matchdata = await fetch(passRequest(matchurl)).then(res => {
                     return res.json();
                 })
                 let summoner;
@@ -152,7 +151,7 @@ function GetMatchHistory(puuid, regionContinent, ids = [startTime, endTime, queu
             ids_link += idsTags[i] +"="+ ids[i] + "&";
         }
     }
-    let url = "https://"+regionContinent+".api.riotgames.com/lol/match/v5/matches/by-puuid/"+puuid+"/ids?"+ids_link+"api_key="+API_KEY;
+    let url = "https://"+regionContinent+".api.riotgames.com/lol/match/v5/matches/by-puuid/"+puuid+"/ids?"+ids_link;
     return url;
 }
 
