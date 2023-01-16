@@ -13,7 +13,7 @@ let regionselection = document.querySelector("#region");
 // const API_KEY = sessionStorage.getItem("API_KEY")
 
 submitbtn.onclick = () => playerfound();
-document.querySelector("#test").onclick = () => playerfound();
+// document.querySelector("#test").onclick = () => playerfound();
 //
 function playerfound() {
     let playerUrl = `https://${regionselection.value}.api.riotgames.com/lol/summoner/v4/summoners/by-name/${input.value}?`
