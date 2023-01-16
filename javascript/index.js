@@ -24,7 +24,8 @@ function playerfound() {
             window.location.href = `results.html?region=${regionselection.value}&summonername=${input.value}`
         }
         else{
-            alert("player not found");
+            alert(playerdata.status.message);
+            console.log(playerdata);
         }
     })
 }
