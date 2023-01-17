@@ -1,4 +1,4 @@
-import { parseURLParams, MakeRequestLink, HTTPrequest, SummonerIconURL, NewElement, unixToDate, askForApiKey, regions, getCurrentVersion, passRequest } from "./func.js";
+import { parseURLParams, MakeRequestLink, HTTPrequest, SummonerIconURL, NewElement, unixToDate, regions, getCurrentVersion, passRequest } from "./func.js";
 
 // askForApiKey();
 
@@ -19,7 +19,7 @@ let summonerSpells = await fetch(`https://ddragon.leagueoflegends.com/cdn/${curr
     return res.json();
 });
 
-console.log(summonerSpells);
+// console.log(summonerSpells);
 
 DisplayResults();
 
@@ -29,21 +29,28 @@ function DisplayResults(){
     let region =  UrlData.region;
     let matchCount = UrlData.count || 5;
     if(region != "" && PlayerUserName != ""){
-        let SummonerInfourl = MakeRequestLink(SUMMONER_INFO_REQUEST,region,PlayerUserName);
-        HTTPrequest("GET", passRequest(SummonerInfourl)).then(summonerdata => {
+        let SummonerInfourl = `http://localhost:3000/getsummoner?region=${region}&name=${PlayerUserName}`;
+        fetch(SummonerInfourl)
+        .then(res => res.json())
+        .then(summonerdata => {
             let iconURL = SummonerIconURL(summonerdata.profileIconId);
             document.querySelector(".summonericon").src = iconURL;
             document.querySelector(".summonerlevel").innerHTML = "Level: " + summonerdata.summonerLevel;
             document.querySelector(".summonername").innerHTML = summonerdata.name;
-            let matchhistoryurl = GetMatchHistory(summonerdata.puuid, regions[region].continent , [ , , , , , matchCount]);
-
-            HTTPrequest("GET",passRequest(matchhistoryurl)).then(matchhistory => {
+           // let matchhistoryurl = GetMatchHistory(summonerdata.puuid, regions[region].continent , [ , , , , , matchCount]);
+            let matchhistoryurl = `http://localhost:3000/getmatchhistory?continent=${regions[region].continent}&puuid=${summonerdata.puuid}&count=${matchCount}`
+            fetch(matchhistoryurl)
+            .then(res => res.json())
+            .then(matchhistory => {
                 // console.log(matchhistory);
                 const matches = document.querySelector(".grid-matchhistory");
                 let matcharray = [];
                 for(let i = 0; i < matchhistory.length; i++){
-                    let url2 = MakeRequestLink(MATCH_INFO_REQUEST,regions[region].continent,matchhistory[i])
-                    HTTPrequest("GET", passRequest(url2)).then(matchdata => {
+                    //let url2 = MakeRequestLink(MATCH_INFO_REQUEST,regions[region].continent,matchhistory[i])
+                    let url2 = `http://localhost:3000/getmatchdata?continent=${regions[region].continent}&id=${matchhistory[i]}`
+                    fetch(url2)
+                    .then(res => res.json())
+                    .then(matchdata => {
                         // let gameVersion = `${matchdata.info.gameVersion.split(".")[0]}.${matchdata.info.gameVersion.split(".")[1]}`;
                         let participants = matchdata.metadata.participants;
                         let summoner;
@@ -98,13 +105,14 @@ function DisplayResults(){
             });
 
             document.querySelector(".more-games").addEventListener("click", async () => {
-                let url = GetMatchHistory(summonerdata.puuid, regions[region].continent , [ , , , , matchCount++, 1]);
-                let matchResponse = await fetch(passRequest(url)).then( res => {
+                //let url = GetMatchHistory(summonerdata.puuid, regions[region].continent , [ , , , , matchCount++, 1]);
+                let url = `http://localhost:3000/getmatchhistory?continent=${regions[region].continent}&puuid=${summonerdata.puuid}&count=1&start=${matchCount++}`
+                let matchResponse = await fetch(url).then( res => {
                     return res.json();
                 })
-                console.log(matchResponse)
-                let matchurl = MakeRequestLink(MATCH_INFO_REQUEST,regions[region].continent, matchResponse[0]);
-                let matchdata = await fetch(passRequest(matchurl)).then(res => {
+                // console.log(matchResponse)
+                let matchurl = `http://localhost:3000/getmatchdata?continent=${regions[region].continent}&id=${matchResponse[0]}`;
+                let matchdata = await fetch(matchurl).then(res => {
                     return res.json();
                 })
                 let summoner;

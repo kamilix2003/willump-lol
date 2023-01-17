@@ -16,8 +16,8 @@ submitbtn.onclick = () => playerfound();
 // document.querySelector("#test").onclick = () => playerfound();
 //
 function playerfound() {
-    let playerUrl = `https://${regionselection.value}.api.riotgames.com/lol/summoner/v4/summoners/by-name/${input.value}?`
-    fetch(passRequest(playerUrl))
+    let playerUrl = `http://localhost:3000/getsummoner?region=${regionselection.value}&name=${input.value}`
+    fetch(playerUrl)
         .then(player => player.json())
         .then(playerdata => {
         if(playerdata.summonerLevel > 0){

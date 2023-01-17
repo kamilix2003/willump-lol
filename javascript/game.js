@@ -1,4 +1,4 @@
-import { HTTPrequest, parseURLParams, NewElement, askForApiKey, regions, getCurrentVersion, unixToDate, passRequest } from "./func.js";
+import { parseURLParams, NewElement, askForApiKey, regions, getCurrentVersion, unixToDate } from "./func.js";
 
 // askForApiKey();
 // const API_KEY = sessionStorage.getItem("API_KEY");
@@ -18,8 +18,10 @@ let urlData = parseURLParams(window.location.href);
 let regionId = urlData.matchid[0].split("_")[0];
 let continent = regions[regionId].continent;
 
-let matchurl = `https://${continent}.api.riotgames.com/lol/match/v5/matches/${urlData.matchid}?`;
-let timelineurl = `https://${continent}.api.riotgames.com/lol/match/v5/matches/${urlData.matchid}/timeline?`;
+//let matchurl = `https://${continent}.api.riotgames.com/lol/match/v5/matches/${urlData.matchid}?`;
+let matchurl = `http://localhost:3000/getmatchdata?continent=${continent}&id=${urlData.matchid}`;
+//let timelineurl = `https://${continent}.api.riotgames.com/lol/match/v5/matches/${urlData.matchid}/timeline?`;
+let timelineurl = `http://localhost:3000/getmatchdata?continent=${continent}&id=${urlData.matchid}/timeline`;
 let runesurl = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/runesReforged.json`;
 let championurl = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/champion.json`;
 let itemsurl = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/item.json`;
@@ -47,7 +49,9 @@ let counter = 0;
 
 let prevSummoner;
 
-HTTPrequest("GET", passRequest(matchurl)).then(matchdata => {
+fetch(matchurl)
+.then(res => res.json())
+.then(matchdata => {
   let summoners = matchdata.info.participants;
   let date = unixToDate(matchdata.info.gameCreation)
   document.querySelector("#date").innerHTML = `${date}`;
@@ -162,7 +166,9 @@ HTTPrequest("GET", passRequest(matchurl)).then(matchdata => {
   document.querySelector(".grid-container").prepend(Team2);
 
 
-  HTTPrequest("GET", passRequest(timelineurl)).then(timeline => {
+  fetch(timelineurl)
+  .then(res => res.json())
+  .then(timeline => {
     let playerframes = playerFrames(timeline);
     let frames = timeline.info.frames;
     // console.log({ playerframes, frames });
