@@ -124,7 +124,7 @@ fetch(matchurl)
     <div class="match-details">
     <p class="win win-${team1Stats.win}">${team1Stats.win ? "Victory!" : ""}</p>
     <p class="bans-info1">bans:</p>
-    <div class="bans bans-${summoners[0].teamId == 100 ? "blue" : "red"}">
+    <div class="bans bans-${summoners[0].teamId == 200 ? "blue" : "red"}">
     <img src="${bans[0][0] != `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/undefined.png` ? bans[0][0] : `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`}" alt="">
     <img src="${bans[0][1] != `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/undefined.png` ? bans[0][1] : `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`}" alt="">
     <img src="${bans[0][2] != `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/undefined.png` ? bans[0][2] : `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`}" alt="">
@@ -145,7 +145,7 @@ fetch(matchurl)
   <div class="match-details">
   <p class="win win-${team2Stats.win}">${team2Stats.win ? "Victory!" : ""}</p>
   <p class="bans-info2">bans:</p>
-  <div class="bans bans-${summoners[9].teamId == 100 ? "blue" : "red"}">
+  <div class="bans bans-${summoners[9].teamId == 200 ? "blue" : "red"}">
   <img src="${bans[1][0] != `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/undefined.png` ? bans[1][0] : `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`}" alt="">
   <img src="${bans[1][1] != `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/undefined.png` ? bans[1][1] : `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`}" alt="">
   <img src="${bans[1][2] != `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/undefined.png` ? bans[1][2] : `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/profileicon/29.png`}" alt="">

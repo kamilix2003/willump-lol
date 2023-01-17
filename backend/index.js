@@ -8,10 +8,13 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT;
 const api_key = process.env.API_KEY;
+const atlas_url = process.env.ATLAS;
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect('mongodb://127.0.0.1:27017/willumpdbs');
+//mongoose.connect('mongodb://127.0.0.1:27017/willumpdbs');
+
+mongoose.connect(atlas_url)
 
 // const Cat = mongoose.model('Cat', { name: String });
 
@@ -24,10 +27,6 @@ const playerSchema = new Schema({
 });
 
 const Player = mongoose.model("player", playerSchema);
-
-const me = new Player({name:"kamilix2003"})
-//me.save().then(() => console.log(me));
-
 
 app.get('/riotapirequest', (req, res) => {
     let url = req.query.url + "api_key="+api_key;
@@ -44,7 +43,8 @@ app.get('/getsummoner', (req,res) => {
     fetch(url)
         .then(res => res.json())
         .then(data => {
-            addNewPlayerToDb(req.query.name);
+            if(data.summonerLevel > 0)
+                addNewPlayerToDb(req.query.name);
             
             res.send(data)
         })
