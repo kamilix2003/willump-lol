@@ -3,3 +3,4 @@ API_KEY.js
 .vscode
 node_modules
 .env
+.env.*

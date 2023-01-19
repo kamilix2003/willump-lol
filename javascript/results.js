@@ -1,4 +1,4 @@
-import { parseURLParams, MakeRequestLink, HTTPrequest, SummonerIconURL, NewElement, unixToDate, askForApiKey, regions, getCurrentVersion, passRequest } from "./func.js";
+import { parseURLParams, MakeRequestLink, HTTPrequest, SummonerIconURL, NewElement, unixToDate, regions, getCurrentVersion, passRequest } from "./func.js";
 
 // askForApiKey();
 
@@ -15,11 +15,20 @@ const SUMMONER_INFO_REQUEST = "/lol/summoner/v4/summoners/by-name/";
 const LEAGUE_INFO_REQUEST = "/lol/league/v4/entries/by-summoner/";
 const MATCH_INFO_REQUEST = "/lol/match/v5/matches/";
 
+let api_url = "";
+
+if(window.location.href == "willump.lol*"){
+  api_url = "willump.lol/api";
+}
+else{
+  api_url = "localhost:3000/api";
+}
+
 let summonerSpells = await fetch(`https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/summoner.json`).then(res => {
     return res.json();
 });
 
-console.log(summonerSpells);
+// console.log(summonerSpells);
 
 DisplayResults();
 
@@ -29,21 +38,28 @@ function DisplayResults(){
     let region =  UrlData.region;
     let matchCount = UrlData.count || 5;
     if(region != "" && PlayerUserName != ""){
-        let SummonerInfourl = MakeRequestLink(SUMMONER_INFO_REQUEST,region,PlayerUserName);
-        HTTPrequest("GET", passRequest(SummonerInfourl)).then(summonerdata => {
+        let SummonerInfourl = `http://${api_url}/getsummoner?region=${region}&name=${PlayerUserName}`;
+        fetch(SummonerInfourl)
+        .then(res => res.json())
+        .then(summonerdata => {
             let iconURL = SummonerIconURL(summonerdata.profileIconId);
             document.querySelector(".summonericon").src = iconURL;
             document.querySelector(".summonerlevel").innerHTML = "Level: " + summonerdata.summonerLevel;
             document.querySelector(".summonername").innerHTML = summonerdata.name;
-            let matchhistoryurl = GetMatchHistory(summonerdata.puuid, regions[region].continent , [ , , , , , matchCount]);
-
-            HTTPrequest("GET",passRequest(matchhistoryurl)).then(matchhistory => {
+           // let matchhistoryurl = GetMatchHistory(summonerdata.puuid, regions[region].continent , [ , , , , , matchCount]);
+            let matchhistoryurl = `http://${api_url}/getmatchhistory?continent=${regions[region].continent}&puuid=${summonerdata.puuid}&count=${matchCount}`
+            fetch(matchhistoryurl)
+            .then(res => res.json())
+            .then(matchhistory => {
                 // console.log(matchhistory);
                 const matches = document.querySelector(".grid-matchhistory");
                 let matcharray = [];
                 for(let i = 0; i < matchhistory.length; i++){
-                    let url2 = MakeRequestLink(MATCH_INFO_REQUEST,regions[region].continent,matchhistory[i])
-                    HTTPrequest("GET", passRequest(url2)).then(matchdata => {
+                    //let url2 = MakeRequestLink(MATCH_INFO_REQUEST,regions[region].continent,matchhistory[i])
+                    let url2 = `http://${api_url}/getmatchdata?continent=${regions[region].continent}&id=${matchhistory[i]}`
+                    fetch(url2)
+                    .then(res => res.json())
+                    .then(matchdata => {
                         // let gameVersion = `${matchdata.info.gameVersion.split(".")[0]}.${matchdata.info.gameVersion.split(".")[1]}`;
                         let participants = matchdata.metadata.participants;
                         let summoner;
@@ -84,27 +100,28 @@ function DisplayResults(){
                 }
             })
 
-            let LeagueInfourl = MakeRequestLink(LEAGUE_INFO_REQUEST,region,summonerdata.id);
-            console.log((LeagueInfourl))
-            HTTPrequest("GET", passRequest(LeagueInfourl)).then(response => {
-                // console.log(response);
-                for(let i = 0; i < response.length; i++){
-                    if(response[i].queueType == "RANKED_SOLO_5x5"){
-                        document.querySelector(".solo").innerHTML = `Solo/Duo: ${response[i].rank} ${response[i].tier} ${response[i].leaguePoints}LP` ;
-                    }else if(response[i].queueType == "RANKED_FLEX_SR"){
-                        document.querySelector(".flex").innerHTML = `Flex: ${response[i].rank} ${response[i].tier} ${response[i].leaguePoints}LP`;
-                    }
-                }
-            });
+            // let LeagueInfourl = MakeRequestLink(LEAGUE_INFO_REQUEST,region,summonerdata.id);
+            // console.log((LeagueInfourl))
+            // HTTPrequest("GET", passRequest(LeagueInfourl)).then(response => {
+            //     // console.log(response);
+            //     for(let i = 0; i < response.length; i++){
+            //         if(response[i].queueType == "RANKED_SOLO_5x5"){
+            //             document.querySelector(".solo").innerHTML = `Solo/Duo: ${response[i].rank} ${response[i].tier} ${response[i].leaguePoints}LP` ;
+            //         }else if(response[i].queueType == "RANKED_FLEX_SR"){
+            //             document.querySelector(".flex").innerHTML = `Flex: ${response[i].rank} ${response[i].tier} ${response[i].leaguePoints}LP`;
+            //         }
+            //     }
+            // });
 
             document.querySelector(".more-games").addEventListener("click", async () => {
-                let url = GetMatchHistory(summonerdata.puuid, regions[region].continent , [ , , , , matchCount++, 1]);
-                let matchResponse = await fetch(passRequest(url)).then( res => {
+                //let url = GetMatchHistory(summonerdata.puuid, regions[region].continent , [ , , , , matchCount++, 1]);
+                let url = `http://${api_url}/getmatchhistory?continent=${regions[region].continent}&puuid=${summonerdata.puuid}&count=1&start=${matchCount++}`
+                let matchResponse = await fetch(url).then( res => {
                     return res.json();
                 })
-                console.log(matchResponse)
-                let matchurl = MakeRequestLink(MATCH_INFO_REQUEST,regions[region].continent, matchResponse[0]);
-                let matchdata = await fetch(passRequest(matchurl)).then(res => {
+                // console.log(matchResponse)
+                let matchurl = `http://${api_url}/getmatchdata?continent=${regions[region].continent}&id=${matchResponse[0]}`;
+                let matchdata = await fetch(matchurl).then(res => {
                     return res.json();
                 })
                 let summoner;
