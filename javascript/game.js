@@ -11,6 +11,16 @@ window.addEventListener("load", () => {
 const redSide = "red-side";
 const blueSide = "blue-side";
 
+let api_url = "";
+
+if(window.location.href == "willump.lol*"){
+  api_url = "willump.lol/api";
+}
+else{
+  api_url = "localhost:3000/api";
+}
+
+
 const currentVersion = await getCurrentVersion();
 
 let urlData = parseURLParams(window.location.href);
@@ -19,9 +29,9 @@ let regionId = urlData.matchid[0].split("_")[0];
 let continent = regions[regionId].continent;
 
 //let matchurl = `https://${continent}.api.riotgames.com/lol/match/v5/matches/${urlData.matchid}?`;
-let matchurl = `http://localhost:3000/getmatchdata?continent=${continent}&id=${urlData.matchid}`;
+let matchurl = `http://${api_url}/getmatchdata?continent=${continent}&id=${urlData.matchid}`;
 //let timelineurl = `https://${continent}.api.riotgames.com/lol/match/v5/matches/${urlData.matchid}/timeline?`;
-let timelineurl = `http://localhost:3000/getmatchdata?continent=${continent}&id=${urlData.matchid}/timeline`;
+let timelineurl = `http://${api_url}/getmatchdata?continent=${continent}&id=${urlData.matchid}/timeline`;
 let runesurl = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/runesReforged.json`;
 let championurl = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/champion.json`;
 let itemsurl = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/item.json`;
