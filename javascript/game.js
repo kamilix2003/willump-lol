@@ -1,4 +1,4 @@
-import { parseURLParams, NewElement, askForApiKey, regions, getCurrentVersion, unixToDate, checkUrl } from "./func.js";
+import { parseURLParams, NewElement, askForApiKey, regions, getCurrentVersion, unixToDate, checkUrl, dev } from "./func.js";
 
 // askForApiKey();
 // const API_KEY = sessionStorage.getItem("API_KEY");
@@ -12,8 +12,6 @@ const redSide = "red-side";
 const blueSide = "blue-side";
 
 let api_url = checkUrl();
-
-let dev = true;
 
 const currentVersion = await getCurrentVersion();
 
@@ -312,7 +310,7 @@ blue side total gold: ${blueSideTotalGold[tooltipItems[0].dataIndex]}`
         <a href="https://leagueoflegends.fandom.com/wiki/${summoners[i].championName}/LoL"$>${summoners[i].championName}</a>
         </p>
         <p class="summoner-name" id="summoner-name-${i}">
-        <a id="summoner-link-${i}" href="${dev ? "results.html" : "willump.lol/matchhistory"}?region=EUN1&summonername=${summoners[i].summonerName}">${summoners[i].summonerName}</a>
+        <a id="summoner-link-${i}" href="${dev ? "results.html" : "https://willump.lol/matchhistory"}?region=EUN1&summonername=${summoners[i].summonerName}">${summoners[i].summonerName}</a>
         </p>
       </div>
       <button class="stats-btn" id="summoner-stats-btn-${i}">&#10140</button>

@@ -1,4 +1,4 @@
-import { askForApiKey, checkUrl, getCurrentVersion, passRequest} from "./func.js";
+import { askForApiKey, checkUrl, getCurrentVersion, passRequest, dev} from "./func.js";
 
 window.addEventListener("load", () => {
     const loader = document.querySelector(".loader-wrapper");
@@ -11,8 +11,6 @@ let regionselection = document.querySelector("#region");
 
 // askForApiKey();
 // const API_KEY = sessionStorage.getItem("API_KEY")
-
-let dev = true;
 
 let api_url = checkUrl();
 

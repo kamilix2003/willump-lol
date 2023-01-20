@@ -1,4 +1,4 @@
-import { checkUrl, parseURLParams, MakeRequestLink, HTTPrequest, SummonerIconURL, NewElement, unixToDate, regions, getCurrentVersion, passRequest } from "./func.js";
+import { checkUrl, parseURLParams, MakeRequestLink, HTTPrequest, SummonerIconURL, NewElement, unixToDate, regions, getCurrentVersion, passRequest, dev } from "./func.js";
 
 // askForApiKey();
 
@@ -16,8 +16,6 @@ const currentVersion = await getCurrentVersion();
 // const MATCH_INFO_REQUEST = "/lol/match/v5/matches/";
 
 let api_url = checkUrl();
-
-let dev = true;
 
 let summonerSpells = await fetch(`https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/summoner.json`).then(res => {
     return res.json();
@@ -69,7 +67,7 @@ function DisplayResults(){
                         let matchresult = matchdata.info.participants[summoner].win;
                         let matchdate = new Date(matchdata.info.gameCreation);
                         let NewMatch = NewElement(`
-                        <a href="${dev ? "game.html" : "match"}?matchid=${matchhistory[i]}">
+                        <a href="${dev ? "game.html" : "https://willump.lol/match"}?matchid=${matchhistory[i]}">
                         <div class="match match-${i}  win-${matchresult}">
                             <img class="match-champ-img" src="https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${matchdata.info.participants[summoner].championName}.png" alt="">
                             <h3 class="match-champ">${matchdata.info.participants[summoner].championName}</h3>
@@ -134,7 +132,7 @@ function DisplayResults(){
                 let summonerSpell1 = getSummonerSpell(matchdata.info.participants[summoner].summoner1Id, summonerSpells).image.full;
                 let summonerSpell2 = getSummonerSpell(matchdata.info.participants[summoner].summoner2Id, summonerSpells).image.full;
                 let NewMatch = NewElement(`
-                <a href="${dev ? "game.html" : "match"}?matchid=${matchhistory[0]}">
+                <a href="${dev ? "game.html" : "https://willump.lol/match"}?matchid=${matchhistory[0]}">
                     <div class="match match-${matchCount}  win-${matchresult}">
                         <img class="match-champ-img" src="https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${matchdata.info.participants[summoner].championName}.png" alt="">
                         <h3 class="match-champ">${matchdata.info.participants[summoner].championName}</h3>
