@@ -8,8 +8,8 @@ export async function getCurrentVersion(){
 }
 
 export function checkUrl(api_url){
-    console.log(window.location.href.split("/")[2]);
-    if(window.location.href.split("/")[2] == "willump"){
+    // console.log(window.location.href.split("/")[2]);
+    if(window.location.href.split("/")[2] == "willump.lol"){
         console.log("will");
         return "willump.lol/api";
     }
