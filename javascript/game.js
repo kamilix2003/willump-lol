@@ -13,6 +13,8 @@ const blueSide = "blue-side";
 
 let api_url = checkUrl();
 
+let dev = true;
+
 const currentVersion = await getCurrentVersion();
 
 let urlData = parseURLParams(window.location.href);
@@ -21,9 +23,9 @@ let regionId = urlData.matchid[0].split("_")[0];
 let continent = regions[regionId].continent;
 
 //let matchurl = `https://${continent}.api.riotgames.com/lol/match/v5/matches/${urlData.matchid}?`;
-let matchurl = `https://${api_url}/getmatchdata?continent=${continent}&id=${urlData.matchid}`;
+let matchurl = `${dev ? "http" : "https"}://${api_url}/getmatchdata?continent=${continent}&id=${urlData.matchid}`;
 //let timelineurl = `https://${continent}.api.riotgames.com/lol/match/v5/matches/${urlData.matchid}/timeline?`;
-let timelineurl = `https://${api_url}/getmatchdata?continent=${continent}&id=${urlData.matchid}/timeline`;
+let timelineurl = `${dev ? "http" : "https"}://${api_url}/getmatchdata?continent=${continent}&id=${urlData.matchid}/timeline`;
 let runesurl = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/runesReforged.json`;
 let championurl = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/champion.json`;
 let itemsurl = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/item.json`;
@@ -310,7 +312,7 @@ blue side total gold: ${blueSideTotalGold[tooltipItems[0].dataIndex]}`
         <a href="https://leagueoflegends.fandom.com/wiki/${summoners[i].championName}/LoL"$>${summoners[i].championName}</a>
         </p>
         <p class="summoner-name" id="summoner-name-${i}">
-        <a id="summoner-link-${i}" href="results.html?region=EUN1&summonername=${summoners[i].summonerName}">${summoners[i].summonerName}</a>
+        <a id="summoner-link-${i}" href="${dev ? "results.html" : "willump.lol/matchhistory"}?region=EUN1&summonername=${summoners[i].summonerName}">${summoners[i].summonerName}</a>
         </p>
       </div>
       <button class="stats-btn" id="summoner-stats-btn-${i}">&#10140</button>

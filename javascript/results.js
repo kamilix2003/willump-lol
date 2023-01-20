@@ -11,11 +11,13 @@ window.addEventListener("load", () => {
 
 const currentVersion = await getCurrentVersion();
 
-const SUMMONER_INFO_REQUEST = "/lol/summoner/v4/summoners/by-name/";
-const LEAGUE_INFO_REQUEST = "/lol/league/v4/entries/by-summoner/";
-const MATCH_INFO_REQUEST = "/lol/match/v5/matches/";
+// const SUMMONER_INFO_REQUEST = "/lol/summoner/v4/summoners/by-name/";
+// const LEAGUE_INFO_REQUEST = "/lol/league/v4/entries/by-summoner/";
+// const MATCH_INFO_REQUEST = "/lol/match/v5/matches/";
 
 let api_url = checkUrl();
+
+let dev = true;
 
 let summonerSpells = await fetch(`https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/summoner.json`).then(res => {
     return res.json();
@@ -31,7 +33,7 @@ function DisplayResults(){
     let region =  UrlData.region;
     let matchCount = UrlData.count || 5;
     if(region != "" && PlayerUserName != ""){
-        let SummonerInfourl = `https://${api_url}/getsummoner?region=${region}&name=${PlayerUserName}`;
+        let SummonerInfourl = `${dev ? "http" : "https"}://${api_url}/getsummoner?region=${region}&name=${PlayerUserName}`;
         fetch(SummonerInfourl)
         .then(res => res.json())
         .then(summonerdata => {
@@ -40,7 +42,7 @@ function DisplayResults(){
             document.querySelector(".summonerlevel").innerHTML = "Level: " + summonerdata.summonerLevel;
             document.querySelector(".summonername").innerHTML = summonerdata.name;
            // let matchhistoryurl = GetMatchHistory(summonerdata.puuid, regions[region].continent , [ , , , , , matchCount]);
-            let matchhistoryurl = `https://${api_url}/getmatchhistory?continent=${regions[region].continent}&puuid=${summonerdata.puuid}&count=${matchCount}`
+            let matchhistoryurl = `${dev ? "http" : "https"}://${api_url}/getmatchhistory?continent=${regions[region].continent}&puuid=${summonerdata.puuid}&count=${matchCount}`
             fetch(matchhistoryurl)
             .then(res => res.json())
             .then(matchhistory => {
@@ -49,7 +51,7 @@ function DisplayResults(){
                 let matcharray = [];
                 for(let i = 0; i < matchhistory.length; i++){
                     //let url2 = MakeRequestLink(MATCH_INFO_REQUEST,regions[region].continent,matchhistory[i])
-                    let url2 = `https://${api_url}/getmatchdata?continent=${regions[region].continent}&id=${matchhistory[i]}`
+                    let url2 = `${dev ? "http" : "https"}://${api_url}/getmatchdata?continent=${regions[region].continent}&id=${matchhistory[i]}`
                     fetch(url2)
                     .then(res => res.json())
                     .then(matchdata => {
@@ -67,7 +69,7 @@ function DisplayResults(){
                         let matchresult = matchdata.info.participants[summoner].win;
                         let matchdate = new Date(matchdata.info.gameCreation);
                         let NewMatch = NewElement(`
-                        <a href="game.html?matchid=${matchhistory[i]}">
+                        <a href="${dev ? "game.html" : "match"}?matchid=${matchhistory[i]}">
                         <div class="match match-${i}  win-${matchresult}">
                             <img class="match-champ-img" src="https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${matchdata.info.participants[summoner].championName}.png" alt="">
                             <h3 class="match-champ">${matchdata.info.participants[summoner].championName}</h3>
@@ -108,12 +110,12 @@ function DisplayResults(){
 
             document.querySelector(".more-games").addEventListener("click", async () => {
                 //let url = GetMatchHistory(summonerdata.puuid, regions[region].continent , [ , , , , matchCount++, 1]);
-                let url = `https://${api_url}/getmatchhistory?continent=${regions[region].continent}&puuid=${summonerdata.puuid}&count=1&start=${matchCount++}`
+                let url = `${dev ? "http" : "https"}://${api_url}/getmatchhistory?continent=${regions[region].continent}&puuid=${summonerdata.puuid}&count=1&start=${matchCount++}`
                 let matchResponse = await fetch(url).then( res => {
                     return res.json();
                 })
                 // console.log(matchResponse)
-                let matchurl = `https://${api_url}/getmatchdata?continent=${regions[region].continent}&id=${matchResponse[0]}`;
+                let matchurl = `${dev ? "http" : "https"}://${api_url}/getmatchdata?continent=${regions[region].continent}&id=${matchResponse[0]}`;
                 let matchdata = await fetch(matchurl).then(res => {
                     return res.json();
                 })
@@ -132,7 +134,7 @@ function DisplayResults(){
                 let summonerSpell1 = getSummonerSpell(matchdata.info.participants[summoner].summoner1Id, summonerSpells).image.full;
                 let summonerSpell2 = getSummonerSpell(matchdata.info.participants[summoner].summoner2Id, summonerSpells).image.full;
                 let NewMatch = NewElement(`
-                    <a href="game.html?matchid=${matchResponse[0]}">
+                <a href="${dev ? "game.html" : "match"}?matchid=${matchhistory[0]}">
                     <div class="match match-${matchCount}  win-${matchresult}">
                         <img class="match-champ-img" src="https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${matchdata.info.participants[summoner].championName}.png" alt="">
                         <h3 class="match-champ">${matchdata.info.participants[summoner].championName}</h3>

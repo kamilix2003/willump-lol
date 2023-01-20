@@ -12,6 +12,7 @@ let regionselection = document.querySelector("#region");
 // askForApiKey();
 // const API_KEY = sessionStorage.getItem("API_KEY")
 
+let dev = true;
 
 let api_url = checkUrl();
 
@@ -19,12 +20,12 @@ submitbtn.onclick = () => playerfound();
 // document.querySelector("#test").onclick = () => playerfound();
 //
 function playerfound() {
-    let playerUrl = `https://${api_url}/getsummoner?region=${regionselection.value}&name=${input.value}`
+    let playerUrl = `${dev ? "http" : "https"}://${api_url}/getsummoner?region=${regionselection.value}&name=${input.value}`
     fetch(playerUrl)
         .then(player => player.json())
         .then(playerdata => {
         if(playerdata.summonerLevel > 0){
-            window.location.href = `results.html?region=${regionselection.value}&summonername=${input.value}`
+            window.location.href = `${dev ? "results.html" : "matchhistory"}?region=${regionselection.value}&summonername=${input.value}`
         }
         else{
             alert(playerdata.status.message);
