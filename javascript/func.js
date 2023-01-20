@@ -8,14 +8,14 @@ export async function getCurrentVersion(){
 }
 
 export function checkUrl(api_url){
-    let willump = "willump.lol";
-    if(window.location.href.substring(0,7) == willump.substring(0,7)){
-    console.log("will");
-    return "willump.lol/api";
+    // console.log(window.location.href.split("/")[2], willump.substring(0,7))
+    if(window.location.href.split("/")[2] == "willump"){
+        console.log("will");
+        return "willump.lol/api";
     }
     else{
-    console.log("local")
-    return "localhost:3000/api";
+        console.log("local")
+        return "localhost:3000/api";
 }}
 
 export function askForApiKey(){
