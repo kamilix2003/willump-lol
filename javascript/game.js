@@ -21,9 +21,9 @@ let regionId = urlData.matchid[0].split("_")[0];
 let continent = regions[regionId].continent;
 
 //let matchurl = `https://${continent}.api.riotgames.com/lol/match/v5/matches/${urlData.matchid}?`;
-let matchurl = `http://${api_url}/getmatchdata?continent=${continent}&id=${urlData.matchid}`;
+let matchurl = `https://${api_url}/getmatchdata?continent=${continent}&id=${urlData.matchid}`;
 //let timelineurl = `https://${continent}.api.riotgames.com/lol/match/v5/matches/${urlData.matchid}/timeline?`;
-let timelineurl = `http://${api_url}/getmatchdata?continent=${continent}&id=${urlData.matchid}/timeline`;
+let timelineurl = `https://${api_url}/getmatchdata?continent=${continent}&id=${urlData.matchid}/timeline`;
 let runesurl = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/runesReforged.json`;
 let championurl = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/champion.json`;
 let itemsurl = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/item.json`;
@@ -377,12 +377,12 @@ blue side total gold: ${blueSideTotalGold[tooltipItems[0].dataIndex]}`
       </div>
       <div class="stats-wrapper">
       <div class="items">
-          ${items[0] != "" ? `<a href="https://leagueoflegends.fandom.com/wiki/${items[0].name.replaceAll(" ", "_")}"> <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[0].image.full}" alt=""></a>` : ""}
-          ${items[1] != "" ? `<a href="https://leagueoflegends.fandom.com/wiki/${items[1].name.replaceAll(" ", "_")}"> <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[1].image.full}" alt=""></a>` : ""}
-          ${items[2] != "" ? `<a href="https://leagueoflegends.fandom.com/wiki/${items[2].name.replaceAll(" ", "_")}"> <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[2].image.full}" alt=""></a>` : ""}
-          ${items[3] != "" ? `<a href="https://leagueoflegends.fandom.com/wiki/${items[3].name.replaceAll(" ", "_")}"> <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[3].image.full}" alt=""></a>` : ""}
-          ${items[4] != "" ? `<a href="https://leagueoflegends.fandom.com/wiki/${items[4].name.replaceAll(" ", "_")}"> <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[4].image.full}" alt=""></a>` : ""}
-          ${items[5] != "" ? `<a href="https://leagueoflegends.fandom.com/wiki/${items[5].name.replaceAll(" ", "_")}"> <img class="item-icon" src="http://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[5].image.full}" alt=""></a>` : ""}
+          ${items[0] != "" ? `<a href="https://leagueoflegends.fandom.com/wiki/${items[0].name.replaceAll(" ", "_")}"> <img class="item-icon" src="https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[0].image.full}" alt=""></a>` : ""}
+          ${items[1] != "" ? `<a href="https://leagueoflegends.fandom.com/wiki/${items[1].name.replaceAll(" ", "_")}"> <img class="item-icon" src="https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[1].image.full}" alt=""></a>` : ""}
+          ${items[2] != "" ? `<a href="https://leagueoflegends.fandom.com/wiki/${items[2].name.replaceAll(" ", "_")}"> <img class="item-icon" src="https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[2].image.full}" alt=""></a>` : ""}
+          ${items[3] != "" ? `<a href="https://leagueoflegends.fandom.com/wiki/${items[3].name.replaceAll(" ", "_")}"> <img class="item-icon" src="https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[3].image.full}" alt=""></a>` : ""}
+          ${items[4] != "" ? `<a href="https://leagueoflegends.fandom.com/wiki/${items[4].name.replaceAll(" ", "_")}"> <img class="item-icon" src="https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[4].image.full}" alt=""></a>` : ""}
+          ${items[5] != "" ? `<a href="https://leagueoflegends.fandom.com/wiki/${items[5].name.replaceAll(" ", "_")}"> <img class="item-icon" src="https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/item/${items[5].image.full}" alt=""></a>` : ""}
       </div>
       <div class="summoner-spells">
       <img src="https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/spell/${summonerSpells[0].image.full}" alt="">
@@ -390,17 +390,17 @@ blue side total gold: ${blueSideTotalGold[tooltipItems[0].dataIndex]}`
       </div>
       </div>
       <div class="runes">
-          <img class="rune-icon rune-icon-main" src="http://ddragon.leagueoflegends.com/cdn/img/${runes.main.row1.icon}" alt="">
+          <img class="rune-icon rune-icon-main" src="https://ddragon.leagueoflegends.com/cdn/img/${runes.main.row1.icon}" alt="">
           <p class="rune-name"> <a href="${`https://leagueoflegends.fandom.com/wiki/${runes.main.row1.name.replaceAll(" ","_")}`}"> ${runes.main.row1.name} </a> </p>
-          <img class="rune-icon" src="http://ddragon.leagueoflegends.com/cdn/img/${runes.main.row2.icon}" alt="">
+          <img class="rune-icon" src="https://ddragon.leagueoflegends.com/cdn/img/${runes.main.row2.icon}" alt="">
           <p class="rune-name"> <a href="${`https://leagueoflegends.fandom.com/wiki/${runes.main.row2.name.replaceAll(" ","_")}`}"> ${runes.main.row2.name} </a> </p>
-          <img class="rune-icon" src="http://ddragon.leagueoflegends.com/cdn/img/${runes.main.row3.icon}" alt="">
+          <img class="rune-icon" src="https://ddragon.leagueoflegends.com/cdn/img/${runes.main.row3.icon}" alt="">
           <p class="rune-name"> <a href="${`https://leagueoflegends.fandom.com/wiki/${runes.main.row3.name.replaceAll(" ","_")}`}"> ${runes.main.row3.name} </a> </p>
-          <img class="rune-icon" src="http://ddragon.leagueoflegends.com/cdn/img/${runes.main.row4.icon}" alt="">
+          <img class="rune-icon" src="https://ddragon.leagueoflegends.com/cdn/img/${runes.main.row4.icon}" alt="">
           <p class="rune-name"> <a href="${`https://leagueoflegends.fandom.com/wiki/${runes.main.row4.name.replaceAll(" ","_")}`}"> ${runes.main.row4.name} </a> </p>
-          <img class="rune-icon" src="http://ddragon.leagueoflegends.com/cdn/img/${runes.secondary.row1.icon}" alt="">
+          <img class="rune-icon" src="https://ddragon.leagueoflegends.com/cdn/img/${runes.secondary.row1.icon}" alt="">
           <p class="rune-name"> <a href="${`https://leagueoflegends.fandom.com/wiki/${runes.secondary.row1.name.replaceAll(" ","_")}`}"> ${runes.secondary.row1.name} </a> </p>
-          <img class="rune-icon" src="http://ddragon.leagueoflegends.com/cdn/img/${runes.secondary.row2.icon}" alt="">
+          <img class="rune-icon" src="https://ddragon.leagueoflegends.com/cdn/img/${runes.secondary.row2.icon}" alt="">
           <p class="rune-name"> <a href="${`https://leagueoflegends.fandom.com/wiki/${runes.secondary.row2.name.replaceAll(" ","_")}`}"> ${runes.secondary.row2.name} </a> </p>
         </div>
       </div>

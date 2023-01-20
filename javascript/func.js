@@ -125,5 +125,5 @@ export function NewElement(html){
 }
 
 export function passRequest(url){
-    return `http://localhost:3000/riotapirequest?url=${encodeURIComponent(url)}`
+    return `https://localhost:3000/riotapirequest?url=${encodeURIComponent(url)}`
 }

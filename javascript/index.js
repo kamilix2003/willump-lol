@@ -19,7 +19,7 @@ submitbtn.onclick = () => playerfound();
 // document.querySelector("#test").onclick = () => playerfound();
 //
 function playerfound() {
-    let playerUrl = `http://${api_url}/getsummoner?region=${regionselection.value}&name=${input.value}`
+    let playerUrl = `https://${api_url}/getsummoner?region=${regionselection.value}&name=${input.value}`
     fetch(playerUrl)
         .then(player => player.json())
         .then(playerdata => {
