@@ -132,7 +132,7 @@ function DisplayResults(){
                 let summonerSpell1 = getSummonerSpell(matchdata.info.participants[summoner].summoner1Id, summonerSpells).image.full;
                 let summonerSpell2 = getSummonerSpell(matchdata.info.participants[summoner].summoner2Id, summonerSpells).image.full;
                 let NewMatch = NewElement(`
-                <a href="${dev ? "game.html" : "https://willump.lol/match"}?matchid=${matchhistory[0]}">
+                <a href="${dev ? "game.html" : "https://willump.lol/match"}?matchid=${matchResponse[0]}">
                     <div class="match match-${matchCount}  win-${matchresult}">
                         <img class="match-champ-img" src="https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${matchdata.info.participants[summoner].championName}.png" alt="">
                         <h3 class="match-champ">${matchdata.info.participants[summoner].championName}</h3>
