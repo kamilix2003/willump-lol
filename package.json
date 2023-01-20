@@ -5,7 +5,9 @@
   "description": "[website](https://kachi_hi.gitlab.io/it-project/html)",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon backend/index.js"
+    "dev": "nodemon backend/index.js",
+    "prod": "pm2 start backend/index.js",
+    "stopprod": "pm2 stop all"
   },
   "repository": {
     "type": "git",
