@@ -8,7 +8,7 @@ export async function getCurrentVersion(){
 }
 
 export function checkUrl(api_url){
-    // console.log(window.location.href.split("/")[2], willump.substring(0,7))
+    console.log(window.location.href.split("/")[2]);
     if(window.location.href.split("/")[2] == "willump"){
         console.log("will");
         return "willump.lol/api";
