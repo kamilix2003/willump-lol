@@ -1,4 +1,4 @@
-import { parseURLParams, MakeRequestLink, HTTPrequest, SummonerIconURL, NewElement, unixToDate, regions, getCurrentVersion, passRequest } from "./func.js";
+import { checkUrl, parseURLParams, MakeRequestLink, HTTPrequest, SummonerIconURL, NewElement, unixToDate, regions, getCurrentVersion, passRequest } from "./func.js";
 
 // askForApiKey();
 
@@ -15,14 +15,7 @@ const SUMMONER_INFO_REQUEST = "/lol/summoner/v4/summoners/by-name/";
 const LEAGUE_INFO_REQUEST = "/lol/league/v4/entries/by-summoner/";
 const MATCH_INFO_REQUEST = "/lol/match/v5/matches/";
 
-let api_url = "";
-
-if(window.location.href == "willump.lol*"){
-  api_url = "willump.lol/api";
-}
-else{
-  api_url = "localhost:3000/api";
-}
+let api_url = checkUrl();
 
 let summonerSpells = await fetch(`https://ddragon.leagueoflegends.com/cdn/${currentVersion}/data/en_US/summoner.json`).then(res => {
     return res.json();

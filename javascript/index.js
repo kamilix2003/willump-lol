@@ -1,4 +1,4 @@
-import { askForApiKey, getCurrentVersion, passRequest} from "./func.js";
+import { askForApiKey, checkUrl, getCurrentVersion, passRequest} from "./func.js";
 
 window.addEventListener("load", () => {
     const loader = document.querySelector(".loader-wrapper");
@@ -12,15 +12,8 @@ let regionselection = document.querySelector("#region");
 // askForApiKey();
 // const API_KEY = sessionStorage.getItem("API_KEY")
 
-let api_url = "";
 
-if(window.location.href == "willump.lol*"){
-  api_url = "willump.lol/api";
-}
-else{
-  api_url = "localhost:3000/api";
-}
-
+let api_url = checkUrl();
 
 submitbtn.onclick = () => playerfound();
 // document.querySelector("#test").onclick = () => playerfound();

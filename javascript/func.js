@@ -7,6 +7,17 @@ export async function getCurrentVersion(){
     return output[0];
 }
 
+export function checkUrl(api_url){
+    let willump = "willump.lol";
+    if(window.location.href.substring(0,7) == willump.substring(0,7)){
+    console.log("will");
+    return "willump.lol/api";
+    }
+    else{
+    console.log("local")
+    return "localhost:3000/api";
+}}
+
 export function askForApiKey(){
     if (sessionStorage.getItem("API_KEY") == "" || sessionStorage.getItem("API_KEY") == "null" || sessionStorage.getItem("API_KEY") == null) {
         alert(`you can get your api key on https://developer.riotgames.com/`);

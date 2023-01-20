@@ -1,4 +1,4 @@
-import { parseURLParams, NewElement, askForApiKey, regions, getCurrentVersion, unixToDate } from "./func.js";
+import { parseURLParams, NewElement, askForApiKey, regions, getCurrentVersion, unixToDate, checkUrl } from "./func.js";
 
 // askForApiKey();
 // const API_KEY = sessionStorage.getItem("API_KEY");
@@ -11,15 +11,7 @@ window.addEventListener("load", () => {
 const redSide = "red-side";
 const blueSide = "blue-side";
 
-let api_url = "";
-
-if(window.location.href == "willump.lol*"){
-  api_url = "willump.lol/api";
-}
-else{
-  api_url = "localhost:3000/api";
-}
-
+let api_url = checkUrl();
 
 const currentVersion = await getCurrentVersion();
 
