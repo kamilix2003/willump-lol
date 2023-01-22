@@ -63,10 +63,15 @@ app.get('/api/getsummoner', (req,res) => {
 app.get('/api/getmatchhistory', (req,res) => {
     let ids = `${req.query.startTime != undefined ? `startTime=${req.query.startTime}&` : "" }${req.query.endTime != undefined ? `endTime=${req.query.endTime}&` : "" }${req.query.queue != undefined ? `queue=${req.query.queue}&` : "" }${req.query.type != undefined ? `type=${req.query.type}&` : "" }${req.query.start != undefined ? `start=${req.query.start}&` : "" }${req.query.count != undefined ? `count=${req.query.count}&` : "" }`
     let url = `https://${req.query.continent}.api.riotgames.com/lol/match/v5/matches/by-puuid/${req.query.puuid}/ids?${ids}api_key=${api_key}`
+    let summonerName = req.query.name;
     // console.log(url);
     fetch(url)
         .then(res => res.json())
-        .then(data => res.send(data))
+        .then(data => {
+            addMatchId(summonerName, data)
+            // console.log(summonerName, data);
+            res.send(data);
+        })
 })
 
 app.get('/api/getmatchdata', (req,res) => {
@@ -87,10 +92,32 @@ app.get('/api/getmatchtimeline', (req,res) => {
 
 app.listen(port)
 
+async function addMatchId(name, matches){
+    try {
+        const player = await Player.findOne({name: name})
+        for(let i = 0; i < matches.length; i++){
+            if(player.matches.indexOf(matches[i]) === -1){
+                console.log("unique");
+                player.matches.push(matches[i]);
+            }
+        }
+        console.log(player.matches)
+        await player.save();
+    }
+    catch (e){
+        console.log(e)
+    }
+}
+
 async function addNewPlayerToDb(name){
-    const player = await Player.exists({name: name})
-    if(!player){
-        const newPlayer = new Player({name: name});
-        newPlayer.save().then(() => console.log(`New user: ${newPlayer.name}`));
+    try {
+        const player = await Player.exists({name: name})
+        if(!player){
+            const newPlayer = new Player({name: name});
+            newPlayer.save().then(() => console.log(`New user: ${newPlayer.name}`));
+        }
+    }
+    catch (e) {
+        console.log(e);
     }
 }

@@ -40,7 +40,7 @@ function DisplayResults(){
             document.querySelector(".summonerlevel").innerHTML = "Level: " + summonerdata.summonerLevel;
             document.querySelector(".summonername").innerHTML = summonerdata.name;
            // let matchhistoryurl = GetMatchHistory(summonerdata.puuid, regions[region].continent , [ , , , , , matchCount]);
-            let matchhistoryurl = `${dev ? "http" : "https"}://${api_url}/getmatchhistory?continent=${regions[region].continent}&puuid=${summonerdata.puuid}&count=${matchCount}`
+            let matchhistoryurl = `${dev ? "http" : "https"}://${api_url}/getmatchhistory?continent=${regions[region].continent}&puuid=${summonerdata.puuid}&count=${matchCount}&name=${summonerdata.name}`
             fetch(matchhistoryurl)
             .then(res => res.json())
             .then(matchhistory => {
@@ -108,7 +108,7 @@ function DisplayResults(){
 
             document.querySelector(".more-games").addEventListener("click", async () => {
                 //let url = GetMatchHistory(summonerdata.puuid, regions[region].continent , [ , , , , matchCount++, 1]);
-                let url = `${dev ? "http" : "https"}://${api_url}/getmatchhistory?continent=${regions[region].continent}&puuid=${summonerdata.puuid}&count=1&start=${matchCount++}`
+                let url = `${dev ? "http" : "https"}://${api_url}/getmatchhistory?continent=${regions[region].continent}&puuid=${summonerdata.puuid}&count=1&start=${matchCount++}&name=${summonerdata.name}`
                 let matchResponse = await fetch(url).then( res => {
                     return res.json();
                 })
