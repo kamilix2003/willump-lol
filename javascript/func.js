@@ -1,6 +1,6 @@
 // const API_KEY = sessionStorage.getItem("API_KEY")
 
-export const dev = false;
+export const dev = true;
 
 export async function getCurrentVersion(){
     let output = await fetch(`https://ddragon.leagueoflegends.com/api/versions.json`).then(res => {

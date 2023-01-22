@@ -4,6 +4,9 @@ body{
     margin: 0;
 }
 
+.header h1{
+    color: var(--secondary-color);
+}
 
 a{
     text-decoration: none;
