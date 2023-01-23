@@ -54,7 +54,7 @@ async function DisplayResults(){
 
                 // console.log(matchhistory);
                 const matches = document.querySelector(".grid-matchhistory");
-                let matcharray = [];
+                let matcharray = new Array(matchhistory.length);
                 for(let i = 0; i < matchhistory.length; i++){
                     //let url2 = MakeRequestLink(MATCH_INFO_REQUEST,regions[region].continent,matchhistory[i])
                     let url2 = `${dev ? "http" : "https"}://${api_url}/getmatchdata?continent=${regions[region].continent}&id=${matchhistory[i]}&name=${summonerdata.name}`
@@ -92,7 +92,8 @@ async function DisplayResults(){
                         `)
                         // matches.appendChild(NewMatch);
                         matcharray[i] = NewMatch;
-                        if(matcharray.length == matchhistory.length){
+                        // console.log(matcharray)
+                        if(!matcharray.includes(undefined)){
                             for(let i = 0; i < matcharray.length;i++){
                                 matches.appendChild(matcharray[i]);
                             }

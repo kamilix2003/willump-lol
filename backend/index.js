@@ -93,9 +93,10 @@ app.get('/api/getmatchdata', (req,res) => {
     fetch(url)
         .then(res => res.json())
         .then(async data => {
-            await Player.exists({name: summonerName}, () => {
-                addMatchId(summonerName, data, matchId);
-            })
+            // await Player.exists({name: summonerName}, () => {
+            //     addMatchId(summonerName, data, matchId);
+            // })
+            addMatchId(summonerName, data, matchId);
             res.send(data)
         })
 })
@@ -119,19 +120,23 @@ async function addMatchId(name, data, matchId){
     try {
         let playerStats = data.info.participants;
         let playerIndex = playerStats.findIndex(obj => obj.summonerName == name)
-        const player = await Player.findOne({name: name})
+        const player = await Player.findOne({name: name.toLowerCase()})
             if(player.matches.findIndex(obj => obj.id == matchId) === -1){
                 console.log(`new match: ${matchId}`);
                 let match = {
                     id: matchId,
                     stats: playerStats[playerIndex]
                 }
+                player.matches.push(match);
                 player.kills += playerStats[playerIndex].kills;
                 player.deaths += playerStats[playerIndex].deaths;
                 player.assists += playerStats[playerIndex].assists;
+                console.log(playerStats[playerIndex].win, playerStats[playerIndex].championName);
                 playerStats[playerIndex].win ? player.wins++ : player.loses++;
-                player.matches.push(match);
             }
+            let w = player.wins;
+            let l = player.loses;
+        console.log({w, l})
         // console.log(player.matches)
         await player.save();
     }
@@ -142,10 +147,10 @@ async function addMatchId(name, data, matchId){
 
 async function addNewPlayerToDb(name){
     try {
-        const player = await Player.exists({name: name})
+        const player = await Player.exists({name: name.toLowerCase()})
         if(!player){
-            const newPlayer = new Player({name: name, matches: {}});
-            newPlayer.save().then(() => console.log(`New user: ${newPlayer.name}`));
+            const newPlayer = new Player({name: name.toLowerCase(), matches: {}});
+            newPlayer.save().then(() => console.log(`New user: ${newPlayer.name.toLowerCase()}`));
         }
     }
     catch (e) {
