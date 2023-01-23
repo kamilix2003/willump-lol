@@ -25,11 +25,12 @@ let summonerSpells = await fetch(`https://ddragon.leagueoflegends.com/cdn/${curr
 
 DisplayResults();
 
-function DisplayResults(){
+async function DisplayResults(){
     let UrlData = parseURLParams(window.location.href);
     let PlayerUserName = UrlData.summonername;
     let region =  UrlData.region;
     let matchCount = UrlData.count || 5;
+    
     if(region != "" && PlayerUserName != ""){
         let SummonerInfourl = `${dev ? "http" : "https"}://${api_url}/getsummoner?region=${region}&name=${PlayerUserName}`;
         fetch(SummonerInfourl)
@@ -44,12 +45,19 @@ function DisplayResults(){
             fetch(matchhistoryurl)
             .then(res => res.json())
             .then(matchhistory => {
+                fetch(`${dev ? "http" : "https"}://${api_url}/getplayerstats?name=${PlayerUserName}`).then(res => res.json())
+                .then(playerStats => {
+                console.log(playerStats);
+                document.querySelector(".kda").innerHTML = `<span class="kills">${playerStats.kills}</span>/<span class="deaths">${playerStats.deaths}</span>/<span class="assists">${playerStats.assists}</span>`;
+                document.querySelector(".wins").innerHTML = `<span class="wins">Wins: ${playerStats.wins}</span> <span class="loses">Loses: ${playerStats.loses}</span>`;
+            })
+
                 // console.log(matchhistory);
                 const matches = document.querySelector(".grid-matchhistory");
                 let matcharray = [];
                 for(let i = 0; i < matchhistory.length; i++){
                     //let url2 = MakeRequestLink(MATCH_INFO_REQUEST,regions[region].continent,matchhistory[i])
-                    let url2 = `${dev ? "http" : "https"}://${api_url}/getmatchdata?continent=${regions[region].continent}&id=${matchhistory[i]}`
+                    let url2 = `${dev ? "http" : "https"}://${api_url}/getmatchdata?continent=${regions[region].continent}&id=${matchhistory[i]}&name=${summonerdata.name}`
                     fetch(url2)
                     .then(res => res.json())
                     .then(matchdata => {
@@ -113,7 +121,7 @@ function DisplayResults(){
                     return res.json();
                 })
                 // console.log(matchResponse)
-                let matchurl = `${dev ? "http" : "https"}://${api_url}/getmatchdata?continent=${regions[region].continent}&id=${matchResponse[0]}`;
+                let matchurl = `${dev ? "http" : "https"}://${api_url}/getmatchdata?continent=${regions[region].continent}&id=${matchResponse[0]}&name=${summonerdata.name}`;
                 let matchdata = await fetch(matchurl).then(res => {
                     return res.json();
                 })

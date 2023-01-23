@@ -19,6 +19,7 @@ const playerSchema = new Schema({
         type: String,
         minLength: 3,
         maxLength: 18,
+        required: true,
     },
     createdAt: {
         type: Date,
@@ -33,8 +34,18 @@ const playerSchema = new Schema({
         type: Date,
         default: () => Date.now()
     },
-    matches: [String]
+    kills: {type: Number, default: 0},
+    deaths: {type: Number, default: 0},
+    assists: {type: Number, default: 0},
+    wins: {type: Number, default: 0},
+    loses: {type: Number, default: 0},
+    matches: {
+        type: [Schema.Types.Mixed]
+    },
+    
 });
+
+
 
 const Player = mongoose.model("player", playerSchema);
 
@@ -68,7 +79,7 @@ app.get('/api/getmatchhistory', (req,res) => {
     fetch(url)
         .then(res => res.json())
         .then(data => {
-            addMatchId(summonerName, data)
+            // addMatchId(summonerName, data)
             // console.log(summonerName, data);
             res.send(data);
         })
@@ -76,10 +87,17 @@ app.get('/api/getmatchhistory', (req,res) => {
 
 app.get('/api/getmatchdata', (req,res) => {
     let url = `https://${req.query.continent}.api.riotgames.com/lol/match/v5/matches/${req.query.id}?api_key=${api_key}`
+    let summonerName = req.query.name
+    let matchId = req.query.id
     // console.log(url);
     fetch(url)
         .then(res => res.json())
-        .then(data => res.send(data))
+        .then(async data => {
+            await Player.exists({name: summonerName}, () => {
+                addMatchId(summonerName, data, matchId);
+            })
+            res.send(data)
+        })
 })
 
 app.get('/api/getmatchtimeline', (req,res) => {
@@ -90,18 +108,31 @@ app.get('/api/getmatchtimeline', (req,res) => {
         .then(data => res.send(data))
 })
 
+app.get('/api/getplayerstats',async (req,res) => {
+    const player = await Player.findOne({name: req.query.name}).select('kills assists deaths wins loses')
+    res.send(player);
+})
+
 app.listen(port)
 
-async function addMatchId(name, matches){
+async function addMatchId(name, data, matchId){
     try {
+        let playerStats = data.info.participants;
+        let playerIndex = playerStats.findIndex(obj => obj.summonerName == name)
         const player = await Player.findOne({name: name})
-        for(let i = 0; i < matches.length; i++){
-            if(player.matches.indexOf(matches[i]) === -1){
-                console.log("unique");
-                player.matches.push(matches[i]);
+            if(player.matches.findIndex(obj => obj.id == matchId) === -1){
+                console.log(`new match: ${matchId}`);
+                let match = {
+                    id: matchId,
+                    stats: playerStats[playerIndex]
+                }
+                player.kills += playerStats[playerIndex].kills;
+                player.deaths += playerStats[playerIndex].deaths;
+                player.assists += playerStats[playerIndex].assists;
+                playerStats[playerIndex].win ? player.wins++ : player.loses++;
+                player.matches.push(match);
             }
-        }
-        console.log(player.matches)
+        // console.log(player.matches)
         await player.save();
     }
     catch (e){
@@ -113,7 +144,7 @@ async function addNewPlayerToDb(name){
     try {
         const player = await Player.exists({name: name})
         if(!player){
-            const newPlayer = new Player({name: name});
+            const newPlayer = new Player({name: name, matches: {}});
             newPlayer.save().then(() => console.log(`New user: ${newPlayer.name}`));
         }
     }
