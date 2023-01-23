@@ -34,11 +34,11 @@ const playerSchema = new Schema({
         type: Date,
         default: () => Date.now()
     },
-    kills: {type: Number, default: 0},
-    deaths: {type: Number, default: 0},
-    assists: {type: Number, default: 0},
-    wins: {type: Number, default: 0},
-    loses: {type: Number, default: 0},
+    // kills: {type: Number, default: 0},
+    // deaths: {type: Number, default: 0},
+    // assists: {type: Number, default: 0},
+    // wins: {type: Number, default: 0},
+    // loses: {type: Number, default: 0},
     matches: {
         type: [Schema.Types.Mixed]
     },
@@ -93,11 +93,11 @@ app.get('/api/getmatchdata', (req,res) => {
     fetch(url)
         .then(res => res.json())
         .then(async data => {
+            res.send(data)
             // await Player.exists({name: summonerName}, () => {
             //     addMatchId(summonerName, data, matchId);
             // })
             addMatchId(summonerName, data, matchId);
-            res.send(data)
         })
 })
 
@@ -110,8 +110,23 @@ app.get('/api/getmatchtimeline', (req,res) => {
 })
 
 app.get('/api/getplayerstats',async (req,res) => {
-    const player = await Player.findOne({name: req.query.name}).select('kills assists deaths wins loses')
-    res.send(player);
+    let stats = {
+        wins: 0,
+        loses: 0,
+        kills: 0,
+        deaths: 0,
+        assists: 0,
+        count: 0,
+    }
+    const player = await Player.findOne({name: req.query.name})
+    player.matches.forEach((element, index) => {
+        element.stats.win ? stats.wins++ : stats.loses++;
+        stats.kills += element.stats.kills;
+        stats.deaths += element.stats.deaths;
+        stats.assists += element.stats.assists;
+        stats.count < index+1 ? stats.count = index+1 : 0;
+    })
+    res.send(stats);
 })
 
 app.listen(port)
@@ -128,15 +143,7 @@ async function addMatchId(name, data, matchId){
                     stats: playerStats[playerIndex]
                 }
                 player.matches.push(match);
-                player.kills += playerStats[playerIndex].kills;
-                player.deaths += playerStats[playerIndex].deaths;
-                player.assists += playerStats[playerIndex].assists;
-                console.log(playerStats[playerIndex].win, playerStats[playerIndex].championName);
-                playerStats[playerIndex].win ? player.wins++ : player.loses++;
             }
-            let w = player.wins;
-            let l = player.loses;
-        console.log({w, l})
         // console.log(player.matches)
         await player.save();
     }
@@ -149,7 +156,7 @@ async function addNewPlayerToDb(name){
     try {
         const player = await Player.exists({name: name.toLowerCase()})
         if(!player){
-            const newPlayer = new Player({name: name.toLowerCase(), matches: {}});
+            const newPlayer = new Player({name: name.toLowerCase()});
             newPlayer.save().then(() => console.log(`New user: ${newPlayer.name.toLowerCase()}`));
         }
     }
