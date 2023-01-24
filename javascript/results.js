@@ -30,6 +30,8 @@ async function DisplayResults(){
     let PlayerUserName = UrlData.summonername;
     let region =  UrlData.region;
     let matchCount = UrlData.count || 5;
+
+    document.querySelector(".header h1 a").innerHTML = `Hello ${PlayerUserName}!`
     
     if(region != "" && PlayerUserName != ""){
         let SummonerInfourl = `${dev ? "http" : "https"}://${api_url}/getsummoner?region=${region}&name=${PlayerUserName}`;
