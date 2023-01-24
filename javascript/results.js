@@ -48,7 +48,10 @@ async function DisplayResults(){
                 fetch(`${dev ? "http" : "https"}://${api_url}/getplayerstats?name=${PlayerUserName}`).then(res => res.json())
                 .then(playerStats => {
                 console.log(playerStats);
-                document.querySelector(".kda").innerHTML = `<span class="kills">${playerStats.kills}</span>/<span class="deaths">${playerStats.deaths}</span>/<span class="assists">${playerStats.assists}</span>`;
+                let kda = (playerStats.kills + playerStats.assists)/playerStats.deaths;
+                document.querySelector(".kda").innerHTML = `KDA: ${kda.toFixed(2)}`;
+                kda < 1 ? document.querySelector(".kda").style.color = "var(--lose)" : "";
+                kda > 3 ? document.querySelector(".kda").style.color = "var(--win)" : "";
                 document.querySelector(".wins").innerHTML = `<span class="wins">Wins: ${playerStats.wins}</span> <span class="loses">Loses: ${playerStats.loses}</span>`;
             })
 
@@ -126,12 +129,8 @@ async function DisplayResults(){
                 let matchdata = await fetch(matchurl).then(res => {
                     return res.json();
                 })
-                let summoner;
-                for(let i = 0; i < 10; i++){
-                    if(matchdata.info.participants[i].summonerName == PlayerUserName){
-                        summoner = i;
-                    }
-                }
+                let summoner = matchdata.info.participants.findIndex(obj => obj.summonerName.toLowerCase() == PlayerUserName)
+                console.log(PlayerUserName,matchdata, summoner)
                 let matchresult = matchdata.info.participants[summoner].win;
                 let kda = [
                     matchdata.info.participants[summoner].kills,

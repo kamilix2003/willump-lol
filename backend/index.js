@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import * as dotenv from "dotenv";
 import mongoose, { Schema } from 'mongoose';
+import e from 'express';
 mongoose.set('strictQuery', true);
 dotenv.config();
 const app = express();
@@ -118,7 +119,8 @@ app.get('/api/getplayerstats',async (req,res) => {
         assists: 0,
         count: 0,
     }
-    const player = await Player.findOne({name: req.query.name})
+    try{
+        const player = await Player.findOne({name: req.query.name.toLowerCase()})
     player.matches.forEach((element, index) => {
         element.stats.win ? stats.wins++ : stats.loses++;
         stats.kills += element.stats.kills;
@@ -126,6 +128,10 @@ app.get('/api/getplayerstats',async (req,res) => {
         stats.assists += element.stats.assists;
         stats.count < index+1 ? stats.count = index+1 : 0;
     })
+    }
+    catch (e) {
+        console.log(e);
+    }
     res.send(stats);
 })
 
