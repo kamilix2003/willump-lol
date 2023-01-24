@@ -16,6 +16,15 @@ h1{
     margin: 0;
 }
 
+.footer i{
+    
+}
+
+.footer a{
+    opacity: 50%;
+    font-weight: 700;
+}
+
 .loader-wrapper{
     height: 100%;
     width: 100%;
@@ -42,10 +51,6 @@ h1{
     place-items: center;
     height: 5vh;
     background-color: var(--main-color-low-lum);
-}
-
-.footer *{
-    opacity: 50%;
 }
 
 .header h1{

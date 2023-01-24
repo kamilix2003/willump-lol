@@ -25,11 +25,14 @@ let summonerSpells = await fetch(`https://ddragon.leagueoflegends.com/cdn/${curr
 
 DisplayResults();
 
-function DisplayResults(){
+async function DisplayResults(){
     let UrlData = parseURLParams(window.location.href);
     let PlayerUserName = UrlData.summonername;
     let region =  UrlData.region;
     let matchCount = UrlData.count || 5;
+
+    document.querySelector(".header h1 a").innerHTML = `Hello ${PlayerUserName}!`
+    
     if(region != "" && PlayerUserName != ""){
         let SummonerInfourl = `${dev ? "http" : "https"}://${api_url}/getsummoner?region=${region}&name=${PlayerUserName}`;
         fetch(SummonerInfourl)
@@ -40,16 +43,26 @@ function DisplayResults(){
             document.querySelector(".summonerlevel").innerHTML = "Level: " + summonerdata.summonerLevel;
             document.querySelector(".summonername").innerHTML = summonerdata.name;
            // let matchhistoryurl = GetMatchHistory(summonerdata.puuid, regions[region].continent , [ , , , , , matchCount]);
-            let matchhistoryurl = `${dev ? "http" : "https"}://${api_url}/getmatchhistory?continent=${regions[region].continent}&puuid=${summonerdata.puuid}&count=${matchCount}`
+            let matchhistoryurl = `${dev ? "http" : "https"}://${api_url}/getmatchhistory?continent=${regions[region].continent}&puuid=${summonerdata.puuid}&count=${matchCount}&name=${summonerdata.name}`
             fetch(matchhistoryurl)
             .then(res => res.json())
             .then(matchhistory => {
+                fetch(`${dev ? "http" : "https"}://${api_url}/getplayerstats?name=${PlayerUserName}`).then(res => res.json())
+                .then(playerStats => {
+                console.log(playerStats);
+                let kda = (playerStats.kills + playerStats.assists)/playerStats.deaths;
+                document.querySelector(".kda").innerHTML = `KDA: ${kda.toFixed(2)}`;
+                kda < 1 ? document.querySelector(".kda").style.color = "var(--lose)" : "";
+                kda > 3 ? document.querySelector(".kda").style.color = "var(--win)" : "";
+                document.querySelector(".wins").innerHTML = `<span class="wins">Wins: ${playerStats.wins}</span> <span class="loses">Loses: ${playerStats.loses}</span>`;
+            })
+
                 // console.log(matchhistory);
                 const matches = document.querySelector(".grid-matchhistory");
-                let matcharray = [];
+                let matcharray = new Array(matchhistory.length);
                 for(let i = 0; i < matchhistory.length; i++){
                     //let url2 = MakeRequestLink(MATCH_INFO_REQUEST,regions[region].continent,matchhistory[i])
-                    let url2 = `${dev ? "http" : "https"}://${api_url}/getmatchdata?continent=${regions[region].continent}&id=${matchhistory[i]}`
+                    let url2 = `${dev ? "http" : "https"}://${api_url}/getmatchdata?continent=${regions[region].continent}&id=${matchhistory[i]}&name=${summonerdata.name}`
                     fetch(url2)
                     .then(res => res.json())
                     .then(matchdata => {
@@ -84,7 +97,8 @@ function DisplayResults(){
                         `)
                         // matches.appendChild(NewMatch);
                         matcharray[i] = NewMatch;
-                        if(matcharray.length == matchhistory.length){
+                        // console.log(matcharray)
+                        if(!matcharray.includes(undefined)){
                             for(let i = 0; i < matcharray.length;i++){
                                 matches.appendChild(matcharray[i]);
                             }
@@ -108,21 +122,17 @@ function DisplayResults(){
 
             document.querySelector(".more-games").addEventListener("click", async () => {
                 //let url = GetMatchHistory(summonerdata.puuid, regions[region].continent , [ , , , , matchCount++, 1]);
-                let url = `${dev ? "http" : "https"}://${api_url}/getmatchhistory?continent=${regions[region].continent}&puuid=${summonerdata.puuid}&count=1&start=${matchCount++}`
+                let url = `${dev ? "http" : "https"}://${api_url}/getmatchhistory?continent=${regions[region].continent}&puuid=${summonerdata.puuid}&count=1&start=${matchCount++}&name=${summonerdata.name}`
                 let matchResponse = await fetch(url).then( res => {
                     return res.json();
                 })
                 // console.log(matchResponse)
-                let matchurl = `${dev ? "http" : "https"}://${api_url}/getmatchdata?continent=${regions[region].continent}&id=${matchResponse[0]}`;
+                let matchurl = `${dev ? "http" : "https"}://${api_url}/getmatchdata?continent=${regions[region].continent}&id=${matchResponse[0]}&name=${summonerdata.name}`;
                 let matchdata = await fetch(matchurl).then(res => {
                     return res.json();
                 })
-                let summoner;
-                for(let i = 0; i < 10; i++){
-                    if(matchdata.info.participants[i].summonerName == PlayerUserName){
-                        summoner = i;
-                    }
-                }
+                let summoner = matchdata.info.participants.findIndex(obj => obj.summonerName.toLowerCase() == PlayerUserName)
+                console.log(PlayerUserName,matchdata, summoner)
                 let matchresult = matchdata.info.participants[summoner].win;
                 let kda = [
                     matchdata.info.participants[summoner].kills,
