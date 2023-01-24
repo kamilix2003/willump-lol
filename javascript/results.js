@@ -67,13 +67,15 @@ async function DisplayResults(){
                     .then(res => res.json())
                     .then(matchdata => {
                         // let gameVersion = `${matchdata.info.gameVersion.split(".")[0]}.${matchdata.info.gameVersion.split(".")[1]}`;
-                        let participants = matchdata.metadata.participants;
-                        let summoner;
-                        for(let i = 0; i < participants.length; i++){
-                            if(participants[i] == summonerdata.puuid){
-                                summoner = i;
-                            }
-                        }
+                        // let participants = matchdata.metadata.participants;
+                        // let summoner;
+                        // for(let i = 0; i < participants.length; i++){
+                        //     if(participants[i] == summonerdata.puuid){
+                        //         summoner = i;
+                        //     }
+                        // }
+                        let summoner = matchdata.info.participants.findIndex(obj => obj.summonerName == PlayerUserName)
+                        // console.log(summoner, matchdata.info.participants, matchdata.info);
                         let summonerSpell1 = getSummonerSpell(matchdata.info.participants[summoner].summoner1Id, summonerSpells).image.full;
                         let summonerSpell2 = getSummonerSpell(matchdata.info.participants[summoner].summoner2Id, summonerSpells).image.full;
                         let kda = [matchdata.info.participants[summoner].kills, matchdata.info.participants[summoner].deaths, matchdata.info.participants[summoner].assists];

@@ -95,10 +95,9 @@ app.get('/api/getmatchdata', (req,res) => {
         .then(res => res.json())
         .then(async data => {
             res.send(data)
-            // await Player.exists({name: summonerName}, () => {
-            //     addMatchId(summonerName, data, matchId);
-            // })
-            addMatchId(summonerName, data, matchId);
+            if(summonerName != undefined){
+                addMatchId(summonerName, data, matchId);
+            }
         })
 })
 
@@ -130,7 +129,7 @@ app.get('/api/getplayerstats',async (req,res) => {
     })
     }
     catch (e) {
-        console.log(e);
+        console.log(e.message);
     }
     res.send(stats);
 })
@@ -149,12 +148,13 @@ async function addMatchId(name, data, matchId){
                     stats: playerStats[playerIndex]
                 }
                 player.matches.push(match);
+                player.updatedAt = Date.now();
             }
         // console.log(player.matches)
         await player.save();
     }
     catch (e){
-        console.log(e)
+        console.log(e.message)
     }
 }
 
@@ -164,6 +164,11 @@ async function addNewPlayerToDb(name){
         if(!player){
             const newPlayer = new Player({name: name.toLowerCase()});
             newPlayer.save().then(() => console.log(`New user: ${newPlayer.name.toLowerCase()}`));
+        }
+        else if(player){
+            const oldPlayer = await Player.findOne({name: name.toLowerCase()})
+            oldPlayer.searchedAt = Date.now();
+            oldPlayer.save().then(() => console.log(`User <${oldPlayer.name}> already exists`));
         }
     }
     catch (e) {
