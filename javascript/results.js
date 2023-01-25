@@ -74,8 +74,8 @@ async function DisplayResults(){
                         //         summoner = i;
                         //     }
                         // }
-                        let summoner = matchdata.info.participants.findIndex(obj => obj.summonerName == PlayerUserName)
-                        // console.log(summoner, matchdata.info.participants, matchdata.info);
+                        let summoner = matchdata.info.participants.findIndex(obj => obj.puuid == summonerdata.puuid)
+                        console.log(summoner, matchdata.info.participants, matchdata.info);
                         let summonerSpell1 = getSummonerSpell(matchdata.info.participants[summoner].summoner1Id, summonerSpells).image.full;
                         let summonerSpell2 = getSummonerSpell(matchdata.info.participants[summoner].summoner2Id, summonerSpells).image.full;
                         let kda = [matchdata.info.participants[summoner].kills, matchdata.info.participants[summoner].deaths, matchdata.info.participants[summoner].assists];
