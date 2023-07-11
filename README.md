@@ -4,6 +4,10 @@
 
 couch willump is web application that allows players to display match statistics of your matches and help you understand why you're stuck in silver.
 
+## preview
+![](img/1.PNG)
+![](img/2.PNG)
+![](img/3.PNG)
 ## tech stack
 
 - [javascript](https://www.javascript.com/)
